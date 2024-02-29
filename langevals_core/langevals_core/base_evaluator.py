@@ -1,8 +1,8 @@
 import os
 from abc import ABC, abstractmethod
-from typing import Generic, List, Literal, Optional, TypeVar, get_type_hints
+from typing import ClassVar, Generic, List, Literal, Optional, TypeVar, get_type_hints
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 EvalCategories = Literal["quality", "safety", "policy", "other"]
 
@@ -28,17 +28,19 @@ class EvaluatorParams(BaseModel):
         extra_fields = subclass_fields_types.keys() - required_fields_types.keys()
         if extra_fields:
             raise TypeError(
-                f"Extra fields not allowed in {cls.__name__}: {extra_fields}"
+                f"Extra fields not allowed in {cls.__name__}: {extra_fields}, only {list(required_fields_types.keys())} are allowed. This is meant to keep a standard interface accross all evaluators, other settings should go into the evaluator TSettings type instead."
             )
 
         for field, expected_type in required_fields_types.items():
-            if not issubclass(subclass_fields_types[field], expected_type):
+            if field in subclass_fields_types and not issubclass(
+                subclass_fields_types[field], expected_type
+            ):
                 raise TypeError(
                     f"Field '{field}' in {cls.__name__} must be of type {expected_type.__name__}, got {subclass_fields_types[field].__name__}"
                 )
 
 
-TParams = TypeVar("TInput", bound=EvaluatorParams)
+TParams = TypeVar("TParams", bound=EvaluatorParams)
 
 
 class EvaluationResult(BaseModel):
@@ -60,31 +62,33 @@ class EvaluationResultError(BaseModel):
     exception: Exception
 
 
-SingleEvaluationResult = EvaluationResult | EvaluationResultSkipped | EvaluationResultError
+SingleEvaluationResult = (
+    EvaluationResult | EvaluationResultSkipped | EvaluationResultError
+)
 
 BatchEvaluationResult = List[SingleEvaluationResult]
 
 
 class BaseEvaluator(BaseModel, Generic[TParams, TSettings], ABC):
-    category: EvalCategories = Field(...)
-    env_vars: list[str] = []
-
     settings: TSettings
-    env: dict[str, str]
+    category: ClassVar[EvalCategories]
+    env_vars: ClassVar[list[str]] = []
 
-    def __init__(self, settings: TSettings):
-        self.settings = settings
-        self.env = {var: os.environ[var] for var in self.env_vars}
+    def env(self, var: str):
+        if var not in self.env_vars:
+            raise ValueError(
+                f"Variable {var} not defined in evaluator env_vars, cannot access it."
+            )
+        return os.environ[var]
 
-    @abstractmethod
     def evaluate(self, params: TParams) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
-    def evaluate_batch(self, inputs: List[TParams]) -> BatchEvaluationResult:
+    def evaluate_batch(self, params: List[TParams]) -> BatchEvaluationResult:
         results = []
         for input in inputs:
             try:
-                results.append(self.evaluate_single(input))
+                results.append(self.evaluate(input))
             except Exception as exception:
                 results.append(EvaluationResultError(exception=exception))
 

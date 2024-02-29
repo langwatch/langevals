@@ -3,7 +3,14 @@
 .PHONY: test lock lock-core lock-evaluators install install-core install-evaluators
 
 test:
-	PYTHONPATH=$$PYTHONPATH:. poetry run pytest -s -vv -m "not integration" $(filter-out $@,$(MAKECMDGOALS))
+	@for dir in evaluators/*; do \
+		if [ -d $$dir ]; then \
+			echo "Running tests in $$dir"; \
+			cd $$dir && poetry run pytest -s -vv && cd ../..; \
+		fi \
+	done
+
+# PYTHONPATH=$$PYTHONPATH:. poetry run pytest -s -vv -m "not integration" $(filter-out $@,$(MAKECMDGOALS))
 
 ensure-poetry:
 	@if ! command -v poetry &> /dev/null; then \
