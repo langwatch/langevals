@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 from typing import Generic, List, Literal, Optional, TypeVar, get_type_hints
 
@@ -8,7 +9,7 @@ EvalCategories = Literal["quality", "safety", "policy", "other"]
 TSettings = TypeVar("TSettings", bound=BaseModel)
 
 
-class EvaluatorInput(BaseModel):
+class EvaluatorParams(BaseModel):
     class Config:
         extra = "forbid"  # Forbid extra fields by default in Pydantic models
 
@@ -37,11 +38,11 @@ class EvaluatorInput(BaseModel):
                 )
 
 
-TInput = TypeVar("TInput", bound=EvaluatorInput)
+TParams = TypeVar("TInput", bound=EvaluatorParams)
 
 
-class EvaluationResultOk(BaseModel):
-    status: Literal["ok"] = "ok"
+class EvaluationResult(BaseModel):
+    status: Literal["processed"] = "processed"
     score: float
     passed: Optional[bool] = None
     details: Optional[str] = None
@@ -56,20 +57,35 @@ class EvaluationResultError(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     status: Literal["error"] = "error"
-    details: Exception
+    exception: Exception
 
 
-EvaluationResult = EvaluationResultOk | EvaluationResultSkipped | EvaluationResultError
+SingleEvaluationResult = EvaluationResult | EvaluationResultSkipped | EvaluationResultError
+
+BatchEvaluationResult = List[SingleEvaluationResult]
 
 
-class BaseEvaluator(BaseModel, Generic[TInput, TSettings], ABC):
+class BaseEvaluator(BaseModel, Generic[TParams, TSettings], ABC):
     category: EvalCategories = Field(...)
+    env_vars: list[str] = []
 
     settings: TSettings
+    env: dict[str, str]
 
     def __init__(self, settings: TSettings):
         self.settings = settings
+        self.env = {var: os.environ[var] for var in self.env_vars}
 
     @abstractmethod
-    def evaluate_batch(self, inputs: List[TInput]) -> List[EvaluationResult]:
+    def evaluate(self, params: TParams) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
+
+    def evaluate_batch(self, inputs: List[TParams]) -> BatchEvaluationResult:
+        results = []
+        for input in inputs:
+            try:
+                results.append(self.evaluate_single(input))
+            except Exception as exception:
+                results.append(EvaluationResultError(exception=exception))
+
+        return results

@@ -10,4 +10,4 @@ LangEvals is a monorepo and has many subpackages with different dependencies for
 make install
 ```
 
-This will also generate the `langevals.code-workspace` file, creating a different workspace per evaluator and telling VS Code which venv to use for each.
+This will also generate the `langevals.code-workspace` file, creating a different workspace per evaluator and telling VS Code which venv to use for each. Then, open this file on vscode and click the "Open Workspace" button

@@ -1,43 +1,50 @@
-from typing import List, Literal
+from typing import Literal
 from pydantic import BaseModel
 from openai import OpenAI
 
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
-    EvaluationResultOk,
-    EvaluationResultError,
-    EvaluatorInput,
+    SingleEvaluationResult,
+    EvaluatorParams,
 )
 
 
-class Input(EvaluatorInput):
+class Params(EvaluatorParams):
     input: str
+
+
+class Categories(BaseModel):
+    sexual: bool = False
+    hate: bool = False
+    harassment: bool = False
+    self_harm: bool = False
+    sexual_minors: bool = False
+    hate_threatening: bool = False
+    violence_graphic: bool = False
+    self_harm_intent: bool = False
+    self_harm_instructions: bool = False
+    harassment_threatening: bool = False
+    violence: bool = False
 
 
 class Settings(BaseModel):
     model: Literal["text-moderation-stable", "text-moderation-latest"] = (
         "text-moderation-stable"
     )
+    categories: Categories = Categories()
 
 
-class OpenAIModerationEvaluator(BaseEvaluator[Input, Settings]):
+class OpenAIModerationEvaluator(BaseEvaluator[Params, Settings]):
     category = "policy"
+    env_vars = ["OPENAI_API_KEY"]
 
-    def evaluate_batch(self, inputs: List[Input]) -> List[EvaluationResult]:
-        results = []
-        client = OpenAI(api_key=self.settings.api_key)
+    def evaluate(self, params: Params) -> SingleEvaluationResult:
+        client = OpenAI(api_key=self.env["OPENAI_API_KEY"])
 
-        for input_item in inputs:
-            try:
-                response = client.moderations.create(input=input_item.input)
-                moderation_result = response.results[0]
-                score = moderation_result["category_scores"][
-                    "violence"
-                ]  # Example score based on violence category
-                passed = not moderation_result["flagged"]
-                results.append(EvaluationResultOk(score=score, passed=passed))
-            except Exception as e:
-                results.append(EvaluationResultError(details=str(e)))
+        response = client.moderations.create(input=params.input)
+        moderation_result = response.results[0]
+        score = max(moderation_result.category_scores.model_dump().values())
+        passed = not moderation_result.flagged
 
-        return results
+        return EvaluationResult(score=score, passed=passed)
