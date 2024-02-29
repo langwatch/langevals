@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "langevals-core"
+version = "0.1.0"
+description = "Core package for LLM evaluation platform, providing base classes and utilities."
+authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.6.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
