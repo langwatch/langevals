@@ -16,17 +16,17 @@ class OpenAIModerationParams(EvaluatorParams):
 
 
 class OpenAIModerationCategories(BaseModel):
-    harassment: bool = False
-    harassment_threatening: bool = False
-    hate: bool = False
-    hate_threatening: bool = False
-    self_harm: bool = False
-    self_harm_instructions: bool = False
-    self_harm_intent: bool = False
-    sexual: bool = False
-    sexual_minors: bool = False
-    violence: bool = False
-    violence_graphic: bool = False
+    harassment: bool = True
+    harassment_threatening: bool = True
+    hate: bool = True
+    hate_threatening: bool = True
+    self_harm: bool = True
+    self_harm_instructions: bool = True
+    self_harm_intent: bool = True
+    sexual: bool = True
+    sexual_minors: bool = True
+    violence: bool = True
+    violence_graphic: bool = True
 
 
 class OpenAIModerationSettings(BaseModel):
@@ -51,30 +51,40 @@ class OpenAIModerationEvaluator(
 
         response = client.moderations.create(input=[p.input for p in params])
         for moderation_result in response.results:
-            detected_categories = moderation_result.categories.model_dump()
-            category_scores = [
-                item
-                for item in moderation_result.category_scores.model_dump().items()
-                if detected_categories[item[0]]
-            ]
+            detected_categories = dict(
+                [
+                    item
+                    for item in moderation_result.categories.model_dump().items()
+                    if self.settings.categories.model_dump().get(item[0], False)
+                ]
+            )
+            category_scores = dict(
+                [
+                    item
+                    for item in moderation_result.category_scores.model_dump().items()
+                    if detected_categories.get(item[0], False)
+                ]
+            )
             highest_categories = sorted(
-                category_scores,
+                category_scores.items(),
                 key=lambda x: x[1],
                 reverse=True,
             )
-            score = max(moderation_result.category_scores.model_dump().values())
+            score = max(category_scores.values()) if len(category_scores) > 0 else 0
+
             passed = not any(detected_categories.values())
 
             details = (
-                "Detected: "
-                + ", ".join(
-                    [
-                        f"{category} ({score * 100:.2f}%)"
-                        for category, score in highest_categories
-                        if detected_categories[category]
-                    ]
+                (
+                    "Detected: "
+                    + ", ".join(
+                        [
+                            f"{category} ({score * 100:.2f}%)"
+                            for category, score in highest_categories
+                        ]
+                    )
                 )
-                if len(detected_categories.values()) > 0
+                if not passed
                 else None
             )
 

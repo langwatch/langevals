@@ -3,6 +3,7 @@ import dotenv
 dotenv.load_dotenv()
 
 from langevals_openai.moderation import (
+    OpenAIModerationCategories,
     OpenAIModerationEvaluator,
     OpenAIModerationParams,
     OpenAIModerationSettings,
@@ -21,13 +22,23 @@ def test_moderation_integration():
         ]
     )
 
-    print("\n\nresults\n\n", results)
+    assert results[0].status == "processed"
+    assert results[0].passed
+    assert results[1].status == "processed"
+    assert not results[1].passed
 
-    assert results[0].status == "processed" and results[0].passed
-    assert results[1].status == "processed" and not results[1].passed
 
-    # print("\n\nresult\n\n", result)
+def test_moderation_with_ignored_categories():
+    settings = OpenAIModerationSettings(
+        categories=OpenAIModerationCategories(harassment=False)
+    )
+    evaluator = OpenAIModerationEvaluator(settings=settings)
 
-    # assert result.status == "processed"
-    # assert isinstance(result.score, float)
-    # assert isinstance(result.passed, bool)
+    test_input = "fuck you"
+    params = [OpenAIModerationParams(input=test_input)]
+
+    results = evaluator.evaluate_batch(params=params)
+
+    assert results[0].status == "processed"
+    assert results[0].passed
+    assert results[0].details is None
