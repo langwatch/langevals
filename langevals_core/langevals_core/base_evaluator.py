@@ -1,15 +1,20 @@
 import os
-from abc import ABC, abstractmethod
+from abc import ABC
+import traceback
 from typing import ClassVar, Generic, List, Literal, Optional, TypeVar, get_type_hints
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 EvalCategories = Literal["quality", "safety", "policy", "other"]
 
 TSettings = TypeVar("TSettings", bound=BaseModel)
 
 
-class EvaluatorParams(BaseModel):
+class EvaluatorEntry(BaseModel):
+    """
+    Entry datapoint for an evaluator, it should contain all the necessary information for the evaluator to run.
+    """
+
     model_config = ConfigDict(extra="forbid")
 
     def __init_subclass__(cls, **kwargs):
@@ -39,10 +44,17 @@ class EvaluatorParams(BaseModel):
                 )
 
 
-TParams = TypeVar("TParams", bound=EvaluatorParams)
+TEntry = TypeVar("TEntry", bound=EvaluatorEntry)
 
 
 class EvaluationResult(BaseModel):
+    """
+    Evaluation result for a single entry that was successfully processed.
+    Score represents different things depending on the evaluator, it can be a percentage, a probability, a distance, etc.
+    Passed is a boolean that represents if the entry passed the evaluation or not, it can be None if the evaluator does not have a concept of passing or failing.
+    Details is an optional string that can be used to provide additional information about the evaluation result.
+    """
+
     status: Literal["processed"] = "processed"
     score: float = Field(description="No description provided")
     passed: Optional[bool] = None
@@ -50,15 +62,23 @@ class EvaluationResult(BaseModel):
 
 
 class EvaluationResultSkipped(BaseModel):
+    """
+    Evaluation result marking an entry that was skipped with an optional details explanation.
+    """
+
     status: Literal["skipped"] = "skipped"
     details: Optional[str] = None
 
 
 class EvaluationResultError(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    """
+    Evaluation result marking an entry that failed to be processed due to an error.
+    """
 
     status: Literal["error"] = "error"
-    exception: Exception
+    error_type: str = Field(description="The type of the exception")
+    message: str = Field(description="Error message")
+    traceback: List[str] = Field(description="Traceback information for debugging")
 
 
 TResult = TypeVar("TResult", bound=EvaluationResult)
@@ -70,8 +90,15 @@ SingleEvaluationResult = (
 BatchEvaluationResult = List[SingleEvaluationResult]
 
 
-class BaseEvaluator(BaseModel, Generic[TParams, TSettings, TResult], ABC):
+class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     settings: TSettings
+    entry: Optional[TEntry] = (
+        None  # dummy field just to read the type later when creating the routes
+    )
+    result: Optional[TResult] = (
+        None  # dummy field just to read the type later when creating the route
+    )
+
     category: ClassVar[EvalCategories]
     env_vars: ClassVar[list[str]] = []
 
@@ -82,15 +109,25 @@ class BaseEvaluator(BaseModel, Generic[TParams, TSettings, TResult], ABC):
             )
         return os.environ[var]
 
-    def evaluate(self, params: TParams) -> SingleEvaluationResult:
+    def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
-    def evaluate_batch(self, params: List[TParams]) -> BatchEvaluationResult:
+    def evaluate_batch(self, data: List[TEntry]) -> BatchEvaluationResult:
         results = []
-        for param in params:
+        for entry in data:
             try:
-                results.append(self.evaluate(param))
-            except Exception as exception:
-                results.append(EvaluationResultError(exception=exception))
+                results.append(self.evaluate(entry))
+            except BaseException as exception:
+                results.append(
+                    EvaluationResultError(
+                        error_type=type(exception).__name__,
+                        message=str(exception),
+                        traceback=list(
+                            traceback.TracebackException.from_exception(
+                                exception
+                            ).format()
+                        ),
+                    )
+                )
 
         return results

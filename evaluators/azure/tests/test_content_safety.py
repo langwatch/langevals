@@ -4,7 +4,7 @@ dotenv.load_dotenv()
 
 from langevals_azure.content_safety import (
     AzureContentSafetyEvaluator,
-    AzureContentSafetyParams,
+    AzureContentSafetyEntry,
     AzureContentSafetySettings,
 )
 
@@ -13,8 +13,8 @@ def test_content_safety_integration():
     settings = AzureContentSafetySettings()
     evaluator = AzureContentSafetyEvaluator(settings=settings)
 
-    safe_input = AzureContentSafetyParams(input="Hello, world!")
-    unsafe_input = AzureContentSafetyParams(
+    safe_input = AzureContentSafetyEntry(input="Hello, world!")
+    unsafe_input = AzureContentSafetyEntry(
         input="Enough is enough! I've had it with these motherfuckin' snakes on this motherfuckin' plane!"
     )
 
@@ -39,7 +39,7 @@ def test_content_safety_with_custom_settings():
     evaluator = AzureContentSafetyEvaluator(settings=settings)
 
     input_text = "Enough is enough! I've had it with these motherfuckin' snakes on this motherfuckin' plane!"
-    params = AzureContentSafetyParams(input=input_text)
+    params = AzureContentSafetyEntry(input=input_text)
 
     result = evaluator.evaluate(params)
 
@@ -53,7 +53,7 @@ def test_content_safety_with_severity_threshold():
     evaluator = AzureContentSafetyEvaluator(settings=settings)
 
     input_text = "Enough is enough! I've had it with these motherfuckin' snakes on this motherfuckin' plane!"
-    params = AzureContentSafetyParams(input=input_text)
+    params = AzureContentSafetyEntry(input=input_text)
 
     result = evaluator.evaluate(params)
 

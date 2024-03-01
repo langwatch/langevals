@@ -14,6 +14,7 @@ python = "^3.11"
 fastapi = "^0.110.0"
 hypercorn = "^0.16.0"
 pydantic = "^2.6.3"
+python-dotenv = "1.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

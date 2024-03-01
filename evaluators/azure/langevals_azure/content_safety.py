@@ -7,12 +7,12 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
     SingleEvaluationResult,
-    EvaluatorParams,
+    EvaluatorEntry,
 )
 from pydantic import BaseModel, Field
 
 
-class AzureContentSafetyParams(EvaluatorParams):
+class AzureContentSafetyEntry(EvaluatorEntry):
     input: str
 
 
@@ -41,7 +41,7 @@ class AzureContentSafetyResult(EvaluationResult):
 
 class AzureContentSafetyEvaluator(
     BaseEvaluator[
-        AzureContentSafetyParams,
+        AzureContentSafetyEntry,
         AzureContentSafetySettings,
         AzureContentSafetyResult,
     ]
@@ -57,13 +57,13 @@ class AzureContentSafetyEvaluator(
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
 
-    def evaluate(self, params: AzureContentSafetyParams) -> SingleEvaluationResult:
+    def evaluate(self, entry: AzureContentSafetyEntry) -> SingleEvaluationResult:
         endpoint = self.env("AZURE_CONTENT_SAFETY_ENDPOINT")
         key = self.env("AZURE_CONTENT_SAFETY_KEY")
 
         client = ContentSafetyClient(endpoint, AzureKeyCredential(key))
         request = AnalyzeTextOptions(
-            text=params.input,
+            text=entry.input,
             categories=self.settings.categories,
             output_type=self.settings.output_type,
         )
@@ -83,6 +83,6 @@ class AzureContentSafetyEvaluator(
             )
             or None
         )
-        details = "Detected: " + details if details else None
+        details = "Detected " + details if details else None
 
         return EvaluationResult(score=score, passed=passed, details=details)

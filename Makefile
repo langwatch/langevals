@@ -49,8 +49,12 @@ lock: ensure-poetry lock-core install-core lock-evaluators
 
 install: ensure-poetry install-core install-evaluators
 	@echo "All evaluator packages installed."
-	poetry install
-	make setup && poetry lock --no-update && poetry install
+	poetry install --all-extras
+	make setup && poetry lock --no-update && poetry install --all-extras
+
+start:
+	@echo "Starting the server..."
+	poetry run python langevals/main.py
 
 %:
 	@:

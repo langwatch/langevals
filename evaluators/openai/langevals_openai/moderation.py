@@ -7,11 +7,11 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     SingleEvaluationResult,
     BatchEvaluationResult,
-    EvaluatorParams,
+    EvaluatorEntry,
 )
 
 
-class OpenAIModerationParams(EvaluatorParams):
+class OpenAIModerationEntry(EvaluatorEntry):
     input: str
 
 
@@ -31,7 +31,7 @@ class OpenAIModerationCategories(BaseModel):
 
 class OpenAIModerationSettings(BaseModel):
     model: Literal["text-moderation-stable", "text-moderation-latest"] = Field(
-        "text-moderation-stable",
+        default="text-moderation-stable",
         description="The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
     )
     categories: OpenAIModerationCategories = Field(
@@ -48,7 +48,7 @@ class OpenAIModerationResult(EvaluationResult):
 
 class OpenAIModerationEvaluator(
     BaseEvaluator[
-        OpenAIModerationParams, OpenAIModerationSettings, OpenAIModerationResult
+        OpenAIModerationEntry, OpenAIModerationSettings, OpenAIModerationResult
     ]
 ):
     """
@@ -63,13 +63,13 @@ class OpenAIModerationEvaluator(
     env_vars = ["OPENAI_API_KEY"]
 
     def evaluate_batch(
-        self, params: list[OpenAIModerationParams]
+        self, data: list[OpenAIModerationEntry]
     ) -> BatchEvaluationResult:
         client = OpenAI(api_key=self.env("OPENAI_API_KEY"))
 
         results: list[SingleEvaluationResult] = []
 
-        response = client.moderations.create(input=[p.input for p in params])
+        response = client.moderations.create(input=[entry.input for entry in data])
         for moderation_result in response.results:
             detected_categories = dict(
                 [
@@ -96,10 +96,10 @@ class OpenAIModerationEvaluator(
 
             details = (
                 (
-                    "Detected: "
+                    "Detected "
                     + ", ".join(
                         [
-                            f"{category} ({score * 100:.2f}%)"
+                            f"{category} ({score * 100:.2f}% confidence)"
                             for category, score in highest_categories
                         ]
                     )
