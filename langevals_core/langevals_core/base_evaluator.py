@@ -44,7 +44,7 @@ TParams = TypeVar("TParams", bound=EvaluatorParams)
 
 class EvaluationResult(BaseModel):
     status: Literal["processed"] = "processed"
-    score: float
+    score: float = Field(description="No description provided")
     passed: Optional[bool] = None
     details: Optional[str] = None
 
@@ -61,6 +61,8 @@ class EvaluationResultError(BaseModel):
     exception: Exception
 
 
+TResult = TypeVar("TResult", bound=EvaluationResult)
+
 SingleEvaluationResult = (
     EvaluationResult | EvaluationResultSkipped | EvaluationResultError
 )
@@ -68,7 +70,7 @@ SingleEvaluationResult = (
 BatchEvaluationResult = List[SingleEvaluationResult]
 
 
-class BaseEvaluator(BaseModel, Generic[TParams, TSettings], ABC):
+class BaseEvaluator(BaseModel, Generic[TParams, TSettings, TResult], ABC):
     settings: TSettings
     category: ClassVar[EvalCategories]
     env_vars: ClassVar[list[str]] = []
@@ -85,9 +87,9 @@ class BaseEvaluator(BaseModel, Generic[TParams, TSettings], ABC):
 
     def evaluate_batch(self, params: List[TParams]) -> BatchEvaluationResult:
         results = []
-        for input in inputs:
+        for param in params:
             try:
-                results.append(self.evaluate(input))
+                results.append(self.evaluate(param))
             except Exception as exception:
                 results.append(EvaluationResultError(exception=exception))
 

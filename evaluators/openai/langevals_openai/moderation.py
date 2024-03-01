@@ -1,5 +1,5 @@
 from typing import Literal
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from openai import OpenAI
 
 from langevals_core.base_evaluator import (
@@ -30,15 +30,35 @@ class OpenAIModerationCategories(BaseModel):
 
 
 class OpenAIModerationSettings(BaseModel):
-    model: Literal["text-moderation-stable", "text-moderation-latest"] = (
-        "text-moderation-stable"
+    model: Literal["text-moderation-stable", "text-moderation-latest"] = Field(
+        "text-moderation-stable",
+        description="The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
     )
-    categories: OpenAIModerationCategories = OpenAIModerationCategories()
+    categories: OpenAIModerationCategories = Field(
+        default_factory=OpenAIModerationCategories,
+        description="The categories of content to check for moderation.",
+    )
+
+
+class OpenAIModerationResult(EvaluationResult):
+    score: float = Field(
+        description="The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence."
+    )
 
 
 class OpenAIModerationEvaluator(
-    BaseEvaluator[OpenAIModerationParams, OpenAIModerationSettings]
+    BaseEvaluator[
+        OpenAIModerationParams, OpenAIModerationSettings, OpenAIModerationResult
+    ]
 ):
+    """
+    OpenAI Moderation Evaluator
+
+    This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
+    including harassment, hate speech, self-harm, sexual content, and violence. It allows
+    customization of the categories to check.
+    """
+
     category = "policy"
     env_vars = ["OPENAI_API_KEY"]
 

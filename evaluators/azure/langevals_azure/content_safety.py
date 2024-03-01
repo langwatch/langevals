@@ -17,16 +17,43 @@ class AzureContentSafetyParams(EvaluatorParams):
 
 
 class AzureContentSafetySettings(BaseModel):
-    severity_threshold: int = Field(ge=1, le=8, default=1)
-    categories: list[str] = ["Hate", "SelfHarm", "Sexual", "Violence"]
-    output_type: Literal["FourSeverityLevels", "EightSeverityLevels"] = (
-        "FourSeverityLevels"
+    severity_threshold: int = Field(
+        ge=1,
+        le=8,
+        default=1,
+        description="The minimum severity level to consider content as unsafe.",
+    )
+    categories: list[str] = Field(
+        default=["Hate", "SelfHarm", "Sexual", "Violence"],
+        description="The categories of moderation to check for.",
+    )
+    output_type: Literal["FourSeverityLevels", "EightSeverityLevels"] = Field(
+        default="FourSeverityLevels",
+        description="The type of severity levels to return on the full 0-7 severity scale, it can be either the trimmed version with four values (0, 2, 4, 6 scores) or the whole range.",
+    )
+
+
+class AzureContentSafetyResult(EvaluationResult):
+    score: float = Field(
+        description="The severity level of the detected content from 0 to 7. A higher score indicates higher severity."
     )
 
 
 class AzureContentSafetyEvaluator(
-    BaseEvaluator[AzureContentSafetyParams, AzureContentSafetySettings]
+    BaseEvaluator[
+        AzureContentSafetyParams,
+        AzureContentSafetySettings,
+        AzureContentSafetyResult,
+    ]
 ):
+    """
+    Azure Content Safety Moderation Evaluator
+
+    This evaluator detects potentially unsafe content in text, including hate speech,
+    self-harm, sexual content, and violence. It allows customization of the severity
+    threshold and the specific categories to check.
+    """
+
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
 
