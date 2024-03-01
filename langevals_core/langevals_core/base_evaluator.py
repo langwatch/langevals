@@ -10,8 +10,7 @@ TSettings = TypeVar("TSettings", bound=BaseModel)
 
 
 class EvaluatorParams(BaseModel):
-    class Config:
-        extra = "forbid"  # Forbid extra fields by default in Pydantic models
+    model_config = ConfigDict(extra="forbid")
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)  # Always call super()!

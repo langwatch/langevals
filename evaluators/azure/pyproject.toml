@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "langevals-openai"
+name = "langevals-azure"
 version = "0.1.0"
-description = "LangEvals OpenAI moderation evaluator for LLM outputs."
+description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals_core = { path = "../../langevals_core", develop = true }
-openai = "1.13.3"
+azure-ai-contentsafety = "^1.0.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

@@ -10,8 +10,6 @@ test:
 		fi \
 	done
 
-# PYTHONPATH=$$PYTHONPATH:. poetry run pytest -s -vv -m "not integration" $(filter-out $@,$(MAKECMDGOALS))
-
 ensure-poetry:
 	@if ! command -v poetry &> /dev/null; then \
 		curl -sSL https://install.python-poetry.org | python3 -; \
@@ -24,7 +22,7 @@ lock-core:
 	@echo "Locking dependencies for langevals_core..."
 	@cd langevals_core && poetry lock
 
-lock-evaluators:
+lock-evaluators: lock-core install-core
 	@for dir in evaluators/*; do \
 		if [ -d $$dir ]; then \
 			echo "Locking in $$dir"; \
@@ -36,7 +34,7 @@ install-core:
 	@echo "Installing dependencies for langevals_core..."
 	@cd langevals_core && poetry install
 
-install-evaluators:
+install-evaluators: install-core
 	@for dir in evaluators/*; do \
 		if [ -d $$dir ]; then \
 			echo "Installing in $$dir"; \
