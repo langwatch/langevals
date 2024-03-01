@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-langevals_core = { path = "../../langevals_core", develop = true }
+langevals-core = { path = "../../langevals_core", develop = true }
 openai = "1.13.3"
 
 [tool.poetry.group.test.dependencies]

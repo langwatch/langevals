@@ -16,17 +16,18 @@ ensure-poetry:
 	fi
 
 setup:
+	poetry run python scripts/generate_evaluator_dependencies.py
 	poetry run python scripts/generate_workspace.py
 
 lock-core:
 	@echo "Locking dependencies for langevals_core..."
-	@cd langevals_core && poetry lock
+	@cd langevals_core && poetry lock --no-update
 
 lock-evaluators: lock-core install-core
 	@for dir in evaluators/*; do \
 		if [ -d $$dir ]; then \
 			echo "Locking in $$dir"; \
-			cd $$dir && poetry lock && cd ../..; \
+			cd $$dir && poetry lock --no-update && cd ../..; \
 		fi \
 	done
 
@@ -44,12 +45,12 @@ install-evaluators: install-core
 
 lock: ensure-poetry lock-core install-core lock-evaluators
 	@echo "All packages locked."
-	poetry lock
+	poetry lock --no-update
 
 install: ensure-poetry install-core install-evaluators
 	@echo "All evaluator packages installed."
 	poetry install
-	make setup
+	make setup && poetry lock --no-update && poetry install
 
 %:
 	@:
