@@ -56,6 +56,7 @@ class AzureContentSafetyEvaluator(
 
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
+    docs_url = "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text"
 
     def evaluate(self, entry: AzureContentSafetyEntry) -> SingleEvaluationResult:
         endpoint = self.env("AZURE_CONTENT_SAFETY_ENDPOINT")

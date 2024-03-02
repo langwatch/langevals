@@ -101,6 +101,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
 
     category: ClassVar[EvalCategories]
     env_vars: ClassVar[list[str]] = []
+    docs_url: ClassVar[str] = ""
 
     def env(self, var: str):
         if var not in self.env_vars:

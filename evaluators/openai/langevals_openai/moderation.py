@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Annotated, ClassVar, Literal
 from pydantic import BaseModel, Field
 from openai import OpenAI
 
@@ -55,12 +55,12 @@ class OpenAIModerationEvaluator(
     OpenAI Moderation Evaluator
 
     This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
-    including harassment, hate speech, self-harm, sexual content, and violence. It allows
-    customization of the categories to check.
+    including harassment, hate speech, self-harm, sexual content, and violence.
     """
 
     category = "policy"
     env_vars = ["OPENAI_API_KEY"]
+    docs_url = "https://platform.openai.com/docs/guides/moderation/overview"
 
     def evaluate_batch(
         self, data: list[OpenAIModerationEntry]

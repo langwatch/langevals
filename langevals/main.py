@@ -70,7 +70,12 @@ def create_evaluator_routes(evaluator_package):
             if len(evaluator_cls.env_vars) > 0
             else ""
         )
-        description = (textwrap.dedent(evaluator_cls.__doc__ or "")) + required_env_vars
+        docs = (
+            "\n\n__Docs:__ " + evaluator_cls.docs_url if evaluator_cls.docs_url else ""
+        )
+        description = (
+            (textwrap.dedent(evaluator_cls.__doc__ or "")) + required_env_vars + docs
+        )
 
         class Request(BaseModel):
             model_config = ConfigDict(extra="forbid")
