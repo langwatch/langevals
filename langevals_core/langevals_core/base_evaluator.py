@@ -13,6 +13,13 @@ TSettings = TypeVar("TSettings", bound=BaseModel)
 class EvaluatorEntry(BaseModel):
     """
     Entry datapoint for an evaluator, it should contain all the necessary information for the evaluator to run.
+
+    Available fields are:
+
+    input: The user or LLM input given to the model
+    output: The LLM generated output
+    contexts: A list of strings of the contexts that were considered when generating the LLM response
+    expected_output: The ground truth of what the LLM should have generated, for comparison with the actual generated output
     """
 
     model_config = ConfigDict(extra="forbid")

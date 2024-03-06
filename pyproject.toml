@@ -23,6 +23,7 @@ toml = "^0.10.2"
 [tool.poetry.extras]
 azure = [ "langevals-azure",]
 openai = [ "langevals-openai",]
+example = [ "langevals-example",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -35,5 +36,10 @@ optional = true
 
 [tool.poetry.dependencies.langevals-openai]
 path = "evaluators/openai"
+develop = true
+optional = true
+
+[tool.poetry.dependencies.langevals-example]
+path = "evaluators/example"
 develop = true
 optional = true

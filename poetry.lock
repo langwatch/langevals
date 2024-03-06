@@ -431,6 +431,22 @@ type = "directory"
 url = "langevals_core"
 
 [[package]]
+name = "langevals-example"
+version = "0.1.0"
+description = "LangEvals example evaluator for LLM outputs."
+optional = true
+python-versions = "^3.11"
+files = []
+develop = true
+
+[package.dependencies]
+langevals-core = {path = "../../langevals_core", develop = true}
+
+[package.source]
+type = "directory"
+url = "evaluators/example"
+
+[[package]]
 name = "langevals-openai"
 version = "0.1.0"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
@@ -801,9 +817,10 @@ h11 = ">=0.9.0,<1"
 
 [extras]
 azure = ["langevals-azure"]
+example = ["langevals-example"]
 openai = ["langevals-openai"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "aed2fb2663d67deadda69a825fcde436c84d00540948a1e4c056f0097f98f323"
+content-hash = "e3a3dc458b1e58dae9589a6792b9caab18b0ede51909553a7589e07c87c18e85"
