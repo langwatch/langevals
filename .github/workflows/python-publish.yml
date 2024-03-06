@@ -1,0 +1,75 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - uses: Gr1N/setup-poetry@v8
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install dependencies
+        run: |
+          poetry install
+          pip install toml
+      - name: Publish core package
+        run: |
+          cd langevals_core
+          PACKAGE_VERSION=$(poetry version --short)
+          RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals_core/$PACKAGE_VERSION/json)
+          if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+            echo "langevals_core version already exists, skipping publish"
+          else
+            echo "Publishing langevals_core"
+            poetry build
+            poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+          fi
+          cd ..
+      - name: Publish evaluator subpackages
+        run: |
+          for dir in evaluators/*; do
+            if [ -d "$dir" ]; then
+              cd $dir
+              PACKAGE_VERSION=$(poetry version --short)
+              DIR_NAME=$(basename $dir)
+              RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals_$DIR_NAME/$PACKAGE_VERSION/json)
+              if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+                echo "$dir version already exists, skipping publish"
+              else
+                echo "Publishing $dir"
+                python ../../scripts/replace_develop_dependencies.py pyproject.toml
+                poetry build
+                poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+              fi
+              cd ../..
+            fi
+          done
+      - name: Publish main package
+        run: |
+          PACKAGE_VERSION=$(poetry version --short)
+          RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals/$PACKAGE_VERSION/json)
+          if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+            echo "langevals_core version already exists, skipping publish"
+          else
+            echo "Publishing langevals"
+            python scripts/replace_develop_dependencies.py pyproject.toml
+            poetry build
+            poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+          fi
