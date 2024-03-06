@@ -1,8 +1,15 @@
 # LangEvals
 
-A Python package for aggregating various language model evaluation tools into a single platform. This package allows developers to evaluate the quality of language models using a variety of evaluators, which can be run locally or through an API.
+LangEvals aggregates various language model evaluators into a single platform, providing a standard interface for a multitude of scores and LLM guardrails, for you to protect and benchmark your LLM models and pipelines.
 
-If there is an evaluation missing that you want to use, LangEvals makes it easier to add new evaluators and bring them under a standard interface, by following the contributing guide below.
+LangEvals can be used in two modes:
+
+- As a python library, to be used locally
+- As an API, to be called from anywhere
+
+Each LangEvals evaluator is a separate sub-package, with its own dependency set, meaning you can install only the exact evaluators you want to use, and have a separate lambda for each API endpoint.
+
+If there is an evaluator missing that you want to use, LangEvals makes it easier to add new ones, by following the contributing guide below.
 
 # Contributing
 
