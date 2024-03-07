@@ -1,4 +1,4 @@
-from typing import Annotated, ClassVar, Literal
+from typing import Literal
 from pydantic import BaseModel, Field
 from openai import OpenAI
 

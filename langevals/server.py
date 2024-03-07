@@ -13,6 +13,7 @@ import importlib.metadata
 import pkgutil
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EnvMissingException,
     EvaluationResultSkipped,
     EvaluationResultError,
 )
@@ -58,15 +59,8 @@ def create_evaluator_routes(evaluator_package):
         module_name, evaluator_name = evaluator_cls.__module__.split(".", 1)
         module_name = module_name.split("langevals_")[1]
 
-        for env_var in evaluator_cls.env_vars:
-            if env_var not in os.environ:
-                warnings.warn(
-                    f"Evaluator {module_name}/{evaluator_name} requires environment variable {env_var} to be set. Evaluator will not run without it.",
-                    RuntimeWarning,
-                )
-
         required_env_vars = (
-            "\n\n__Required env vars:__ " + ", ".join(evaluator_cls.env_vars)
+            "\n\n__Env vars:__ " + ", ".join(evaluator_cls.env_vars)
             if len(evaluator_cls.env_vars) > 0
             else ""
         )
@@ -96,12 +90,6 @@ def create_evaluator_routes(evaluator_package):
         async def evaluate(
             req: Request,
         ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
-            for env_var in evaluator_cls.env_vars:
-                if env_var not in os.environ and (
-                    req.env is None or env_var not in req.env
-                ):
-                    raise HTTPException(status_code=400, detail=f"{env_var} is not set")
-
             evaluator = evaluator_cls(settings=(req.settings or {}), env=req.env)  # type: ignore
             return evaluator.evaluate_batch(req.data)
 
@@ -112,11 +100,16 @@ for evaluator_name, evaluator_module in evaluators.items():
 
 
 @app.exception_handler(ValidationError)
-async def unicorn_exception_handler(request: Request, exc: ValidationError):
+async def validation_exception_handler(request: Request, exc: ValidationError):
     raise HTTPException(
         status_code=400,
         detail=exc.errors(),
     )
+
+
+@app.exception_handler(EnvMissingException)
+async def missing_env_exception_handler(request: Request, exc: EnvMissingException):
+    raise HTTPException(status_code=400, detail=exc.message)
 
 
 def main():

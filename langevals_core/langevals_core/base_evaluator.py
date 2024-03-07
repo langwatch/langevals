@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import os
 from abc import ABC
 import traceback
@@ -5,7 +6,7 @@ from typing import ClassVar, Generic, List, Literal, Optional, TypeVar, get_type
 
 from pydantic import BaseModel, ConfigDict, Field
 
-EvalCategories = Literal["quality", "safety", "policy", "other"]
+EvalCategories = Literal["quality", "rag", "safety", "policy", "other"]
 
 TSettings = TypeVar("TSettings", bound=BaseModel)
 
@@ -28,10 +29,10 @@ class EvaluatorEntry(BaseModel):
         super().__init_subclass__(**kwargs)  # Always call super()!
 
         required_fields_types = {
-            "input": str,
-            "output": str,
-            "contexts": list,
-            "expected_output": str,
+            "input": [str],
+            "output": [str],
+            "contexts": [List[str], list[str]],
+            "expected_output": [str],
         }
 
         subclass_fields_types = get_type_hints(cls)
@@ -42,9 +43,10 @@ class EvaluatorEntry(BaseModel):
                 f"Extra fields not allowed in {cls.__name__}: {extra_fields}, only {list(required_fields_types.keys())} are allowed. This is meant to keep a standard interface accross all evaluators, other settings should go into the evaluator TSettings type instead."
             )
 
-        for field, expected_type in required_fields_types.items():
-            if field in subclass_fields_types and not issubclass(
-                subclass_fields_types[field], expected_type
+        for field, expected_types in required_fields_types.items():
+            if (
+                field in subclass_fields_types
+                and subclass_fields_types[field] not in expected_types
             ):
                 raise TypeError(
                     f"Field '{field}' in {cls.__name__} must be of type {expected_type.__name__}, got {subclass_fields_types[field].__name__}"
@@ -52,6 +54,11 @@ class EvaluatorEntry(BaseModel):
 
 
 TEntry = TypeVar("TEntry", bound=EvaluatorEntry)
+
+
+class Money(BaseModel):
+    currency: str
+    amount: float
 
 
 class EvaluationResult(BaseModel):
@@ -66,6 +73,7 @@ class EvaluationResult(BaseModel):
     score: float = Field(description="No description provided")
     passed: Optional[bool] = None
     details: Optional[str] = None
+    cost: Optional[Money] = None
 
 
 class EvaluationResultSkipped(BaseModel):
@@ -97,6 +105,11 @@ SingleEvaluationResult = (
 BatchEvaluationResult = List[SingleEvaluationResult]
 
 
+@dataclass
+class EnvMissingException(Exception):
+    message: str
+
+
 class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     settings: TSettings
     env: Optional[dict[str, str]] = None
@@ -116,11 +129,16 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
             raise ValueError(
                 f"Variable {var} not defined in evaluator env_vars, cannot access it."
             )
-        return (
-            self.env[var]
-            if self.env is not None and var in self.env
-            else os.environ[var]
-        )
+
+        try:
+            return (
+                self.env[var]
+                if self.env is not None and var in self.env
+                else os.environ[var]
+            )
+
+        except KeyError:
+            raise EnvMissingException(f"Variable {var} not defined in environment.")
 
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
