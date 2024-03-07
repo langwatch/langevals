@@ -6,8 +6,8 @@ import dotenv
 dotenv.load_dotenv()
 
 import asyncio
-from fastapi import FastAPI
-from typing import List, get_args
+from fastapi import FastAPI, HTTPException, Request
+from typing import List, Optional, get_args
 import importlib
 import importlib.metadata
 import pkgutil
@@ -16,7 +16,7 @@ from langevals_core.base_evaluator import (
     EvaluationResultSkipped,
     EvaluationResultError,
 )
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 app = FastAPI()
 
@@ -80,8 +80,13 @@ def create_evaluator_routes(evaluator_package):
         class Request(BaseModel):
             model_config = ConfigDict(extra="forbid")
 
-            data: List[entry_type]  # type: ignore
-            settings: settings_type  # type: ignore
+            data: List[entry_type] = Field(description="List of entries to be evaluated, check the field type for the necessary keys")  # type: ignore
+            settings: Optional[settings_type] = Field(None, description="Evaluator settings, check the field type for what settings this evaluator supports")  # type: ignore
+            env: Optional[dict[str, str]] = Field(
+                None,
+                description="Optional environment variables to override the server ones",
+                json_schema_extra={"example": {}},
+            )
 
         @app.post(
             f"/{module_name}/{evaluator_name}/evaluate",
@@ -92,16 +97,26 @@ def create_evaluator_routes(evaluator_package):
             req: Request,
         ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
             for env_var in evaluator_cls.env_vars:
-                if env_var not in os.environ:
-                    raise RuntimeError(f"{env_var} is not set")
+                if env_var not in os.environ and (
+                    req.env is None or env_var not in req.env
+                ):
+                    raise HTTPException(status_code=400, detail=f"{env_var} is not set")
 
-            evaluator = evaluator_cls(settings=req.settings)  # type: ignore
+            evaluator = evaluator_cls(settings=(req.settings or {}), env=req.env)  # type: ignore
             return evaluator.evaluate_batch(req.data)
 
 
 evaluators = load_evaluator_modules()
 for evaluator_name, evaluator_module in evaluators.items():
     create_evaluator_routes(evaluator_module)
+
+
+@app.exception_handler(ValidationError)
+async def unicorn_exception_handler(request: Request, exc: ValidationError):
+    raise HTTPException(
+        status_code=400,
+        detail=exc.errors(),
+    )
 
 
 def main():

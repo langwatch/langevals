@@ -1,12 +1,12 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = [ "poetry-core>=1.0.0",]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "langevals"
 version = "0.1.1"
 description = "A platform to evaluate LLM outputs using various evaluators."
-authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
+authors = [ "Rogerio Chaves <rogerio@langwatch.ai>",]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -17,7 +17,7 @@ pydantic = "^2.6.3"
 python-dotenv = "1.0.1"
 
 [tool.poetry.scripts]
-langevals-server = 'langevals.server:main'
+langevals-server = "langevals.server:main"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
@@ -25,9 +25,9 @@ toml = "^0.10.2"
 grevillea = "^0.0.1"
 
 [tool.poetry.extras]
-azure = ["langevals-azure"]
-openai = ["langevals-openai"]
-example = ["langevals-example"]
+azure = [ "langevals-azure",]
+openai = [ "langevals-openai",]
+example = [ "langevals-example",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"

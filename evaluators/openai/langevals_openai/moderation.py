@@ -65,7 +65,7 @@ class OpenAIModerationEvaluator(
     def evaluate_batch(
         self, data: list[OpenAIModerationEntry]
     ) -> BatchEvaluationResult:
-        client = OpenAI(api_key=self.env("OPENAI_API_KEY"))
+        client = OpenAI(api_key=self.get_env("OPENAI_API_KEY"))
 
         results: list[SingleEvaluationResult] = []
 

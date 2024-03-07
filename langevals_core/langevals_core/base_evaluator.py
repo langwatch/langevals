@@ -99,6 +99,7 @@ BatchEvaluationResult = List[SingleEvaluationResult]
 
 class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     settings: TSettings
+    env: Optional[dict[str, str]] = None
     entry: Optional[TEntry] = (
         None  # dummy field just to read the type later when creating the routes
     )
@@ -110,12 +111,16 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     env_vars: ClassVar[list[str]] = []
     docs_url: ClassVar[str] = ""
 
-    def env(self, var: str):
-        if var not in self.env_vars:
+    def get_env(self, var: str):
+        if var not in self.env_vars and (self.env is None or var not in self.env):
             raise ValueError(
                 f"Variable {var} not defined in evaluator env_vars, cannot access it."
             )
-        return os.environ[var]
+        return (
+            self.env[var]
+            if self.env is not None and var in self.env
+            else os.environ[var]
+        )
 
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
