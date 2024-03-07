@@ -4,3 +4,6 @@ langevals.code-workspace
 .env
 __pycache__
 dist
+gcp-credentials.json
+serverless-requirements.txt
+.serverless

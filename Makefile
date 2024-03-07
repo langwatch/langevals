@@ -59,5 +59,19 @@ run-docker:
 	@docker build --build-arg EVALUATOR=$(EVALUATOR) -t langevals-$(EVALUATOR) .
 	@docker run -p 80:80 langevals-$(EVALUATOR)
 
+deploy-all-evaluators:
+	@command -v gcloud >/dev/null 2>&1 || { echo >&2 "Installing Google Cloud SDK..."; curl https://sdk.cloud.google.com | bash; exec -l $$SHELL; }
+	npm install -g serverless
+	serverless plugin install -n serverless-google-cloudfunctions
+	serverless plugin install -n serverless-python-requirements
+	serverless plugin install -n serverless-plugin-scripts
+	@for dir in evaluators/*; do \
+		if [ -d $$dir ]; then \
+			export EVALUATOR_NAME=$$(basename $$dir) && \
+			echo "Deploying $$EVALUATOR_NAME" && \
+			serverless deploy \
+		fi \
+	done
+
 %:
 	@:

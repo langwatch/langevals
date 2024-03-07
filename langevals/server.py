@@ -1,5 +1,4 @@
 import os
-import sys
 import textwrap
 import warnings
 import dotenv
@@ -100,20 +99,12 @@ def create_evaluator_routes(evaluator_package):
             return evaluator.evaluate_batch(req.data)
 
 
+evaluators = load_evaluator_modules()
+for evaluator_name, evaluator_module in evaluators.items():
+    create_evaluator_routes(evaluator_module)
+
+
 def main():
-    evaluator_name = None
-    if len(sys.argv) > 1:
-        evaluator_name = sys.argv[1]
-
-    evaluators = load_evaluator_modules()
-    if evaluator_name:
-        evaluator_module = evaluators.get(f"langevals_{evaluator_name}")
-        if evaluator_module:
-            create_evaluator_routes(evaluator_module)
-    else:
-        for evaluator_name, evaluator_module in evaluators.items():
-            create_evaluator_routes(evaluator_module)
-
     from hypercorn.config import Config
     from hypercorn.asyncio import serve
 

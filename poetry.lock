@@ -246,6 +246,16 @@ typing-extensions = ">=4.8.0"
 all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=2.11.2)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.7)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
 
 [[package]]
+name = "grevillea"
+version = "0.0.1"
+description = "Google Cloud Functions support for ASGI"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "grevillea-0.0.1.tar.gz", hash = "sha256:5e6119c380d0a7deb55a3eb25dc812e65789d7633fe8af652e6f45afecc65f23"},
+]
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -433,7 +443,7 @@ url = "langevals_core"
 [[package]]
 name = "langevals-example"
 version = "0.1.0"
-description = "LangEvals example evaluator for LLM outputs."
+description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
 files = []
@@ -823,4 +833,4 @@ openai = ["langevals-openai"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e3a3dc458b1e58dae9589a6792b9caab18b0ede51909553a7589e07c87c18e85"
+content-hash = "64770ce4e7e01dab37e3ad1c9ff6a2ddd0f48db998b15b89bde16170fed55ba2"

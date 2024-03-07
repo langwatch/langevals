@@ -14,4 +14,4 @@ RUN pip install langevals[$evaluator]
 EXPOSE 80
 
 # Run langevals-server when the container launches
-CMD ["langevals-server", "$EVALUATOR"]
+CMD ["langevals-server"]

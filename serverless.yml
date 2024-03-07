@@ -1,0 +1,45 @@
+service: langevals-evaluator-${env:EVALUATOR_NAME}
+
+provider:
+  name: google
+  stage: production
+  runtime: python311
+  project: langwatch
+  credentials: ./gcp-credentials.json
+  region: europe-west3
+
+frameworkVersion: "3"
+plugins:
+  - serverless-google-cloudfunctions
+  - serverless-python-requirements
+  - serverless-plugin-scripts
+
+custom:
+  pythonRequirements:
+    fileName: serverless-requirements.txt
+    pythonBin: python3
+    dockerizePip: false
+    usePoetry: false
+  scripts:
+    commands:
+      make-public-function: gcloud auth activate-service-account langevals-deploy@langwatch.iam.gserviceaccount.com --key-file=gcp-credentials.json; gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-evaluator --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region} | xargs echo
+
+    hooks:
+      "package:initialize": echo "grevillea\nlangevals[${env:EVALUATOR_NAME}]" > serverless-requirements.txt
+      "after:deploy:deploy": npx sls make-public-function
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+    - .gitignore
+    - README.md
+    - .git/**
+    - "**/__pycache__/**"
+    - "**/*.pyc"
+
+functions:
+  evaluator:
+    handler: main
+    events:
+      - http: path
