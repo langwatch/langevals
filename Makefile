@@ -1,6 +1,4 @@
-# export POETRY_VENV_PATH=$(PWD)/.venv
-
-.PHONY: test lock lock-core lock-evaluators install install-core install-evaluators
+.PHONY: test lock lock-core lock-evaluators install install-core install-evaluators run-docker
 
 test:
 	@for dir in evaluators/*; do \
@@ -54,7 +52,12 @@ install: ensure-poetry install-core install-evaluators
 
 start:
 	@echo "Starting the server..."
-	poetry run python langevals/main.py
+	poetry run python langevals/server.py
+
+run-docker:
+	@echo "Building and running the Docker container for the evaluator..."
+	@docker build --build-arg EVALUATOR=$(EVALUATOR) -t langevals-$(EVALUATOR) .
+	@docker run -p 80:80 langevals-$(EVALUATOR)
 
 %:
 	@:
