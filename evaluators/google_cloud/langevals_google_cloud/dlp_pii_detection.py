@@ -1,5 +1,5 @@
 import json
-from typing import Literal, Optional
+from typing import Any, Literal, Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
@@ -10,6 +10,7 @@ from langevals_core.base_evaluator import (
 from pydantic import BaseModel, Field
 import google.cloud.dlp
 from google.oauth2 import service_account
+import proto
 
 
 class GoogleCloudDLPPIIDetectionEntry(EvaluatorEntry):
@@ -46,6 +47,7 @@ class GoogleCloudDLPPIIDetectionResult(EvaluationResult):
     passed: Optional[bool] = Field(
         description="If true then no PII was detected, if false then at lease one PII was detected"
     )
+    raw_response: dict[str, Any]
 
 
 class GoogleCloudDLPPIIDetectionEvaluator(
@@ -110,4 +112,5 @@ class GoogleCloudDLPPIIDetectionEvaluator(
                 if len(response.result.findings) == 0
                 else f"PII detected: {', '.join(findings)}"
             ),
+            raw_response=proto.Message.to_dict(response.result),  # type: ignore
         )
