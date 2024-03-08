@@ -24,15 +24,14 @@ rm -rf dist
 poetry build
 DIST_FILE=$(ls dist/*.whl)
 LOCAL_DIGEST=$(md5sum "$DIST_FILE" | cut -d' ' -f1)
+# Clean up the build artifacts
+rm -rf dist
 
 # Extract the remote digest and compare it with the local digest
 REMOTE_DIGEST=$(echo "$REMOTE_METADATA" | jq -r '.urls[0].digests.md5')
 if [ "$REMOTE_DIGEST" != "$LOCAL_DIGEST" ]; then
-    echo "$PACKAGE_NAME has changed and needs a version bump."
+    echo "[Error 3] $PACKAGE_NAME has changed and needs a version bump."
     exit 3
 else
     echo "$PACKAGE_NAME is up to date."
 fi
-
-# Clean up the build artifacts
-rm -rf dist

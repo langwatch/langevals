@@ -79,7 +79,7 @@ check-evaluator-versions:
 	for dir in evaluators/*; do \
 		if [ -d "$$dir" ]; then \
 			echo "Checking $$dir"; \
-			(cd "$$dir" && ../../scripts/check_version_bump.sh); \
+			(cd "$$dir" && git add pyproject.toml && python ../../scripts/replace_develop_dependencies.py pyproject.toml && ../../scripts/check_version_bump.sh; exit_status=$$?; git checkout pyproject.toml; exit $$exit_status); \
 		fi \
 	done
 

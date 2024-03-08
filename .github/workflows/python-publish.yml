@@ -66,6 +66,7 @@ jobs:
               RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals_$DIR_NAME/$PACKAGE_VERSION/json)
               if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
                 if [ "${{ env.NEW_VERSION }}" == "true" ]; then
+                  python ../../scripts/replace_develop_dependencies.py pyproject.toml
                   ../../scripts/check_version_bump.sh
                 fi
                 echo "$dir version already exists, skipping publish"
