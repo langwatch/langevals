@@ -29,12 +29,26 @@ jobs:
         run: |
           poetry install
           pip install toml
+      - name: Check if trying to bump main package
+        id: check_version
+        run: |
+          PACKAGE_VERSION=$(poetry version --short)
+          RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals/$PACKAGE_VERSION/json)
+          if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+            echo "NEW_VERSION=false" >> $GITHUB_ENV
+          else
+            echo "NEW_VERSION=true" >> $GITHUB_ENV
+          fi
       - name: Publish core package
         run: |
           cd langevals_core
           PACKAGE_VERSION=$(poetry version --short)
           RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals_core/$PACKAGE_VERSION/json)
           if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+            # if new version
+            if [ "${{ env.NEW_VERSION }}" == "true" ]; then
+              ../scripts/check_version_bump.sh
+            fi
             echo "langevals_core version already exists, skipping publish"
           else
             echo "Publishing langevals_core"
@@ -51,6 +65,9 @@ jobs:
               DIR_NAME=$(basename $dir)
               RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals_$DIR_NAME/$PACKAGE_VERSION/json)
               if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+                if [ "${{ env.NEW_VERSION }}" == "true" ]; then
+                  ../../scripts/check_version_bump.sh
+                fi
                 echo "$dir version already exists, skipping publish"
               else
                 echo "Publishing $dir"
@@ -63,9 +80,7 @@ jobs:
           done
       - name: Publish main package
         run: |
-          PACKAGE_VERSION=$(poetry version --short)
-          RESPONSE=$(curl -s --head https://pypi.org/pypi/langevals/$PACKAGE_VERSION/json)
-          if [[ $RESPONSE == *"HTTP/2 200"* ]]; then
+          if [ "${{ env.NEW_VERSION }}" == "false" ]; then
             echo "langevals_core version already exists, skipping publish"
           else
             echo "Publishing langevals"

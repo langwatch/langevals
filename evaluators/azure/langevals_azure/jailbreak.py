@@ -1,4 +1,3 @@
-from typing import Optional
 from httpx import Client, Response
 from langevals_core.base_evaluator import (
     BaseEvaluator,

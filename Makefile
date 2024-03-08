@@ -73,5 +73,15 @@ deploy-all-evaluators:
 		fi \
 	done
 
+check-evaluator-versions:
+	@echo "Checking all evaluator versions for changes..."
+	@(cd langevals_core && ../scripts/check_version_bump.sh); \
+	for dir in evaluators/*; do \
+		if [ -d "$$dir" ]; then \
+			echo "Checking $$dir"; \
+			(cd "$$dir" && ../../scripts/check_version_bump.sh); \
+		fi \
+	done
+
 %:
 	@:
