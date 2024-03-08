@@ -1169,7 +1169,7 @@ extended-testing = ["lxml (>=5.1.0,<6.0.0)"]
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -1186,7 +1186,7 @@ url = "evaluators/azure"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.0"
+version = "0.1.1"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -1202,7 +1202,7 @@ url = "langevals_core"
 
 [[package]]
 name = "langevals-example"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
@@ -1218,7 +1218,7 @@ url = "evaluators/example"
 
 [[package]]
 name = "langevals-google-cloud"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals integration for Google Cloud APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -1235,7 +1235,7 @@ url = "evaluators/google_cloud"
 
 [[package]]
 name = "langevals-openai"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -1252,7 +1252,7 @@ url = "evaluators/openai"
 
 [[package]]
 name = "langevals-ragas"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals Ragas evaluator"
 optional = true
 python-versions = "^3.11"

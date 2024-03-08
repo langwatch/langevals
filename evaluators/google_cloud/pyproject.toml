@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-google-cloud"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals integration for Google Cloud APIs evaluators"
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"

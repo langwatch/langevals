@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-azure"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"

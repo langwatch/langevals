@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-core"
-version = "0.1.0"
+version = "0.1.1"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"
