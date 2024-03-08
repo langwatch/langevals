@@ -37,6 +37,8 @@ def load_evaluator_modules():
 
 
 def create_evaluator_routes(evaluator_package):
+    print(f"Loading {evaluator_package.__name__}")
+
     evaluator_classes: list[BaseEvaluator] = []
     package_path = evaluator_package.__path__
     for _, module_name, _ in pkgutil.walk_packages(package_path):

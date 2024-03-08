@@ -6,13 +6,13 @@ from langevals_core.base_evaluator import (
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
 
-class FaithfulnessEntry(EvaluatorEntry):
+class RagasFaithfulnessEntry(EvaluatorEntry):
     output: str
     contexts: List[str]
 
 
-class FaithfulnessEvaluator(
-    BaseEvaluator[FaithfulnessEntry, RagasSettings, RagasResult]
+class RagasFaithfulnessEvaluator(
+    BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasResult]
 ):
     """
     Ragas Faithfulness
@@ -28,7 +28,7 @@ class FaithfulnessEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html"
 
-    def evaluate(self, entry: FaithfulnessEntry) -> RagasResult:
+    def evaluate(self, entry: RagasFaithfulnessEntry) -> RagasResult:
         return evaluate_ragas(
             evaluator=self,
             metric="faithfulness",

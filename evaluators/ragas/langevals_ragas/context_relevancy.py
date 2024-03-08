@@ -6,13 +6,13 @@ from langevals_core.base_evaluator import (
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
 
-class ContextRelevancyEntry(EvaluatorEntry):
+class RagasContextRelevancyEntry(EvaluatorEntry):
     output: str
     contexts: list[str]
 
 
-class ContextRelevancyEvaluator(
-    BaseEvaluator[ContextRelevancyEntry, RagasSettings, RagasResult]
+class RagasContextRelevancyEvaluator(
+    BaseEvaluator[RagasContextRelevancyEntry, RagasSettings, RagasResult]
 ):
     """
     Ragas Context Relevancy
@@ -28,7 +28,7 @@ class ContextRelevancyEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html"
 
-    def evaluate(self, entry: ContextRelevancyEntry) -> RagasResult:
+    def evaluate(self, entry: RagasContextRelevancyEntry) -> RagasResult:
         return evaluate_ragas(
             evaluator=self,
             metric="context_relevancy",

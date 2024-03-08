@@ -5,13 +5,13 @@ from langevals_core.base_evaluator import (
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
 
-class AnswerRelevancyEntry(EvaluatorEntry):
+class RagasAnswerRelevancyEntry(EvaluatorEntry):
     input: str
     output: str
 
 
-class AnswerRelevancyEvaluator(
-    BaseEvaluator[AnswerRelevancyEntry, RagasSettings, RagasResult]
+class RagasAnswerRelevancyEvaluator(
+    BaseEvaluator[RagasAnswerRelevancyEntry, RagasSettings, RagasResult]
 ):
     """
     Ragas Answer Relevancy
@@ -27,7 +27,7 @@ class AnswerRelevancyEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html"
 
-    def evaluate(self, entry: AnswerRelevancyEntry) -> RagasResult:
+    def evaluate(self, entry: RagasAnswerRelevancyEntry) -> RagasResult:
         return evaluate_ragas(
             evaluator=self,
             metric="answer_relevancy",

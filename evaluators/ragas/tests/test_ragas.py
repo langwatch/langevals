@@ -1,29 +1,29 @@
 import dotenv
 from langevals_ragas.context_precision import (
-    ContextPrecisionEntry,
-    ContextPrecisionEvaluator,
+    RagasContextPrecisionEntry,
+    RagasContextPrecisionEvaluator,
 )
-from langevals_ragas.context_recall import ContextRecallEntry, ContextRecallEvaluator
+from langevals_ragas.context_recall import RagasContextRecallEntry, RagasContextRecallEvaluator
 from langevals_ragas.context_relevancy import (
-    ContextRelevancyEntry,
-    ContextRelevancyEvaluator,
+    RagasContextRelevancyEntry,
+    RagasContextRelevancyEvaluator,
 )
-from langevals_ragas.faithfulness import FaithfulnessEntry, FaithfulnessEvaluator
+from langevals_ragas.faithfulness import RagasFaithfulnessEntry, RagasFaithfulnessEvaluator
 
 dotenv.load_dotenv()
 
-from langevals_ragas.lib.common import RagasSettings, evaluate_ragas
+from langevals_ragas.lib.common import RagasSettings
 from langevals_ragas.answer_relevancy import (
-    AnswerRelevancyEntry,
-    AnswerRelevancyEvaluator,
+    RagasAnswerRelevancyEntry,
+    RagasAnswerRelevancyEvaluator,
 )
 
 
 def test_faithfulness():
-    evaluator = FaithfulnessEvaluator(settings=RagasSettings())
+    evaluator = RagasFaithfulnessEvaluator(settings=RagasSettings())
 
     result = evaluator.evaluate(
-        FaithfulnessEntry(
+        RagasFaithfulnessEntry(
             output="The capital of France is Paris.",
             contexts=["France is a country in Europe.", "Paris is a city in France."],
         )
@@ -34,10 +34,10 @@ def test_faithfulness():
 
 
 def test_answer_relevancy():
-    evaluator = AnswerRelevancyEvaluator(settings=RagasSettings())
+    evaluator = RagasAnswerRelevancyEvaluator(settings=RagasSettings())
 
     result = evaluator.evaluate(
-        AnswerRelevancyEntry(
+        RagasAnswerRelevancyEntry(
             input="What is the capital of France?",
             output="The capital of France is Paris.",
         )
@@ -48,10 +48,10 @@ def test_answer_relevancy():
 
 
 def test_context_relevancy():
-    evaluator = ContextRelevancyEvaluator(settings=RagasSettings())
+    evaluator = RagasContextRelevancyEvaluator(settings=RagasSettings())
 
     result = evaluator.evaluate(
-        ContextRelevancyEntry(
+        RagasContextRelevancyEntry(
             output="The capital of France is Paris.",
             contexts=["France is a country in Europe.", "Paris is a city in France."],
         )
@@ -62,10 +62,10 @@ def test_context_relevancy():
 
 
 def test_context_precision():
-    evaluator = ContextPrecisionEvaluator(settings=RagasSettings())
+    evaluator = RagasContextPrecisionEvaluator(settings=RagasSettings())
 
     result = evaluator.evaluate(
-        ContextPrecisionEntry(
+        RagasContextPrecisionEntry(
             input="What is the capital of France?",
             contexts=["France is a country in Europe.", "Paris is a city in France."],
             expected_output="Paris is the capital of France.",
@@ -77,10 +77,10 @@ def test_context_precision():
 
 
 def test_context_recall():
-    evaluator = ContextRecallEvaluator(settings=RagasSettings())
+    evaluator = RagasContextRecallEvaluator(settings=RagasSettings())
 
     result = evaluator.evaluate(
-        ContextRecallEntry(
+        RagasContextRecallEntry(
             contexts=["France is a country in Europe.", "Paris is a city in France."],
             expected_output="Paris is the capital of France.",
         )

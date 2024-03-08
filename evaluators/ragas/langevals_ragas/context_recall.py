@@ -5,13 +5,13 @@ from langevals_core.base_evaluator import (
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
 
-class ContextRecallEntry(EvaluatorEntry):
+class RagasContextRecallEntry(EvaluatorEntry):
     contexts: list[str]
     expected_output: str
 
 
-class ContextRecallEvaluator(
-    BaseEvaluator[ContextRecallEntry, RagasSettings, RagasResult]
+class RagasContextRecallEvaluator(
+    BaseEvaluator[RagasContextRecallEntry, RagasSettings, RagasResult]
 ):
     """
     Ragas Context Recall
@@ -27,7 +27,7 @@ class ContextRecallEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html"
 
-    def evaluate(self, entry: ContextRecallEntry) -> RagasResult:
+    def evaluate(self, entry: RagasContextRecallEntry) -> RagasResult:
         return evaluate_ragas(
             evaluator=self,
             metric="context_recall",
