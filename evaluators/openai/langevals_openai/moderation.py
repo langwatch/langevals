@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import BaseModel, Field
 from openai import OpenAI
 
@@ -8,11 +8,13 @@ from langevals_core.base_evaluator import (
     SingleEvaluationResult,
     BatchEvaluationResult,
     EvaluatorEntry,
+    EvaluationResultSkipped,
 )
 
 
 class OpenAIModerationEntry(EvaluatorEntry):
-    input: str
+    input: Optional[str] = None
+    output: Optional[str] = None
 
 
 class OpenAIModerationCategories(BaseModel):
@@ -69,8 +71,18 @@ class OpenAIModerationEvaluator(
 
         results: list[SingleEvaluationResult] = []
 
-        response = client.moderations.create(input=[entry.input for entry in data])
-        for moderation_result in response.results:
+        contents = [
+            "\n\n".join([entry.input or "", entry.output or ""]).strip()
+            for entry in data
+        ]
+        response = client.moderations.create(input=contents)
+        for index, moderation_result in enumerate(response.results):
+            if not contents[index]:
+                results.append(
+                    EvaluationResultSkipped(details="Input and output are both empty")
+                )
+                continue
+
             detected_categories = dict(
                 [
                     item

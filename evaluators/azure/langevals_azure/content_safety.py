@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 from azure.ai.contentsafety import ContentSafetyClient
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.contentsafety.models import AnalyzeTextOptions
@@ -8,12 +8,14 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     SingleEvaluationResult,
     EvaluatorEntry,
+    EvaluationResultSkipped,
 )
 from pydantic import BaseModel, Field
 
 
 class AzureContentSafetyEntry(EvaluatorEntry):
-    input: str
+    input: Optional[str] = None
+    output: Optional[str] = None
 
 
 class AzureContentSafetySettings(BaseModel):
@@ -63,8 +65,12 @@ class AzureContentSafetyEvaluator(
         key = self.get_env("AZURE_CONTENT_SAFETY_KEY")
 
         client = ContentSafetyClient(endpoint, AzureKeyCredential(key))
+
+        content = "\n\n".join([entry.input or "", entry.output or ""]).strip()
+        if not content:
+            return EvaluationResultSkipped(details="Input and output are both empty")
         request = AnalyzeTextOptions(
-            text=entry.input,
+            text=content,
             categories=self.settings.categories,
             output_type=self.settings.output_type,
         )

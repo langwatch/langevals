@@ -1,6 +1,7 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    SingleEvaluationResult,
 )
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
@@ -28,7 +29,7 @@ class RagasContextPrecisionEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html"
 
-    def evaluate(self, entry: RagasContextPrecisionEntry) -> RagasResult:
+    def evaluate(self, entry: RagasContextPrecisionEntry) -> SingleEvaluationResult:
         return evaluate_ragas(
             evaluator=self,
             metric="context_precision",

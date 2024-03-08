@@ -3,7 +3,9 @@ from typing import Literal, Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    SingleEvaluationResult,
     EvaluationResult,
+    EvaluationResultSkipped,
 )
 from pydantic import BaseModel, Field
 import google.cloud.dlp
@@ -11,7 +13,8 @@ from google.oauth2 import service_account
 
 
 class GoogleCloudDLPPIIDetectionEntry(EvaluatorEntry):
-    input: str
+    input: Optional[str] = None
+    output: Optional[str] = None
 
 
 class GoogleCloudDLPInfoTypes(BaseModel):
@@ -65,13 +68,15 @@ class GoogleCloudDLPPIIDetectionEvaluator(
 
     def evaluate(
         self, entry: GoogleCloudDLPPIIDetectionEntry
-    ) -> GoogleCloudDLPPIIDetectionResult:
+    ) -> SingleEvaluationResult:
         credentials_json = json.loads(self.get_env("GOOGLE_CREDENTIALS_JSON"))
         credentials = service_account.Credentials.from_service_account_info(
             credentials_json
         )
         dlp_client = google.cloud.dlp.DlpServiceClient(credentials=credentials)
-        content = entry.input
+        content = "\n\n".join([entry.input or "", entry.output or ""]).strip()
+        if not content:
+            return EvaluationResultSkipped(details="Input and output are both empty")
 
         settings_info_types = self.settings.info_types.model_dump()
         info_types = [

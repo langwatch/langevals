@@ -1,7 +1,7 @@
-from typing import List
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    SingleEvaluationResult,
 )
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
@@ -28,7 +28,7 @@ class RagasContextRelevancyEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html"
 
-    def evaluate(self, entry: RagasContextRelevancyEntry) -> RagasResult:
+    def evaluate(self, entry: RagasContextRelevancyEntry) -> SingleEvaluationResult:
         return evaluate_ragas(
             evaluator=self,
             metric="context_relevancy",

@@ -1,6 +1,7 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    SingleEvaluationResult,
 )
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
@@ -27,7 +28,7 @@ class RagasContextRecallEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html"
 
-    def evaluate(self, entry: RagasContextRecallEntry) -> RagasResult:
+    def evaluate(self, entry: RagasContextRecallEntry) -> SingleEvaluationResult:
         return evaluate_ragas(
             evaluator=self,
             metric="context_recall",

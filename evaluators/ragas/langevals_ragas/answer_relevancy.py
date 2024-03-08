@@ -1,6 +1,7 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    SingleEvaluationResult,
 )
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
@@ -27,7 +28,7 @@ class RagasAnswerRelevancyEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html"
 
-    def evaluate(self, entry: RagasAnswerRelevancyEntry) -> RagasResult:
+    def evaluate(self, entry: RagasAnswerRelevancyEntry) -> SingleEvaluationResult:
         return evaluate_ragas(
             evaluator=self,
             metric="answer_relevancy",

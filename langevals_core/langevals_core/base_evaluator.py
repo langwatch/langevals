@@ -29,8 +29,8 @@ class EvaluatorEntry(BaseModel):
         super().__init_subclass__(**kwargs)  # Always call super()!
 
         required_fields_types = {
-            "input": [str],
-            "output": [str],
+            "input": [str, Optional[str]],
+            "output": [str, Optional[str]],
             "contexts": [List[str], list[str]],
             "expected_output": [str],
         }

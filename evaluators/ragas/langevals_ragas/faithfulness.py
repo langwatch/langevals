@@ -1,14 +1,14 @@
-from typing import List
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    SingleEvaluationResult,
 )
 from .lib.common import evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasFaithfulnessEntry(EvaluatorEntry):
     output: str
-    contexts: List[str]
+    contexts: list[str]
 
 
 class RagasFaithfulnessEvaluator(
@@ -28,7 +28,7 @@ class RagasFaithfulnessEvaluator(
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html"
 
-    def evaluate(self, entry: RagasFaithfulnessEntry) -> RagasResult:
+    def evaluate(self, entry: RagasFaithfulnessEntry) -> SingleEvaluationResult:
         return evaluate_ragas(
             evaluator=self,
             metric="faithfulness",

@@ -2,6 +2,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    SingleEvaluationResult,
 )
 from pydantic import BaseModel, Field
 
@@ -39,7 +40,7 @@ class ExampleWordCountEvaluator(
     env_vars = ["NECESSARY_ENV_VAR"]
     docs_url = "https://path/to/official/docs"
 
-    def evaluate(self, entry: ExampleWordCountEntry) -> ExampleWordCountResult:
+    def evaluate(self, entry: ExampleWordCountEntry) -> SingleEvaluationResult:
         words = entry.output.split(" ")
         return ExampleWordCountResult(
             score=len(words), passed=True, details=f"Words found: {', '.join(words)}"
