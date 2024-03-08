@@ -49,7 +49,7 @@ class AzureContentSafetyEvaluator(
     ]
 ):
     """
-    Azure Content Safety Moderation Evaluator
+    Azure Content Safety Moderation
 
     This evaluator detects potentially unsafe content in text, including hate speech,
     self-harm, sexual content, and violence. It allows customization of the severity
