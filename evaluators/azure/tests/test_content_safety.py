@@ -3,6 +3,7 @@ import dotenv
 dotenv.load_dotenv()
 
 from langevals_azure.content_safety import (
+    AzureContentSafetyCategories,
     AzureContentSafetyEvaluator,
     AzureContentSafetyEntry,
     AzureContentSafetySettings,
@@ -33,7 +34,9 @@ def test_content_safety_integration():
 def test_content_safety_with_custom_settings():
     settings = AzureContentSafetySettings(
         severity_threshold=1,
-        categories=["Sexual"],
+        categories=AzureContentSafetyCategories(
+            Hate=False, SelfHarm=True, Sexual=True, Violence=True
+        ),
         output_type="EightSeverityLevels",
     )
     evaluator = AzureContentSafetyEvaluator(settings=settings)

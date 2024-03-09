@@ -6,7 +6,7 @@ from typing import ClassVar, Generic, List, Literal, Optional, TypeVar, get_type
 
 from pydantic import BaseModel, ConfigDict, Field
 
-EvalCategories = Literal["quality", "rag", "safety", "policy", "other"]
+EvalCategories = Literal["quality", "rag", "safety", "policy", "other", "custom"]
 
 TSettings = TypeVar("TSettings", bound=BaseModel)
 
@@ -125,6 +125,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     category: ClassVar[EvalCategories]
     env_vars: ClassVar[list[str]] = []
     docs_url: ClassVar[str] = ""
+    is_guardrail: ClassVar[bool] = False
 
     def get_env(self, var: str):
         if var not in self.env_vars and (self.env is None or var not in self.env):

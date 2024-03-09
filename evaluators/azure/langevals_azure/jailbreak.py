@@ -1,3 +1,4 @@
+from typing import Optional
 from httpx import Client, Response
 from langevals_core.base_evaluator import (
     BaseEvaluator,
@@ -6,7 +7,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResultSkipped,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AzureJailbreakEntry(EvaluatorEntry):
@@ -16,9 +17,13 @@ class AzureJailbreakEntry(EvaluatorEntry):
 class AzureJailbreakSettings(BaseModel):
     pass
 
+class AzureJailbreakResult(EvaluationResult):
+    passed: Optional[bool] = Field(
+        description="If true then no jailbreak was detected, if false then a jailbreak was detected"
+    )
 
 class AzureJailbreakEvaluator(
-    BaseEvaluator[AzureJailbreakEntry, AzureJailbreakSettings, EvaluationResult]
+    BaseEvaluator[AzureJailbreakEntry, AzureJailbreakSettings, AzureJailbreakResult]
 ):
     """
     Azure Jailbreak Detection
@@ -28,6 +33,7 @@ class AzureJailbreakEvaluator(
 
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
+    is_guardrail = True
 
     def evaluate(self, entry: AzureJailbreakEntry) -> SingleEvaluationResult:
         endpoint = self.get_env("AZURE_CONTENT_SAFETY_ENDPOINT")

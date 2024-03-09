@@ -27,6 +27,7 @@ class RagasContextRelevancyEvaluator(
         "AZURE_CONTENT_SAFETY_KEY",
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html"
+    is_guardrail = False
 
     def evaluate(self, entry: RagasContextRelevancyEntry) -> SingleEvaluationResult:
         return evaluate_ragas(

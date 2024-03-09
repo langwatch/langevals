@@ -28,6 +28,7 @@ class RagasContextPrecisionEvaluator(
         "AZURE_CONTENT_SAFETY_KEY",
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html"
+    is_guardrail = False
 
     def evaluate(self, entry: RagasContextPrecisionEntry) -> SingleEvaluationResult:
         return evaluate_ragas(

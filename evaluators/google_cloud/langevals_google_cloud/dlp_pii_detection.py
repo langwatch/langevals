@@ -67,6 +67,7 @@ class GoogleCloudDLPPIIDetectionEvaluator(
     category = "safety"
     env_vars = ["GOOGLE_CREDENTIALS_JSON"]
     docs_url = "https://cloud.google.com/sensitive-data-protection/docs/apis"
+    is_guardrail = True
 
     def evaluate(
         self, entry: GoogleCloudDLPPIIDetectionEntry

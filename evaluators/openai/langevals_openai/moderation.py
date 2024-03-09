@@ -37,7 +37,7 @@ class OpenAIModerationSettings(BaseModel):
         description="The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
     )
     categories: OpenAIModerationCategories = Field(
-        default_factory=OpenAIModerationCategories,
+        default=OpenAIModerationCategories(),
         description="The categories of content to check for moderation.",
     )
 
@@ -63,6 +63,7 @@ class OpenAIModerationEvaluator(
     category = "policy"
     env_vars = ["OPENAI_API_KEY"]
     docs_url = "https://platform.openai.com/docs/guides/moderation/overview"
+    is_guardrail = True
 
     def evaluate_batch(
         self, data: list[OpenAIModerationEntry]

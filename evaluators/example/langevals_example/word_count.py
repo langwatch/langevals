@@ -22,7 +22,7 @@ class ExampleWordCountSettings(BaseModel):
 # EvaluationResult class to add a pydantic description to the field explaning what the score means for this evaluator,
 # as shown here
 class ExampleWordCountResult(EvaluationResult):
-    score: float = Field(description="How nice the output is, from 0 to 100")
+    score: float = Field(description="How many words are there in the output, split by space")
 
 
 class ExampleWordCountEvaluator(
@@ -36,12 +36,15 @@ class ExampleWordCountEvaluator(
     This evaluator serves as a boilerplate for creating new evaluators.
     """
 
-    category = "other"
-    env_vars = ["NECESSARY_ENV_VAR"]
-    docs_url = "https://path/to/official/docs"
+    category = "other"  # The category of the evaluator, can be "safety", "quality", "other", etc, check BaseEvaluator for all options
+    env_vars = [
+        "NECESSARY_ENV_VAR"
+    ]  # The environment variables that are necessary for the evaluator to run
+    docs_url = "https://path/to/official/docs"  # The URL to the official documentation of the evaluator
+    is_guardrail = False  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
 
     def evaluate(self, entry: ExampleWordCountEntry) -> SingleEvaluationResult:
         words = entry.output.split(" ")
         return ExampleWordCountResult(
-            score=len(words), passed=True, details=f"Words found: {', '.join(words)}"
+            score=len(words), details=f"Words found: {', '.join(words)}"
         )

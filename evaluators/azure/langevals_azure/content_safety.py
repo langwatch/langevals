@@ -18,6 +18,13 @@ class AzureContentSafetyEntry(EvaluatorEntry):
     output: Optional[str] = None
 
 
+class AzureContentSafetyCategories(BaseModel):
+    Hate: bool = True
+    SelfHarm: bool = True
+    Sexual: bool = True
+    Violence: bool = True
+
+
 class AzureContentSafetySettings(BaseModel):
     severity_threshold: int = Field(
         ge=1,
@@ -25,8 +32,8 @@ class AzureContentSafetySettings(BaseModel):
         default=1,
         description="The minimum severity level to consider content as unsafe.",
     )
-    categories: list[str] = Field(
-        default=["Hate", "SelfHarm", "Sexual", "Violence"],
+    categories: AzureContentSafetyCategories = Field(
+        default=AzureContentSafetyCategories(),
         description="The categories of moderation to check for.",
     )
     output_type: Literal["FourSeverityLevels", "EightSeverityLevels"] = Field(
@@ -59,6 +66,7 @@ class AzureContentSafetyEvaluator(
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
     docs_url = "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text"
+    is_guardrail = True
 
     def evaluate(self, entry: AzureContentSafetyEntry) -> SingleEvaluationResult:
         endpoint = self.get_env("AZURE_CONTENT_SAFETY_ENDPOINT")
@@ -71,7 +79,11 @@ class AzureContentSafetyEvaluator(
             return EvaluationResultSkipped(details="Input and output are both empty")
         request = AnalyzeTextOptions(
             text=content,
-            categories=self.settings.categories,
+            categories=[
+                key
+                for key in self.settings.categories.model_dump().keys()
+                if self.settings.categories.model_dump().get(key, False)
+            ],
             output_type=self.settings.output_type,
         )
         response = client.analyze_text(request)

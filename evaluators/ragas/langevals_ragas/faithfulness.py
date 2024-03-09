@@ -27,6 +27,7 @@ class RagasFaithfulnessEvaluator(
         "AZURE_CONTENT_SAFETY_KEY",
     ]
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html"
+    is_guardrail = False
 
     def evaluate(self, entry: RagasFaithfulnessEntry) -> SingleEvaluationResult:
         return evaluate_ragas(

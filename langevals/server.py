@@ -1,18 +1,18 @@
-import os
-import textwrap
-import warnings
+import sys
 import dotenv
+
+from langevals.utils import (
+    get_evaluator_classes,
+    get_evaluator_definitions,
+    load_evaluator_modules,
+)
 
 dotenv.load_dotenv()
 
 import asyncio
 from fastapi import FastAPI, HTTPException, Request
-from typing import List, Optional, get_args
-import importlib
-import importlib.metadata
-import pkgutil
+from typing import List, Optional
 from langevals_core.base_evaluator import (
-    BaseEvaluator,
     EnvMissingException,
     EvaluationResultSkipped,
     EvaluationResultError,
@@ -22,56 +22,26 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 app = FastAPI()
 
 
-def load_evaluator_modules():
-    evaluators = {}
-    for distribution in importlib.metadata.distributions():
-        normalized_name = distribution.metadata["Name"].replace("-", "_")
-        if normalized_name == "langevals_core":
-            continue
-        if normalized_name.startswith("langevals_"):
-            try:
-                evaluators[normalized_name] = importlib.import_module(normalized_name)
-            except ImportError:
-                pass
-    return evaluators
-
-
 def create_evaluator_routes(evaluator_package):
     print(f"Loading {evaluator_package.__name__}")
 
-    evaluator_classes: list[BaseEvaluator] = []
-    package_path = evaluator_package.__path__
-    for _, module_name, _ in pkgutil.walk_packages(package_path):
-        module = importlib.import_module(f"{evaluator_package.__name__}.{module_name}")
-        for name, cls in module.__dict__.items():
-            if (
-                isinstance(cls, type)
-                and issubclass(cls, BaseEvaluator)
-                and cls is not BaseEvaluator
-            ):
-                evaluator_classes.append(cls)  # type: ignore
-
-    for evaluator_cls in evaluator_classes:
-        fields = evaluator_cls.model_fields
-
-        settings_type = fields["settings"].annotation
-        entry_type = get_args(fields["entry"].annotation)[0]
-        result_type = get_args(fields["result"].annotation)[0]
-
-        module_name, evaluator_name = evaluator_cls.__module__.split(".", 1)
-        module_name = module_name.split("langevals_")[1]
+    for evaluator_cls in get_evaluator_classes(evaluator_package):
+        definitions = get_evaluator_definitions(evaluator_cls)
+        module_name = definitions.module_name
+        evaluator_name = definitions.evaluator_name
+        entry_type = definitions.entry_type
+        settings_type = definitions.settings_type
+        result_type = definitions.result_type
 
         required_env_vars = (
-            "\n\n__Env vars:__ " + ", ".join(evaluator_cls.env_vars)
-            if len(evaluator_cls.env_vars) > 0
+            "\n\n__Env vars:__ " + ", ".join(definitions.env_vars)
+            if len(definitions.env_vars) > 0
             else ""
         )
-        docs = (
-            "\n\n__Docs:__ " + evaluator_cls.docs_url if evaluator_cls.docs_url else ""
+        docs_url = (
+            "\n\n__Docs:__ " + definitions.docs_url if definitions.docs_url else ""
         )
-        description = (
-            (textwrap.dedent(evaluator_cls.__doc__ or "")) + required_env_vars + docs
-        )
+        description = definitions.description + required_env_vars + docs_url
 
         class Request(BaseModel):
             model_config = ConfigDict(extra="forbid")
@@ -115,6 +85,13 @@ async def missing_env_exception_handler(request: Request, exc: EnvMissingExcepti
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--export-openapi-json":
+        import json
+
+        with open("openapi.json", "w") as f:
+            f.write(json.dumps(app.openapi(), indent=2))
+        print("openapi.json exported")
+        return
     from hypercorn.config import Config
     from hypercorn.asyncio import serve
 

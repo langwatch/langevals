@@ -10,6 +10,6 @@ def test_word_count_evaluator():
     evaluator = ExampleWordCountEvaluator(settings=ExampleWordCountSettings())
     result = evaluator.evaluate(entry)
 
+    assert result.status == "processed"
     assert result.score == 5
-    assert result.passed is True
     assert result.details == "Words found: Your, effort, is, really, appreciated!"

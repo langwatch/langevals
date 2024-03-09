@@ -23,7 +23,7 @@ def test_jailbreak_detection():
     assert jailbreak_result.status == "processed"
     assert jailbreak_result.score == 1
     assert not jailbreak_result.passed
-    assert jailbreak_result.details == "Jailbreak content detected"
+    assert jailbreak_result.details == "Jailbreak attempt detected"
 
     assert no_jailbreak_result.status == "processed"
     assert no_jailbreak_result.score == 0

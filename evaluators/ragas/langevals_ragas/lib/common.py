@@ -1,5 +1,5 @@
 import math
-from typing import List, Optional
+from typing import List, Literal, Optional
 from langevals_core.base_evaluator import BaseEvaluator, EvaluationResult, Money
 from pydantic import BaseModel, Field
 from ragas import evaluate
@@ -23,7 +23,7 @@ from datasets import Dataset
 
 
 class RagasSettings(BaseModel):
-    model: str = Field(
+    model: Literal["gpt-3.5-turbo-1106", "gpt-4-1106-preview"] = Field(
         default="gpt-3.5-turbo-1106", description="The model to use for evaluation."
     )
 
