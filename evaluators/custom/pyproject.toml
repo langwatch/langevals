@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "langevals-custom"
+version = "0.1.0"
+description = "Custom evaluators you can build using other LLMs to do the eval, semantic matching or simple regexes or string matching."
+authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langevals-core = { path = "../../langevals_core", develop = true }
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+python-dotenv = "1.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

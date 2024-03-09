@@ -1201,6 +1201,22 @@ type = "directory"
 url = "langevals_core"
 
 [[package]]
+name = "langevals-custom"
+version = "0.1.0"
+description = "Custom evaluators you can build using other LLMs to do the eval, semantic matching or simple regexes or string matching."
+optional = true
+python-versions = "^3.11"
+files = []
+develop = true
+
+[package.dependencies]
+langevals-core = {path = "../../langevals_core", develop = true}
+
+[package.source]
+type = "directory"
+url = "evaluators/custom"
+
+[[package]]
 name = "langevals-example"
 version = "0.1.1"
 description = "LangEvals boilerplate example evaluator for LLMs."
@@ -2737,6 +2753,7 @@ multidict = ">=4.0"
 
 [extras]
 azure = ["langevals-azure"]
+custom = ["langevals-custom"]
 example = ["langevals-example"]
 google-cloud = ["langevals-google_cloud"]
 openai = ["langevals-openai"]
@@ -2745,4 +2762,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "57a2d92c75a420383066fdd0d8b62b29b4654de4ec84add96515a52299ba3c7d"
+content-hash = "904144a825d92d21a2cfb96ba91a02e7af7615601d9937378b7d1bdad889c48f"
