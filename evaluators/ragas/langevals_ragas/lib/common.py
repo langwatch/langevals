@@ -23,8 +23,16 @@ from datasets import Dataset
 
 
 class RagasSettings(BaseModel):
-    model: Literal["gpt-3.5-turbo-1106", "gpt-4-1106-preview"] = Field(
-        default="gpt-3.5-turbo-1106", description="The model to use for evaluation."
+    model: Literal[
+        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-3.5-turbo-0125",
+        "openai/gpt-4-1106-preview",
+        "openai/gpt-4-0125-preview",
+        "azure/gpt-3.5-turbo-1106",
+        "azure/gpt-4-1106-preview",
+    ] = Field(
+        default="openai/gpt-3.5-turbo-1106",
+        description="The model to use for evaluation.",
     )
 
 
@@ -41,36 +49,26 @@ def evaluate_ragas(
     ground_truth: Optional[str] = None,
     settings: RagasSettings = RagasSettings(),
 ):
-    use_azure = False
-    try:
-        evaluator.get_env("AZURE_OPENAI_ENDPOINT")
-        use_azure = True
-    except BaseException:
-        pass
+    vendor, model = settings.model.split("/")
 
-    if use_azure:
+    if vendor == "azure":
         gpt = AzureChatOpenAI(
-            model=settings.model.replace(".", ""),
+            model=model.replace(".", ""),
             api_version="2023-05-15",
             azure_endpoint=evaluator.get_env("AZURE_OPENAI_ENDPOINT") or "",
             api_key=evaluator.get_env("AZURE_OPENAI_KEY"),  # type: ignore
         )
         gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
-        # Temporary until text-embedding-3-small is also available on azure: https://learn.microsoft.com/en-us/answers/questions/1531681/openai-new-embeddings-model
-        embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
+        embeddings = AzureOpenAIEmbeddings(
+            azure_deployment="text-embedding-ada-002",  # TODO: upgrate to text-embedding-3-small as soon as it is also available on azure: https://learn.microsoft.com/en-us/answers/questions/1531681/openai-new-embeddings-model
+            model="text-embedding-ada-002",
+            api_version="2023-05-15",
+            azure_endpoint=evaluator.get_env("AZURE_OPENAI_ENDPOINT") or "",
+            api_key=evaluator.get_env("AZURE_OPENAI_KEY"),  # type: ignore
         )
-        # embeddings = AzureOpenAIEmbeddings(
-        #     azure_deployment="text-embedding-ada-002",
-        #     model="text-embedding-ada-002",
-        #     api_version="2023-05-15",
-        #     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT") or "",
-        #     api_key=os.getenv("AZURE_OPENAI_KEY"),
-        # )
     else:
         gpt = ChatOpenAI(
-            model=settings.model,
+            model=model,
             api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
         )
         gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)

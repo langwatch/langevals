@@ -102,31 +102,61 @@ export type Evaluators = {
   };
   "ragas/answer_relevancy": {
     settings: {
-      model: "gpt-3.5-turbo-1106" | "gpt-4-1106-preview";
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-4-1106-preview";
     };
     result: {};
   };
   "ragas/context_precision": {
     settings: {
-      model: "gpt-3.5-turbo-1106" | "gpt-4-1106-preview";
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-4-1106-preview";
     };
     result: {};
   };
   "ragas/context_recall": {
     settings: {
-      model: "gpt-3.5-turbo-1106" | "gpt-4-1106-preview";
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-4-1106-preview";
     };
     result: {};
   };
   "ragas/context_relevancy": {
     settings: {
-      model: "gpt-3.5-turbo-1106" | "gpt-4-1106-preview";
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-4-1106-preview";
     };
     result: {};
   };
   "ragas/faithfulness": {
     settings: {
-      model: "gpt-3.5-turbo-1106" | "gpt-4-1106-preview";
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-4-1106-preview";
     };
     result: {};
   };
@@ -285,7 +315,7 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "gpt-3.5-turbo-1106",
+        default: "openai/gpt-3.5-turbo-1106",
       },
     },
     result: {},
@@ -302,7 +332,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "gpt-3.5-turbo-1106",
+        default: "openai/gpt-3.5-turbo-1106",
       },
     },
     result: {},
@@ -319,7 +349,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "gpt-3.5-turbo-1106",
+        default: "openai/gpt-3.5-turbo-1106",
       },
     },
     result: {},
@@ -336,7 +366,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "gpt-3.5-turbo-1106",
+        default: "openai/gpt-3.5-turbo-1106",
       },
     },
     result: {},
@@ -353,7 +383,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "gpt-3.5-turbo-1106",
+        default: "openai/gpt-3.5-turbo-1106",
       },
     },
     result: {},

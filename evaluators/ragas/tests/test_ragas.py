@@ -3,12 +3,18 @@ from langevals_ragas.context_precision import (
     RagasContextPrecisionEntry,
     RagasContextPrecisionEvaluator,
 )
-from langevals_ragas.context_recall import RagasContextRecallEntry, RagasContextRecallEvaluator
+from langevals_ragas.context_recall import (
+    RagasContextRecallEntry,
+    RagasContextRecallEvaluator,
+)
 from langevals_ragas.context_relevancy import (
     RagasContextRelevancyEntry,
     RagasContextRelevancyEvaluator,
 )
-from langevals_ragas.faithfulness import RagasFaithfulnessEntry, RagasFaithfulnessEvaluator
+from langevals_ragas.faithfulness import (
+    RagasFaithfulnessEntry,
+    RagasFaithfulnessEvaluator,
+)
 
 dotenv.load_dotenv()
 
@@ -29,6 +35,7 @@ def test_faithfulness():
         )
     )
 
+    assert result.status == "processed"
     assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
 
@@ -43,6 +50,7 @@ def test_answer_relevancy():
         )
     )
 
+    assert result.status == "processed"
     assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
 
@@ -57,6 +65,7 @@ def test_context_relevancy():
         )
     )
 
+    assert result.status == "processed"
     assert result.score > 0.3
     assert result.cost and result.cost.amount > 0.0
 
@@ -72,6 +81,7 @@ def test_context_precision():
         )
     )
 
+    assert result.status == "processed"
     assert result.score > 0.3
     assert result.cost and result.cost.amount > 0.0
 
@@ -86,5 +96,6 @@ def test_context_recall():
         )
     )
 
+    assert result.status == "processed"
     assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
