@@ -15,11 +15,10 @@ class RagasAnswerRelevancyEvaluator(
     BaseEvaluator[RagasAnswerRelevancyEntry, RagasSettings, RagasResult]
 ):
     """
-    Ragas Answer Relevancy
-
     This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
     """
 
+    name = "Ragas Answer Relevancy"
     category = "rag"
     env_vars = [
         "OPENAI_API_KEY",

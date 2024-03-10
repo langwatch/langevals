@@ -16,6 +16,7 @@ ensure-poetry:
 setup:
 	poetry run python scripts/generate_evaluator_dependencies.py
 	poetry run python scripts/generate_workspace.py
+	poetry run python scripts/generate_evaluators_ts.py
 
 lock-core:
 	@echo "Locking dependencies for langevals_core..."

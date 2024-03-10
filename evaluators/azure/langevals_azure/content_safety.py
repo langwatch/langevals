@@ -56,13 +56,12 @@ class AzureContentSafetyEvaluator(
     ]
 ):
     """
-    Azure Content Safety Moderation
-
     This evaluator detects potentially unsafe content in text, including hate speech,
     self-harm, sexual content, and violence. It allows customization of the severity
     threshold and the specific categories to check.
     """
 
+    name = "Azure Content Safety"
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
     docs_url = "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text"

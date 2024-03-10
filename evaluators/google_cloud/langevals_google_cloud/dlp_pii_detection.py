@@ -58,12 +58,11 @@ class GoogleCloudDLPPIIDetectionEvaluator(
     ]
 ):
     """
-    Google Cloud DLP PII Detector
-
     Google DLP PII detects personally identifiable information in text, including phone numbers, email addresses, and
     social security numbers. It allows customization of the detection threshold and the specific types of PII to check.
     """
 
+    name = "Google Cloud DLP PII Detection"
     category = "safety"
     env_vars = ["GOOGLE_CREDENTIALS_JSON"]
     docs_url = "https://cloud.google.com/sensitive-data-protection/docs/apis"

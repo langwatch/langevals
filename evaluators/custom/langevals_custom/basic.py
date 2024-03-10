@@ -38,11 +38,10 @@ class CustomBasicEvaluator(
     BaseEvaluator[CustomBasicEntry, CustomBasicSettings, CustomBasicResult]
 ):
     """
-    Basic Custom Evaluator
-
     Allows you to check for simple text matches or regex evaluation
     """
 
+    name = "Custom Basic Evaluator"
     category = "custom"
     is_guardrail = True
 

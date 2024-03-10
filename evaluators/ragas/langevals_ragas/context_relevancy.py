@@ -15,11 +15,10 @@ class RagasContextRelevancyEvaluator(
     BaseEvaluator[RagasContextRelevancyEntry, RagasSettings, RagasResult]
 ):
     """
-    Ragas Context Relevancy
-
     This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
     """
 
+    name = "Ragas Context Relevancy"
     category = "rag"
     env_vars = [
         "OPENAI_API_KEY",

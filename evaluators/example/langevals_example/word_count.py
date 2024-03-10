@@ -22,7 +22,9 @@ class ExampleWordCountSettings(BaseModel):
 # EvaluationResult class to add a pydantic description to the field explaning what the score means for this evaluator,
 # as shown here
 class ExampleWordCountResult(EvaluationResult):
-    score: float = Field(description="How many words are there in the output, split by space")
+    score: float = Field(
+        description="How many words are there in the output, split by space"
+    )
 
 
 class ExampleWordCountEvaluator(
@@ -31,11 +33,10 @@ class ExampleWordCountEvaluator(
     ]
 ):
     """
-    Example Evaluator
-
     This evaluator serves as a boilerplate for creating new evaluators.
     """
 
+    name = "Example Evaluator"
     category = "other"  # The category of the evaluator, can be "safety", "quality", "other", etc, check BaseEvaluator for all options
     env_vars = [
         "NECESSARY_ENV_VAR"

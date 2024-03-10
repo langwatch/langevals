@@ -54,12 +54,11 @@ class OpenAIModerationEvaluator(
     ]
 ):
     """
-    OpenAI Moderation
-
     This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
     including harassment, hate speech, self-harm, sexual content, and violence.
     """
 
+    name = "OpenAI Moderation"
     category = "policy"
     env_vars = ["OPENAI_API_KEY"]
     docs_url = "https://platform.openai.com/docs/guides/moderation/overview"

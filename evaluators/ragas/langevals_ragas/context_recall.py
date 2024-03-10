@@ -15,11 +15,10 @@ class RagasContextRecallEvaluator(
     BaseEvaluator[RagasContextRecallEntry, RagasSettings, RagasResult]
 ):
     """
-    Ragas Context Recall
-
     This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
     """
 
+    name = "Ragas Context Recall"
     category = "rag"
     env_vars = [
         "OPENAI_API_KEY",

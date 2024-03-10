@@ -15,11 +15,10 @@ class RagasFaithfulnessEvaluator(
     BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasResult]
 ):
     """
-    Ragas Faithfulness
-
     This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context.
     """
 
+    name = "Ragas Faithfulness"
     category = "rag"
     env_vars = [
         "OPENAI_API_KEY",

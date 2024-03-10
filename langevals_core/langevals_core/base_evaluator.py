@@ -122,6 +122,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         None  # dummy field just to read the type later when creating the route
     )
 
+    name: ClassVar[str]
     category: ClassVar[EvalCategories]
     env_vars: ClassVar[list[str]] = []
     docs_url: ClassVar[str] = ""

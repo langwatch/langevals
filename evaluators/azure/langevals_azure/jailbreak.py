@@ -17,20 +17,21 @@ class AzureJailbreakEntry(EvaluatorEntry):
 class AzureJailbreakSettings(BaseModel):
     pass
 
+
 class AzureJailbreakResult(EvaluationResult):
     passed: Optional[bool] = Field(
         description="If true then no jailbreak was detected, if false then a jailbreak was detected"
     )
 
+
 class AzureJailbreakEvaluator(
     BaseEvaluator[AzureJailbreakEntry, AzureJailbreakSettings, AzureJailbreakResult]
 ):
     """
-    Azure Jailbreak Detection
-
     This evaluator checks for jailbreak-attempt in the input using Azure's Content Safety API.
     """
 
+    name = "Azure Jailbreak Detection"
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
     is_guardrail = True

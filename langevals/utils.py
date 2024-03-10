@@ -48,6 +48,7 @@ class EvaluatorDefinitions(BaseModel):
     entry_type: Type[EvaluatorEntry]
     settings_type: Type[BaseModel]
     result_type: Type[EvaluationResult]
+    name: str
     description: str
     docs_url: Optional[str]
     env_vars: list[str]
@@ -65,6 +66,11 @@ def get_evaluator_definitions(evaluator_cls: BaseEvaluator):
     module_name, evaluator_name = evaluator_cls.__module__.split(".", 1)
     module_name = module_name.split("langevals_")[1]
 
+    if getattr(evaluator_cls, "name", None) is None:
+        raise ValueError(f"Missing name attribute in {evaluator_cls}")
+
+    name = evaluator_cls.name
+    docs_url = evaluator_cls.docs_url
     description = textwrap.dedent(evaluator_cls.__doc__ or "")
     docs_url = evaluator_cls.docs_url
     env_vars = evaluator_cls.env_vars
@@ -77,6 +83,7 @@ def get_evaluator_definitions(evaluator_cls: BaseEvaluator):
         entry_type=entry_type,
         settings_type=settings_type,  # type: ignore
         result_type=result_type,
+        name=name,
         description=description,
         docs_url=docs_url,
         env_vars=env_vars,

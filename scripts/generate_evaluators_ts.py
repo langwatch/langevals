@@ -1,6 +1,11 @@
 import inspect
 import json
+import os
 from typing import Any, Dict, Literal, get_args, get_origin
+from langevals_core.base_evaluator import (
+    EvalCategories,
+    EvaluationResult,
+)
 
 from pydantic import BaseModel
 from langevals.utils import (
@@ -9,6 +14,8 @@ from langevals.utils import (
     get_evaluator_definitions,
     load_evaluator_modules,
 )
+
+os.system("npm list -g prettier &> /dev/null || npm install -g prettier")
 
 
 def stringify_field_types(field_types):
@@ -25,6 +32,7 @@ def stringify_field_types(field_types):
 
 def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
     evaluator_info = {
+        "name": definitions.name,
         "description": definitions.description,
         "category": definitions.category,
         "docsUrl": definitions.docs_url,
@@ -33,8 +41,6 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
         "settingsDescriptions": {},
         "result": {},
     }
-
-    # print("\n\ndefinitions\n\n", definitions)
 
     def get_field_type_to_typescript(field):
         if inspect.isclass(field) and issubclass(field, BaseModel):
@@ -61,10 +67,7 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
             f"Unsupported field type: {field} on {definitions.category}/{definitions.evaluator_name} settings"
         )
 
-    # Extract settings information
     for field_name, field in definitions.settings_type.model_fields.items():
-        # field_info = {"description": field.description}#, "default": field.default}
-        # evaluator_info["settingsTypes"][field_name] = {"description": field.description}
         default = (
             field.default.model_dump()
             if isinstance(field.default, BaseModel)
@@ -78,21 +81,54 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
             field.annotation
         )
 
-    # Extract result information
-    if hasattr(definitions.result_type, "score"):
-        evaluator_info["result"]["score"] = {
-            "description": definitions.result_type.model_fields["score"].description
-        }
-    if hasattr(definitions.result_type, "passed"):
-        evaluator_info["result"]["passed"] = {
-            "description": definitions.result_type.model_fields["passed"].description
-        }
+    base_score_description = EvaluationResult.model_fields["score"].description
+    score_field = definitions.result_type.model_fields.get("score")
+    if (
+        score_field
+        and score_field.description
+        and score_field.description != base_score_description
+    ):
+        evaluator_info["result"]["score"] = {"description": score_field.description}
+
+    base_passed_description = EvaluationResult.model_fields["passed"].description
+    passed_field = definitions.result_type.model_fields.get("passed")
+    if (
+        passed_field
+        and passed_field.description
+        and passed_field.description != base_passed_description
+    ):
+        evaluator_info["result"]["passed"] = {"description": passed_field.description}
 
     return evaluator_info
 
 
 def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) -> str:
-    ts_definitions = "export type Evaluators = {\n"
+    categories_union = " | ".join([f'"{value}"' for value in get_args(EvalCategories)])
+    ts_definitions = (
+        f"export type EvaluatorDefinition<T extends EvaluatorTypes> = {{\n"
+        f"    name: string;\n"
+        f"    description: string;\n"
+        f"    category: {categories_union};\n"
+        f"    docsUrl?: string;\n"
+        f"    isGuardrail: boolean;\n"
+        f"    settings: {{\n"
+        f'        [K in keyof Evaluators[T]["settings"]]: {{\n'
+        f"        description?: string;\n"
+        f'        default: Evaluators[T]["settings"][K];\n'
+        f"        }};\n"
+        f"    }};\n"
+        f"    result: {{\n"
+        f"        score?: {{\n"
+        f"        description: string;\n"
+        f"        }};\n"
+        f"        passed?: {{\n"
+        f"        description: string;\n"
+        f"        }};\n"
+        f"    }};\n"
+        f"}};\n\n"
+        f"export type EvaluatorTypes = keyof Evaluators;\n\n"
+    )
+    ts_definitions += "export type Evaluators = {\n"
     for evaluator_name, evaluator_info in evaluators_info.items():
         ts_definitions += f'  "{evaluator_name}": {{\n'
         ts_definitions += (
@@ -109,6 +145,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
     ts_definitions += "} = {\n"
     for evaluator_name, evaluator_info in evaluators_info.items():
         ts_definitions += f'  "{evaluator_name}": {{\n'
+        ts_definitions += f'    name: `{evaluator_info["name"]}`,\n'
         ts_definitions += f'    description: `{evaluator_info["description"]}`,\n'
         ts_definitions += f'    category: "{evaluator_info["category"]}",\n'
         ts_definitions += f'    docsUrl: "{evaluator_info["docsUrl"]}",\n'
@@ -141,6 +178,8 @@ def main():
 
     with open("ts-integration/evaluators.generated.ts", "w") as ts_file:
         ts_file.write(ts_content)
+
+    os.system("prettier ts-integration/evaluators.generated.ts --write &> /dev/null")
 
     print("TypeScript definitions generated successfully.")
 

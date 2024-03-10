@@ -16,11 +16,10 @@ class RagasContextPrecisionEvaluator(
     BaseEvaluator[RagasContextPrecisionEntry, RagasSettings, RagasResult]
 ):
     """
-    Ragas Context Precision
-
     This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
     """
 
+    name = "Ragas Context Precision"
     category = "rag"
     env_vars = [
         "OPENAI_API_KEY",

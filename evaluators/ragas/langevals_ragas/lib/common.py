@@ -29,7 +29,7 @@ class RagasSettings(BaseModel):
 
 
 class RagasResult(EvaluationResult):
-    score: float = Field(description="The score for the evaluated metric.")
+    score: float
 
 
 def evaluate_ragas(
