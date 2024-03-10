@@ -69,6 +69,25 @@ export type Evaluators = {
       };
     };
   };
+  "custom/similarity": {
+    settings: {
+      field: "input" | "output";
+      rule: "is_not_similar_to" | "is_similar_to";
+      value: string;
+      threshold: number;
+      embedding_model:
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+    };
+    result: {
+      score: {
+        description: "How similar the input and output semantically, from 0.0 to 1.0, with 1.0 meaning the sentences are identical";
+      };
+      passed: {
+        description: "Passes if the cosine similarity crosses the threshold for the defined rule";
+      };
+    };
+  };
   "example/word_count": {
     settings: Record<string, never>;
     result: {
@@ -246,6 +265,49 @@ Allows you to check for simple text matches or regex evaluation
     result: {
       score: {
         description: "Returns 1 if all rules pass, 0 if any rule fails",
+      },
+    },
+  },
+  "custom/similarity": {
+    name: `Semantic Similarity Evaluator`,
+    description: `
+Allows you to check for semantic similarity or dissimilarity between input and output and a
+target value, so you can avoid sentences that you don't want to be present without having to
+match on the exact text.
+`,
+    category: "custom",
+    docsUrl: "",
+    isGuardrail: true,
+    settings: {
+      field: {
+        description: null,
+        default: "output",
+      },
+      rule: {
+        description: null,
+        default: "is_not_similar_to",
+      },
+      value: {
+        description: null,
+        default: "example",
+      },
+      threshold: {
+        description: null,
+        default: 0.3,
+      },
+      embedding_model: {
+        description: null,
+        default: "openai/text-embedding-3-small",
+      },
+    },
+    result: {
+      score: {
+        description:
+          "How similar the input and output semantically, from 0.0 to 1.0, with 1.0 meaning the sentences are identical",
+      },
+      passed: {
+        description:
+          "Passes if the cosine similarity crosses the threshold for the defined rule",
       },
     },
   },

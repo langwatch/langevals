@@ -51,7 +51,17 @@ def evaluate_ragas(
 ):
     vendor, model = settings.model.split("/")
 
-    if vendor == "azure":
+    if vendor == "openai":
+        gpt = ChatOpenAI(
+            model=model,
+            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
+        )
+        gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
+        )
+    elif vendor == "azure":
         gpt = AzureChatOpenAI(
             model=model.replace(".", ""),
             api_version="2023-05-15",
@@ -67,15 +77,7 @@ def evaluate_ragas(
             api_key=evaluator.get_env("AZURE_OPENAI_KEY"),  # type: ignore
         )
     else:
-        gpt = ChatOpenAI(
-            model=model,
-            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
-        )
-        gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
-        embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
-        )
+        raise ValueError(f"Invalid model: {settings.model}")
 
     answer_relevancy.llm = gpt_wrapper
     answer_relevancy.embeddings = embeddings  # type: ignore

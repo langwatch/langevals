@@ -8,6 +8,8 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
+litellm = "^1.30.7"
+numpy = "^1.26.4"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
