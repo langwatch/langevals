@@ -21,6 +21,8 @@ from ragas.metrics import (
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
 
+env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+
 
 class RagasSettings(BaseModel):
     model: Literal[
@@ -28,7 +30,7 @@ class RagasSettings(BaseModel):
         "openai/gpt-3.5-turbo-0125",
         "openai/gpt-4-1106-preview",
         "openai/gpt-4-0125-preview",
-        "azure/gpt-3.5-turbo-1106",
+        "azure/gpt-35-turbo-1106",
         "azure/gpt-4-1106-preview",
     ] = Field(
         default="openai/gpt-3.5-turbo-1106",
@@ -65,16 +67,16 @@ def evaluate_ragas(
         gpt = AzureChatOpenAI(
             model=model.replace(".", ""),
             api_version="2023-05-15",
-            azure_endpoint=evaluator.get_env("AZURE_OPENAI_ENDPOINT") or "",
-            api_key=evaluator.get_env("AZURE_OPENAI_KEY"),  # type: ignore
+            azure_endpoint=evaluator.get_env("AZURE_API_BASE") or "",
+            api_key=evaluator.get_env("AZURE_API_KEY"),  # type: ignore
         )
         gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
         embeddings = AzureOpenAIEmbeddings(
             azure_deployment="text-embedding-ada-002",  # TODO: upgrate to text-embedding-3-small as soon as it is also available on azure: https://learn.microsoft.com/en-us/answers/questions/1531681/openai-new-embeddings-model
             model="text-embedding-ada-002",
             api_version="2023-05-15",
-            azure_endpoint=evaluator.get_env("AZURE_OPENAI_ENDPOINT") or "",
-            api_key=evaluator.get_env("AZURE_OPENAI_KEY"),  # type: ignore
+            azure_endpoint=evaluator.get_env("AZURE_API_BASE") or "",
+            api_key=evaluator.get_env("AZURE_API_KEY"),  # type: ignore
         )
     else:
         raise ValueError(f"Invalid model: {settings.model}")

@@ -31,7 +31,7 @@ class EvaluatorEntry(BaseModel):
         required_fields_types = {
             "input": [str, Optional[str]],
             "output": [str, Optional[str]],
-            "contexts": [List[str], list[str]],
+            "contexts": [List[str], list[str], Optional[List[str]], Optional[list[str]]],
             "expected_output": [str],
         }
 

@@ -3,7 +3,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasContextRelevancyEntry(EvaluatorEntry):
@@ -20,11 +20,7 @@ class RagasContextRelevancyEvaluator(
 
     name = "Ragas Context Relevancy"
     category = "rag"
-    env_vars = [
-        "OPENAI_API_KEY",
-        "AZURE_CONTENT_SAFETY_ENDPOINT",
-        "AZURE_CONTENT_SAFETY_KEY",
-    ]
+    env_vars = env_vars
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html"
     is_guardrail = False
 

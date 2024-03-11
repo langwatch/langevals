@@ -1,4 +1,3 @@
-import re
 from typing import Literal, Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
@@ -52,7 +51,7 @@ class CustomSimilarityEvaluator(
 
     name = "Semantic Similarity Evaluator"
     category = "custom"
-    env_vars = ["OPENAI_API_KEY", "AZURE_OPENAI_KEY", "AZURE_OPENAI_ENDPOINT"]
+    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
     is_guardrail = True
 
     def evaluate(self, entry: CustomSimilarityEntry) -> SingleEvaluationResult:
@@ -96,8 +95,8 @@ class CustomSimilarityEvaluator(
             response = litellm.embedding(
                 model=f"azure/{model}",
                 input=[text],
-                api_key=self.get_env("AZURE_OPENAI_KEY"),
-                api_base=self.get_env("AZURE_OPENAI_ENDPOINT"),
+                api_key=self.get_env("AZURE_API_KEY"),
+                api_base=self.get_env("AZURE_API_BASE"),
                 api_version="2023-05-15",
             )
             return response.data[0]["embedding"]  # type: ignore

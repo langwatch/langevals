@@ -38,7 +38,7 @@ class CustomBasicEvaluator(
     BaseEvaluator[CustomBasicEntry, CustomBasicSettings, CustomBasicResult]
 ):
     """
-    Allows you to check for simple text matches or regex evaluation
+    Allows you to check for simple text matches or regex evaluation.
     """
 
     name = "Custom Basic Evaluator"

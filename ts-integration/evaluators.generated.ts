@@ -69,6 +69,26 @@ export type Evaluators = {
       };
     };
   };
+  "custom/llm_boolean": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      prompt: string;
+    };
+    result: {
+      score: {
+        description: "Returns 1 if LLM evaluates it as true, 0 if as false";
+      };
+      passed: {
+        description: "The veredict given by the LLM";
+      };
+    };
+  };
   "custom/similarity": {
     settings: {
       field: "input" | "output";
@@ -126,7 +146,7 @@ export type Evaluators = {
         | "openai/gpt-3.5-turbo-0125"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
-        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
     };
     result: {};
@@ -138,7 +158,7 @@ export type Evaluators = {
         | "openai/gpt-3.5-turbo-0125"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
-        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
     };
     result: {};
@@ -150,7 +170,7 @@ export type Evaluators = {
         | "openai/gpt-3.5-turbo-0125"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
-        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
     };
     result: {};
@@ -162,7 +182,7 @@ export type Evaluators = {
         | "openai/gpt-3.5-turbo-0125"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
-        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
     };
     result: {};
@@ -174,7 +194,7 @@ export type Evaluators = {
         | "openai/gpt-3.5-turbo-0125"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
-        | "azure/gpt-3.5-turbo-1106"
+        | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
     };
     result: {};
@@ -251,7 +271,7 @@ social security numbers. It allows customization of the detection threshold and 
   "custom/basic": {
     name: `Custom Basic Evaluator`,
     description: `
-Allows you to check for simple text matches or regex evaluation
+Allows you to check for simple text matches or regex evaluation.
 `,
     category: "custom",
     docsUrl: "",
@@ -265,6 +285,35 @@ Allows you to check for simple text matches or regex evaluation
     result: {
       score: {
         description: "Returns 1 if all rules pass, 0 if any rule fails",
+      },
+    },
+  },
+  "custom/llm_boolean": {
+    name: `Custom LLM Boolean Evaluator`,
+    description: `
+Use an LLM with custom prompt to do a true/false boolean evaluation of the message.
+`,
+    category: "custom",
+    docsUrl: "",
+    isGuardrail: true,
+    settings: {
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      prompt: {
+        description:
+          "The system prompt to use for the LLM to run the evaluation",
+        default:
+          "You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
+      },
+    },
+    result: {
+      score: {
+        description: "Returns 1 if LLM evaluates it as true, 0 if as false",
+      },
+      passed: {
+        description: "The veredict given by the LLM",
       },
     },
   },
