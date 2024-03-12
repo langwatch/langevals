@@ -11,6 +11,10 @@ from langevals_ragas.context_relevancy import (
     RagasContextRelevancyEntry,
     RagasContextRelevancyEvaluator,
 )
+from langevals_ragas.context_utilization import (
+    RagasContextUtilizationEntry,
+    RagasContextUtilizationEvaluator,
+)
 from langevals_ragas.faithfulness import (
     RagasFaithfulnessEntry,
     RagasFaithfulnessEvaluator,
@@ -78,6 +82,22 @@ def test_context_precision():
             input="What is the capital of France?",
             contexts=["France is a country in Europe.", "Paris is a city in France."],
             expected_output="Paris is the capital of France.",
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score > 0.3
+    assert result.cost and result.cost.amount > 0.0
+
+
+def test_context_utilization():
+    evaluator = RagasContextUtilizationEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasContextUtilizationEntry(
+            input="What is the capital of France?",
+            output="Paris is the capital of France.",
+            contexts=["France is a country in Europe.", "Paris is a city in France."],
         )
     )
 

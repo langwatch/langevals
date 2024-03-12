@@ -17,6 +17,7 @@ from ragas.metrics import (
     context_precision,
     context_recall,
     context_relevancy,
+    context_utilization,
 )
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
@@ -97,6 +98,8 @@ def evaluate_ragas(
         ragas_metric = faithfulness
     elif metric == "context_precision":
         ragas_metric = context_precision
+    elif metric == "context_utilization":
+        ragas_metric = context_utilization
     elif metric == "context_recall":
         ragas_metric = context_recall
     elif metric == "context_relevancy":
