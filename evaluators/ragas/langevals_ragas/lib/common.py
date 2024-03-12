@@ -1,6 +1,11 @@
 import math
 from typing import List, Literal, Optional
-from langevals_core.base_evaluator import BaseEvaluator, EvaluationResult, Money
+from langevals_core.base_evaluator import (
+    BaseEvaluator,
+    EvaluationResult,
+    Money,
+    EvaluationResultSkipped,
+)
 from pydantic import BaseModel, Field
 from ragas import evaluate
 from ragas.metrics.base import Metric
@@ -21,6 +26,7 @@ from ragas.metrics import (
 )
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
+import litellm
 
 env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
 
@@ -36,6 +42,10 @@ class RagasSettings(BaseModel):
     ] = Field(
         default="openai/gpt-3.5-turbo-1106",
         description="The model to use for evaluation.",
+    )
+    max_tokens: int = Field(
+        default=2048,
+        description="The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
     )
 
 
@@ -90,6 +100,20 @@ def evaluate_ragas(
     context_relevancy.llm = gpt_wrapper
 
     contexts = [x for x in contexts if x] if contexts else None
+
+    total_tokens = 0
+    litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
+    total_tokens += len(litellm.encode(model=litellm_model, text=question or ""))
+    total_tokens += len(litellm.encode(model=litellm_model, text=answer or ""))
+    if contexts is not None:
+        for context in contexts:
+            tokens = litellm.encode(model=litellm_model, text=context)
+            total_tokens += len(tokens)
+    max_tokens = min(settings.max_tokens, 16384)
+    if total_tokens > max_tokens:
+        return EvaluationResultSkipped(
+            details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
+        )
 
     ragas_metric: Metric
     if metric == "answer_relevancy":

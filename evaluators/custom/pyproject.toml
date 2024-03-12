@@ -8,7 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
-litellm = "^1.30.7"
+litellm = "^1.31.3"
 numpy = "^1.26.4"
 
 [tool.poetry.group.test.dependencies]

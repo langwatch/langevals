@@ -187,6 +187,18 @@ export type Evaluators = {
     };
     result: {};
   };
+  "ragas/context_utilization": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+    };
+    result: {};
+  };
   "ragas/faithfulness": {
     settings: {
       model:
@@ -473,6 +485,23 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     category: "rag",
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
+    isGuardrail: false,
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+    },
+    result: {},
+  },
+  "ragas/context_utilization": {
+    name: `Ragas Context Utilization`,
+    description: `
+This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
     isGuardrail: false,
     settings: {
       model: {

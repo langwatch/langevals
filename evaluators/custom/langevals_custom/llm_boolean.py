@@ -35,6 +35,10 @@ class CustomLLMBooleanSettings(BaseModel):
         default="You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
         description="The system prompt to use for the LLM to run the evaluation",
     )
+    max_tokens: int = Field(
+        default=16384,
+        description="The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+    )
 
 
 class CustomLLMBooleanResult(EvaluationResult):
@@ -79,8 +83,21 @@ class CustomLLMBooleanEvaluator(
 
         content += f"# Task\n{self.settings.prompt}"
 
+        litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
+
+        total_tokens = len(
+            litellm.encode(
+                model=litellm_model, text=f"{self.settings.prompt} {content}"
+            )
+        )
+        max_tokens = min(self.settings.max_tokens, 32768)
+        if total_tokens > max_tokens:
+            return EvaluationResultSkipped(
+                details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
+            )
+
         response = litellm.completion(
-            model=model if vendor == "openai" else f"{vendor}/{model}",
+            model=litellm_model,
             messages=[
                 {
                     "role": "system",

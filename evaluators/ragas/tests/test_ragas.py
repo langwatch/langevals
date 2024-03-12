@@ -1,4 +1,5 @@
 import dotenv
+import pytest
 from langevals_ragas.context_precision import (
     RagasContextPrecisionEntry,
     RagasContextPrecisionEvaluator,
@@ -104,6 +105,27 @@ def test_context_utilization():
     assert result.status == "processed"
     assert result.score > 0.3
     assert result.cost and result.cost.amount > 0.0
+
+
+def test_context_utilization_skips_if_context_is_too_large():
+    evaluator = RagasContextUtilizationEvaluator(
+        settings=RagasSettings(max_tokens=2048)
+    )
+
+    result = evaluator.evaluate(
+        RagasContextUtilizationEntry(
+            input="What is the capital of France?",
+            output="Paris is the capital of France.",
+            contexts=[
+                "France is a country in Europe.",
+                "Paris is a city in France.",
+            ]
+            * 200,
+        )
+    )
+
+    assert result.status == "skipped"
+    assert result.details == "Total tokens exceed the maximum of 2048: 2814"
 
 
 def test_context_recall():

@@ -12,6 +12,7 @@ ragas = "0.1.0"
 langchain-openai = "^0.0.8"
 langchain_community = "^0.0.27"
 datasets = "^2.18.0"
+litellm = "^1.31.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
