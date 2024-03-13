@@ -13,13 +13,13 @@ import litellm
 from litellm import ModelResponse, Choices, Message
 
 
-class CustomLLMBooleanEntry(EvaluatorEntry):
+class CustomLLMScoreEntry(EvaluatorEntry):
     input: Optional[str] = None
     output: Optional[str] = None
     contexts: Optional[list[str]] = None
 
 
-class CustomLLMBooleanSettings(BaseModel):
+class CustomLLMScoreSettings(BaseModel):
     model: Literal[
         "openai/gpt-3.5-turbo-1106",
         "openai/gpt-3.5-turbo-0125",
@@ -32,7 +32,7 @@ class CustomLLMBooleanSettings(BaseModel):
         description="The model to use for evaluation",
     )
     prompt: str = Field(
-        default="You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
+        default="You are an LLM evaluator. Please score from 0.0 to 1.0 how likely the user is to be satisfied with this answer, from 0.0 being not satisfied at all to 1.0 being completely satisfied",
         description="The system prompt to use for the LLM to run the evaluation",
     )
     max_tokens: int = Field(
@@ -41,28 +41,25 @@ class CustomLLMBooleanSettings(BaseModel):
     )
 
 
-class CustomLLMBooleanResult(EvaluationResult):
+class CustomLLMScoreResult(EvaluationResult):
     score: float = Field(
-        description="Returns 1 if LLM evaluates it as true, 0 if as false"
+        description="The score given by the LLM, according to the prompt"
     )
-    passed: Optional[bool] = Field(description="The veredict given by the LLM")
 
 
-class CustomLLMBooleanEvaluator(
-    BaseEvaluator[
-        CustomLLMBooleanEntry, CustomLLMBooleanSettings, CustomLLMBooleanResult
-    ]
+class CustomLLMScoreEvaluator(
+    BaseEvaluator[CustomLLMScoreEntry, CustomLLMScoreSettings, CustomLLMScoreResult]
 ):
     """
-    Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation of the message.
+    Use an LLM as a judge with custom prompt to do a numeric score evaluation of the message.
     """
 
-    name = "Custom LLM Boolean Evaluator"
+    name = "Custom LLM Score Evaluator"
     category = "custom"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
-    is_guardrail = True
+    is_guardrail = False
 
-    def evaluate(self, entry: CustomLLMBooleanEntry) -> SingleEvaluationResult:
+    def evaluate(self, entry: CustomLLMScoreEntry) -> SingleEvaluationResult:
         vendor, model = self.settings.model.split("/")
 
         if vendor == "azure":
@@ -118,16 +115,16 @@ class CustomLLMBooleanEvaluator(
                             "properties": {
                                 "scratchpad": {
                                     "type": "string",
-                                    "description": "use this field to ponder and write the reasoning behind the decision written before a result is actually given",
+                                    "description": "use this field to break down the task and explain your reasoning in multiple sub-scores, using it to combine into a final score",
                                 },
-                                "passed": {
-                                    "type": "boolean",
-                                    "description": "your final veredict, reply true or false if the content passes the test or not",
+                                "final_score": {
+                                    "type": "number",
+                                    "description": "your final score for the task",
                                 },
                             },
-                            "required": ["scratchpad", "passed"],
+                            "required": ["scratchpad", "final_score"],
                         },
-                        "description": "use this function to write your thoughts on the scratchpad, then decide if it passed or not",
+                        "description": "use this function to write your thoughts on the scratchpad, then decide on the final score",
                     },
                 },
             ],
@@ -140,8 +137,7 @@ class CustomLLMBooleanEvaluator(
             cast(Message, choice.message).tool_calls[0].function.arguments
         )
 
-        return CustomLLMBooleanResult(
-            score=1 if arguments["passed"] else 0,
-            passed=arguments["passed"],
+        return CustomLLMScoreResult(
+            score=arguments["final_score"],
             details=arguments["scratchpad"],
         )

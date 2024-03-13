@@ -12,7 +12,7 @@ from langevals_core.base_evaluator import (
 from pydantic import BaseModel
 
 
-def load_evaluator_modules():
+def load_evaluator_packages():
     evaluators = {}
     for distribution in importlib.metadata.distributions():
         normalized_name = distribution.metadata["Name"].replace("-", "_")

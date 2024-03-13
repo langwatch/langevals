@@ -90,6 +90,24 @@ export type Evaluators = {
       };
     };
   };
+  "custom/llm_score": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      prompt: string;
+      max_tokens: number;
+    };
+    result: {
+      score: {
+        description: "The score given by the LLM, according to the prompt";
+      };
+    };
+  };
   "custom/similarity": {
     settings: {
       field: "input" | "output";
@@ -402,7 +420,7 @@ Allows you to check for simple text matches or regex evaluation.
   "custom/llm_boolean": {
     name: `Custom LLM Boolean Evaluator`,
     description: `
-Use an LLM with custom prompt to do a true/false boolean evaluation of the message.
+Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation of the message.
 `,
     category: "custom",
     docsUrl: "",
@@ -410,7 +428,7 @@ Use an LLM with custom prompt to do a true/false boolean evaluation of the messa
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "openai/gpt-3.5-turbo-0125",
       },
       prompt: {
         description:
@@ -421,7 +439,7 @@ Use an LLM with custom prompt to do a true/false boolean evaluation of the messa
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 16384,
+        default: 8192,
       },
     },
     result: {
@@ -430,6 +448,37 @@ Use an LLM with custom prompt to do a true/false boolean evaluation of the messa
       },
       passed: {
         description: "The veredict given by the LLM",
+      },
+    },
+  },
+  "custom/llm_score": {
+    name: `Custom LLM Score Evaluator`,
+    description: `
+Use an LLM as a judge with custom prompt to do a numeric score evaluation of the message.
+`,
+    category: "custom",
+    docsUrl: "",
+    isGuardrail: false,
+    settings: {
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      prompt: {
+        description:
+          "The system prompt to use for the LLM to run the evaluation",
+        default:
+          "You are an LLM evaluator. Please score from 0.0 to 1.0 how likely the user is to be satisfied with this answer, from 0.0 being not satisfied at all to 1.0 being completely satisfied",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 8192,
+      },
+    },
+    result: {
+      score: {
+        description: "The score given by the LLM, according to the prompt",
       },
     },
   },

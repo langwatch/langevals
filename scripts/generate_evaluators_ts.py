@@ -12,7 +12,7 @@ from langevals.utils import (
     EvaluatorDefinitions,
     get_evaluator_classes,
     get_evaluator_definitions,
-    load_evaluator_modules,
+    load_evaluator_packages,
 )
 
 os.system("npm list -g prettier &> /dev/null || npm install -g prettier")
@@ -171,7 +171,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
 
 
 def main():
-    evaluators = load_evaluator_modules()
+    evaluators = load_evaluator_packages()
     evaluators_info = {}
 
     for _, evaluator_module in evaluators.items():
