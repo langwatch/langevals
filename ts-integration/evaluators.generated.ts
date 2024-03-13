@@ -79,6 +79,7 @@ export type Evaluators = {
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
       prompt: string;
+      max_tokens: number;
     };
     result: {
       score: {
@@ -148,6 +149,7 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
     result: {};
   };
@@ -160,6 +162,7 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
     result: {};
   };
@@ -172,6 +175,7 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
     result: {};
   };
@@ -184,6 +188,7 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
     result: {};
   };
@@ -196,6 +201,7 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
     result: {};
   };
@@ -208,8 +214,101 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
     result: {};
+  };
+  "lingua/language_detection": {
+    settings: {
+      check_for: "input_matches_output" | "output_matches_language";
+      expected_language:
+        | "AF"
+        | "AR"
+        | "AZ"
+        | "BE"
+        | "BG"
+        | "BN"
+        | "BS"
+        | "CA"
+        | "CS"
+        | "CY"
+        | "DA"
+        | "DE"
+        | "EL"
+        | "EN"
+        | "EO"
+        | "ES"
+        | "ET"
+        | "EU"
+        | "FA"
+        | "FI"
+        | "FR"
+        | "GA"
+        | "GU"
+        | "HE"
+        | "HI"
+        | "HR"
+        | "HU"
+        | "HY"
+        | "ID"
+        | "IS"
+        | "IT"
+        | "JA"
+        | "KA"
+        | "KK"
+        | "KO"
+        | "LA"
+        | "LG"
+        | "LT"
+        | "LV"
+        | "MI"
+        | "MK"
+        | "MN"
+        | "MR"
+        | "MS"
+        | "NB"
+        | "NL"
+        | "NN"
+        | "PA"
+        | "PL"
+        | "PT"
+        | "RO"
+        | "RU"
+        | "SK"
+        | "SL"
+        | "SN"
+        | "SO"
+        | "SQ"
+        | "SR"
+        | "ST"
+        | "SV"
+        | "SW"
+        | "TA"
+        | "TE"
+        | "TH"
+        | "TL"
+        | "TN"
+        | "TR"
+        | "TS"
+        | "UK"
+        | "UR"
+        | "VI"
+        | "XH"
+        | "YO"
+        | "ZH"
+        | "ZU"
+        | undefined;
+      min_words: number;
+      threshold: number;
+    };
+    result: {
+      score: {
+        description: "How many languages were detected";
+      };
+      passed: {
+        description: "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language";
+      };
+    };
   };
   "azure/content_safety": {
     settings: {
@@ -290,7 +389,7 @@ Allows you to check for simple text matches or regex evaluation.
     isGuardrail: true,
     settings: {
       rules: {
-        description: null,
+        description: undefined,
         default: [],
       },
     },
@@ -319,6 +418,11 @@ Use an LLM with custom prompt to do a true/false boolean evaluation of the messa
         default:
           "You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
       },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 16384,
+      },
     },
     result: {
       score: {
@@ -341,23 +445,23 @@ match on the exact text.
     isGuardrail: true,
     settings: {
       field: {
-        description: null,
+        description: undefined,
         default: "output",
       },
       rule: {
-        description: null,
+        description: undefined,
         default: "is_not_similar_to",
       },
       value: {
-        description: null,
+        description: undefined,
         default: "example",
       },
       threshold: {
-        description: null,
+        description: undefined,
         default: 0.3,
       },
       embedding_model: {
-        description: null,
+        description: undefined,
         default: "openai/text-embedding-3-small",
       },
     },
@@ -440,6 +544,11 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
     },
     result: {},
   },
@@ -456,6 +565,11 @@ This metric evaluates whether all of the ground-truth relevant items present in 
       model: {
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
       },
     },
     result: {},
@@ -474,6 +588,11 @@ This evaluator measures the extent to which the retrieved context aligns with th
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
     },
     result: {},
   },
@@ -490,6 +609,11 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
       model: {
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
       },
     },
     result: {},
@@ -508,6 +632,11 @@ This metric evaluates whether all of the output relevant items present in the co
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
     },
     result: {},
   },
@@ -525,8 +654,53 @@ This evaluator assesses the extent to which the generated answer is consistent w
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
     },
     result: {},
+  },
+  "lingua/language_detection": {
+    name: `Lingua Language Detection`,
+    description: `
+This evaluator detects the language of the input and output text to check for example if the generated answer is in the same language as the prompt,
+or if it's in a specific expected language.
+`,
+    category: "quality",
+    docsUrl: "https://github.com/pemistahl/lingua-py",
+    isGuardrail: true,
+    settings: {
+      check_for: {
+        description: "What should be checked",
+        default: "input_matches_output",
+      },
+      expected_language: {
+        description:
+          "(Optional) The specific language that the output is expected to be",
+        default: undefined,
+      },
+      min_words: {
+        description:
+          "Minimum number of words to check, as the language detection can be unreliable for very short texts. Inputs shorter than the minimum will be skipped.",
+        default: 7,
+      },
+      threshold: {
+        description:
+          "Minimum confidence threshold for the language detection. If the confidence is lower than this, the evaluation will be skipped.",
+        default: 0.25,
+      },
+    },
+    result: {
+      score: {
+        description: "How many languages were detected",
+      },
+      passed: {
+        description:
+          "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
+      },
+    },
   },
   "azure/content_safety": {
     name: `Azure Content Safety`,

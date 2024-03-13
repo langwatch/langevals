@@ -1,7 +1,7 @@
 import inspect
 import json
 import os
-from typing import Any, Dict, Literal, get_args, get_origin
+from typing import Any, Dict, Literal, Optional, Union, get_args, get_origin
 from langevals_core.base_evaluator import (
     EvalCategories,
     EvaluationResult,
@@ -60,11 +60,19 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
             return "boolean"
         elif get_origin(field) == Literal:
             return " | ".join([f'"{value}"' for value in get_args(field)])
+        elif get_origin(field) == Optional:
+            return get_field_type_to_typescript(get_args(field)[0]) + " | undefined"
+        elif get_origin(field) == Union:
+            return " | ".join(
+                [get_field_type_to_typescript(arg) for arg in get_args(field)]
+            )
         elif get_origin(field) == list:
             return get_field_type_to_typescript(get_args(field)[0]) + "[]"
+        elif field == type(None):
+            return "undefined"
 
         raise ValueError(
-            f"Unsupported field type: {field} on {definitions.category}/{definitions.evaluator_name} settings"
+            f"Unsupported field type for typescript conversion: {field} on {definitions.category}/{definitions.evaluator_name} settings"
         )
 
     for field_name, field in definitions.settings_type.model_fields.items():
@@ -152,7 +160,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         ts_definitions += (
             f'    isGuardrail: {str(evaluator_info["isGuardrail"]).lower()},\n'
         )
-        ts_definitions += f'    settings: {json.dumps(evaluator_info["settingsDescriptions"], indent=6)},\n'
+        ts_definitions += f'    settings: {json.dumps(evaluator_info["settingsDescriptions"], indent=6).replace(": null", ": undefined")},\n'
         ts_definitions += (
             f'    result: {json.dumps(evaluator_info["result"], indent=6)}\n'
         )
