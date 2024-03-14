@@ -31,7 +31,12 @@ class EvaluatorEntry(BaseModel):
         required_fields_types = {
             "input": [str, Optional[str]],
             "output": [str, Optional[str]],
-            "contexts": [List[str], list[str], Optional[List[str]], Optional[list[str]]],
+            "contexts": [
+                List[str],
+                list[str],
+                Optional[List[str]],
+                Optional[list[str]],
+            ],
             "expected_output": [str],
         }
 
@@ -127,6 +132,13 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     env_vars: ClassVar[list[str]] = []
     docs_url: ClassVar[str] = ""
     is_guardrail: ClassVar[bool] = False
+
+    @classmethod
+    def run_evaluation(
+        cls, data: List[TEntry], settings: TSettings, env: dict[str, str]
+    ):
+        evaluator = cls(settings=settings, env=env)
+        return evaluator.evaluate_batch(data)
 
     def get_env(self, var: str):
         if var not in self.env_vars and (self.env is None or var not in self.env):
