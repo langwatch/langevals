@@ -60,20 +60,6 @@ run-docker:
 	@docker build --build-arg EVALUATOR=$(EVALUATOR) -t langevals-$(EVALUATOR) .
 	@docker run -p 80:80 langevals-$(EVALUATOR)
 
-deploy-all-evaluators:
-	@command -v gcloud >/dev/null 2>&1 || { echo >&2 "Installing Google Cloud SDK..."; curl https://sdk.cloud.google.com | bash; exec -l $$SHELL; }
-	npm install -g serverless
-	serverless plugin install -n serverless-google-cloudfunctions
-	serverless plugin install -n serverless-python-requirements
-	serverless plugin install -n serverless-plugin-scripts
-	@for dir in evaluators/*; do \
-		if [ -d $$dir ]; then \
-			export EVALUATOR_NAME=$$(basename $$dir) && \
-			echo "Deploying $$EVALUATOR_NAME" && \
-			serverless deploy \
-		fi \
-	done
-
 check-evaluator-versions:
 	@echo "Checking all evaluator versions for changes..."
 	@(cd langevals_core && ../scripts/check_version_bump.sh); \
@@ -81,6 +67,21 @@ check-evaluator-versions:
 		if [ -d "$$dir" ]; then \
 			echo "Checking $$dir"; \
 			(cd "$$dir" && git add pyproject.toml && python ../../scripts/replace_develop_dependencies.py pyproject.toml && ../../scripts/check_version_bump.sh; exit_status=$$?; git checkout pyproject.toml; exit $$exit_status); \
+		fi \
+	done
+
+package-for-lambdas:
+	rm -rf dist
+	poetry build
+	mkdir -p dist/lambdas/
+	@for dir in evaluators/*; do \
+		if [ -d $$dir ]; then \
+			export EVALUATOR_NAME=$$(basename $$dir) && \
+			echo "\n\nPackaging $$EVALUATOR_NAME\n" && \
+			poetry run pip install -t dist/lambdas/$$EVALUATOR_NAME "$$(ls dist/*.whl | head -n 1)[$$EVALUATOR_NAME]" --platform manylinux2014_x86_64 --implementation cp --python-version 3.11 --only-binary=:all: && \
+			cd dist/lambdas/ && \
+			cd $$EVALUATOR_NAME && zip -r ../$$EVALUATOR_NAME.zip . -x '*.pyc' && \
+			cd ../../../; \
 		fi \
 	done
 

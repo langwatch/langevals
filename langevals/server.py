@@ -13,11 +13,11 @@ import asyncio
 from fastapi import FastAPI, HTTPException, Request
 from typing import List, Optional
 from langevals_core.base_evaluator import (
-    EnvMissingException,
     EvaluationResultSkipped,
     EvaluationResultError,
 )
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from mangum import Mangum
 
 app = FastAPI()
 
@@ -35,9 +35,7 @@ def create_evaluator_routes(evaluator_cls):
         if len(definitions.env_vars) > 0
         else ""
     )
-    docs_url = (
-        "\n\n__Docs:__ " + definitions.docs_url if definitions.docs_url else ""
-    )
+    docs_url = "\n\n__Docs:__ " + definitions.docs_url if definitions.docs_url else ""
     description = definitions.description + required_env_vars + docs_url
 
     class Request(BaseModel):
@@ -78,11 +76,6 @@ async def validation_exception_handler(request: Request, exc: ValidationError):
     )
 
 
-@app.exception_handler(EnvMissingException)
-async def missing_env_exception_handler(request: Request, exc: EnvMissingException):
-    raise HTTPException(status_code=400, detail=exc.message)
-
-
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--export-openapi-json":
         import json
@@ -96,6 +89,8 @@ def main():
 
     asyncio.run(serve(app, Config()))  # type: ignore
 
+
+handler = Mangum(app, lifespan="off")
 
 if __name__ == "__main__":
     main()
