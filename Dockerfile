@@ -1,17 +1,15 @@
-# Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Set the working directory in the container
+RUN pip install poetry
+
 WORKDIR /usr/src/app
 
-# Argument to specify which evaluator to install
+RUN pip install --target . awslambdaric
+
 ARG EVALUATOR
 
-# Install evaluator
-RUN pip install langevals[$evaluator]
+COPY . .
+RUN poetry install --extras=$EVALUATOR
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Run langevals-server when the container launches
-CMD ["langevals-server"]
+ENTRYPOINT [ "/usr/local/bin/poetry", "run", "python", "-m", "awslambdaric" ]
+CMD [ "langevals.server.handler" ]

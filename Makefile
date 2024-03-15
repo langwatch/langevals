@@ -70,20 +70,5 @@ check-evaluator-versions:
 		fi \
 	done
 
-package-for-lambdas:
-	rm -rf dist
-	poetry build
-	mkdir -p dist/lambdas/
-	@for dir in evaluators/*; do \
-		if [ -d $$dir ]; then \
-			export EVALUATOR_NAME=$$(basename $$dir) && \
-			echo "\n\nPackaging $$EVALUATOR_NAME\n" && \
-			poetry run pip install -t dist/lambdas/$$EVALUATOR_NAME "$$(ls dist/*.whl | head -n 1)[$$EVALUATOR_NAME]" --platform manylinux2014_x86_64 --implementation cp --python-version 3.11 --only-binary=:all: && \
-			cd dist/lambdas/ && \
-			cd $$EVALUATOR_NAME && zip -r ../$$EVALUATOR_NAME.zip . -x '*.pyc' && \
-			cd ../../../; \
-		fi \
-	done
-
 %:
 	@:

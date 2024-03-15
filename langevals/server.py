@@ -90,7 +90,7 @@ def main():
     asyncio.run(serve(app, Config()))  # type: ignore
 
 
-handler = Mangum(app, lifespan="off")
-
 if __name__ == "__main__":
     main()
+else:
+    handler = Mangum(app, lifespan="off")
