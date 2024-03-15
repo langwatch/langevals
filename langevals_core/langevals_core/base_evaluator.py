@@ -23,7 +23,7 @@ class EvaluatorEntry(BaseModel):
     expected_output: The ground truth of what the LLM should have generated, for comparison with the actual generated output
     """
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)  # Always call super()!
@@ -31,7 +31,12 @@ class EvaluatorEntry(BaseModel):
         required_fields_types = {
             "input": [str, Optional[str]],
             "output": [str, Optional[str]],
-            "contexts": [List[str], list[str], Optional[List[str]], Optional[list[str]]],
+            "contexts": [
+                List[str],
+                list[str],
+                Optional[List[str]],
+                Optional[list[str]],
+            ],
             "expected_output": [str],
         }
 

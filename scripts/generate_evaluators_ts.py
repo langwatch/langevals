@@ -24,7 +24,8 @@ def stringify_field_types(field_types):
 
     settings = "{\n"
     for field_name, field_type in field_types.items():
-        settings += f"        {field_name}: {field_type};\n"
+        optional = "?" if " | undefined" in field_type else ""
+        settings += f"        {field_name}{optional}: {field_type.replace(' | undefined', '')};\n"
     settings += "      }"
 
     return settings
@@ -59,7 +60,7 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
         elif field == bool:
             return "boolean"
         elif get_origin(field) == Literal:
-            return " | ".join([f'"{value}"' for value in get_args(field)])
+            return " | ".join([json.dumps(value) for value in get_args(field)])
         elif get_origin(field) == Optional:
             return get_field_type_to_typescript(get_args(field)[0]) + " | undefined"
         elif get_origin(field) == Union:
@@ -107,6 +108,23 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
     ):
         evaluator_info["result"]["passed"] = {"description": passed_field.description}
 
+    def is_field_optional(field):
+        if not field.is_required:
+            return True
+        if get_origin(field.annotation) == Optional:
+            return True
+        if get_origin(field.annotation) == Union and type(None) in get_args(
+            field.annotation
+        ):
+            return True
+        return False
+
+    evaluator_info["requiredFields"] = [
+        field_name
+        for field_name, field in definitions.entry_type.model_fields.items()
+        if not is_field_optional(field)
+    ]
+
     return evaluator_info
 
 
@@ -119,6 +137,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"    category: {categories_union};\n"
         f"    docsUrl?: string;\n"
         f"    isGuardrail: boolean;\n"
+        f'    requiredFields: ("input" | "output" | "contexts" | "expected_output")[];\n'
         f"    settings: {{\n"
         f'        [K in keyof Evaluators[T]["settings"]]: {{\n'
         f"        description?: string;\n"
@@ -135,15 +154,36 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"    }};\n"
         f"}};\n\n"
         f"export type EvaluatorTypes = keyof Evaluators;\n\n"
+        f"export type EvaluationResult = {{\n"
+        f"    status: 'processed';\n"
+        f"    score: number;\n"
+        f"    passed?: boolean | undefined;\n"
+        f"    details?: string | undefined;\n"
+        f"    cost?: Money | undefined;\n"
+        f"    raw_result?: any;\n"
+        f"}};\n\n"
+        f"export type EvaluationResultSkipped = {{\n"
+        f"    status: 'skipped';\n"
+        f"    details?: string | undefined;\n"
+        f"}};\n\n"
+        f"export type EvaluationResultError = {{\n"
+        f"    status: 'error';\n"
+        f"    error_type: string;\n"
+        f"    message: string;\n"
+        f"    traceback: string[];\n"
+        f"}};\n\n"
+        f"export type SingleEvaluationResult = EvaluationResult | EvaluationResultSkipped | EvaluationResultError;\n"
+        f"export type BatchEvaluationResult = SingleEvaluationResult[];\n\n"
+        f"export type Money = {{\n"
+        f"    currency: string;\n"
+        f"    amount: number;\n"
+        f"}};\n\n"
     )
     ts_definitions += "export type Evaluators = {\n"
     for evaluator_name, evaluator_info in evaluators_info.items():
         ts_definitions += f'  "{evaluator_name}": {{\n'
         ts_definitions += (
             f"    settings: {stringify_field_types(evaluator_info['settingsTypes'])};\n"
-        )
-        ts_definitions += (
-            f'    result: {json.dumps(evaluator_info["result"], indent=6)};\n'
         )
         ts_definitions += "  };\n"
     ts_definitions += "};\n\n"
@@ -159,6 +199,9 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         ts_definitions += f'    docsUrl: "{evaluator_info["docsUrl"]}",\n'
         ts_definitions += (
             f'    isGuardrail: {str(evaluator_info["isGuardrail"]).lower()},\n'
+        )
+        ts_definitions += (
+            f'    requiredFields: {json.dumps(evaluator_info["requiredFields"])},\n'
         )
         ts_definitions += f'    settings: {json.dumps(evaluator_info["settingsDescriptions"], indent=6).replace(": null", ": undefined")},\n'
         ts_definitions += (

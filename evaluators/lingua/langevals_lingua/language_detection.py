@@ -7,7 +7,7 @@ from langevals_core.base_evaluator import (
     SingleEvaluationResult,
 )
 from pydantic import BaseModel, Field
-from lingua import IsoCode639_1, LanguageDetectorBuilder
+from lingua import LanguageDetectorBuilder
 
 
 class LinguaLanguageDetectionEntry(EvaluatorEntry):
@@ -100,7 +100,7 @@ class LinguaLanguageDetectionSettings(BaseModel):
     )
     expected_language: Optional[AvailableLanguages] = Field(
         default=None,
-        description="(Optional) The specific language that the output is expected to be",
+        description="The specific language that the output is expected to be",
     )
     min_words: int = Field(
         default=7,

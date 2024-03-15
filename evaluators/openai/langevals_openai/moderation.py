@@ -59,7 +59,7 @@ class OpenAIModerationEvaluator(
     """
 
     name = "OpenAI Moderation"
-    category = "policy"
+    category = "safety"
     env_vars = ["OPENAI_API_KEY"]
     docs_url = "https://platform.openai.com/docs/guides/moderation/overview"
     is_guardrail = True

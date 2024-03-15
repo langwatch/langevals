@@ -94,6 +94,9 @@ class GoogleCloudDLPPIIDetectionEvaluator(
                     "info_types": info_types,
                     "min_likelihood": self.settings.min_likelihood,
                     "include_quote": True,
+                    "limits": {
+                        "max_findings_per_request": 0,  # (0 = server maximum)
+                    },
                 },
                 "item": {"value": content},
             }

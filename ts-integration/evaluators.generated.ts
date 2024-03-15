@@ -4,6 +4,7 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
   category: "quality" | "rag" | "safety" | "policy" | "other" | "custom";
   docsUrl?: string;
   isGuardrail: boolean;
+  requiredFields: ("input" | "output" | "contexts" | "expected_output")[];
   settings: {
     [K in keyof Evaluators[T]["settings"]]: {
       description?: string;
@@ -21,6 +22,38 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
 };
 
 export type EvaluatorTypes = keyof Evaluators;
+
+export type EvaluationResult = {
+  status: "processed";
+  score: number;
+  passed?: boolean | undefined;
+  details?: string | undefined;
+  cost?: Money | undefined;
+  raw_result?: any;
+};
+
+export type EvaluationResultSkipped = {
+  status: "skipped";
+  details?: string | undefined;
+};
+
+export type EvaluationResultError = {
+  status: "error";
+  error_type: string;
+  message: string;
+  traceback: string[];
+};
+
+export type SingleEvaluationResult =
+  | EvaluationResult
+  | EvaluationResultSkipped
+  | EvaluationResultError;
+export type BatchEvaluationResult = SingleEvaluationResult[];
+
+export type Money = {
+  currency: string;
+  amount: number;
+};
 
 export type Evaluators = {
   "google_cloud/dlp_pii_detection": {
@@ -42,14 +75,6 @@ export type Evaluators = {
         | "LIKELY"
         | "VERY_LIKELY";
     };
-    result: {
-      score: {
-        description: "Amount of PII detected, 0 means no PII detected";
-      };
-      passed: {
-        description: "If true then no PII was detected, if false then at lease one PII was detected";
-      };
-    };
   };
   "custom/basic": {
     settings: {
@@ -62,11 +87,6 @@ export type Evaluators = {
           | "not_matches_regex";
         value: string;
       }[];
-    };
-    result: {
-      score: {
-        description: "Returns 1 if all rules pass, 0 if any rule fails";
-      };
     };
   };
   "custom/llm_boolean": {
@@ -81,14 +101,6 @@ export type Evaluators = {
       prompt: string;
       max_tokens: number;
     };
-    result: {
-      score: {
-        description: "Returns 1 if LLM evaluates it as true, 0 if as false";
-      };
-      passed: {
-        description: "The veredict given by the LLM";
-      };
-    };
   };
   "custom/llm_score": {
     settings: {
@@ -102,11 +114,6 @@ export type Evaluators = {
       prompt: string;
       max_tokens: number;
     };
-    result: {
-      score: {
-        description: "The score given by the LLM, according to the prompt";
-      };
-    };
   };
   "custom/similarity": {
     settings: {
@@ -118,22 +125,9 @@ export type Evaluators = {
         | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
     };
-    result: {
-      score: {
-        description: "How similar the input and output semantically, from 0.0 to 1.0, with 1.0 meaning the sentences are identical";
-      };
-      passed: {
-        description: "Passes if the cosine similarity crosses the threshold for the defined rule";
-      };
-    };
   };
   "example/word_count": {
     settings: Record<string, never>;
-    result: {
-      score: {
-        description: "How many words are there in the output, split by space";
-      };
-    };
   };
   "openai/moderation": {
     settings: {
@@ -152,11 +146,6 @@ export type Evaluators = {
         violence_graphic: boolean;
       };
     };
-    result: {
-      score: {
-        description: "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.";
-      };
-    };
   };
   "ragas/answer_relevancy": {
     settings: {
@@ -169,7 +158,6 @@ export type Evaluators = {
         | "azure/gpt-4-1106-preview";
       max_tokens: number;
     };
-    result: {};
   };
   "ragas/context_precision": {
     settings: {
@@ -182,7 +170,6 @@ export type Evaluators = {
         | "azure/gpt-4-1106-preview";
       max_tokens: number;
     };
-    result: {};
   };
   "ragas/context_recall": {
     settings: {
@@ -195,7 +182,6 @@ export type Evaluators = {
         | "azure/gpt-4-1106-preview";
       max_tokens: number;
     };
-    result: {};
   };
   "ragas/context_relevancy": {
     settings: {
@@ -208,7 +194,6 @@ export type Evaluators = {
         | "azure/gpt-4-1106-preview";
       max_tokens: number;
     };
-    result: {};
   };
   "ragas/context_utilization": {
     settings: {
@@ -221,7 +206,6 @@ export type Evaluators = {
         | "azure/gpt-4-1106-preview";
       max_tokens: number;
     };
-    result: {};
   };
   "ragas/faithfulness": {
     settings: {
@@ -234,12 +218,11 @@ export type Evaluators = {
         | "azure/gpt-4-1106-preview";
       max_tokens: number;
     };
-    result: {};
   };
   "lingua/language_detection": {
     settings: {
       check_for: "input_matches_output" | "output_matches_language";
-      expected_language:
+      expected_language?:
         | "AF"
         | "AR"
         | "AZ"
@@ -314,23 +297,14 @@ export type Evaluators = {
         | "XH"
         | "YO"
         | "ZH"
-        | "ZU"
-        | undefined;
+        | "ZU";
       min_words: number;
       threshold: number;
-    };
-    result: {
-      score: {
-        description: "How many languages were detected";
-      };
-      passed: {
-        description: "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language";
-      };
     };
   };
   "azure/content_safety": {
     settings: {
-      severity_threshold: number;
+      severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
       categories: {
         Hate: boolean;
         SelfHarm: boolean;
@@ -339,19 +313,9 @@ export type Evaluators = {
       };
       output_type: "FourSeverityLevels" | "EightSeverityLevels";
     };
-    result: {
-      score: {
-        description: "The severity level of the detected content from 0 to 7. A higher score indicates higher severity.";
-      };
-    };
   };
   "azure/jailbreak": {
     settings: Record<string, never>;
-    result: {
-      passed: {
-        description: "If true then no jailbreak was detected, if false then a jailbreak was detected";
-      };
-    };
   };
 };
 
@@ -367,6 +331,7 @@ social security numbers. It allows customization of the detection threshold and 
     category: "safety",
     docsUrl: "https://cloud.google.com/sensitive-data-protection/docs/apis",
     isGuardrail: true,
+    requiredFields: [],
     settings: {
       info_types: {
         description: "The types of PII to check for in the input.",
@@ -405,6 +370,7 @@ Allows you to check for simple text matches or regex evaluation.
     category: "custom",
     docsUrl: "",
     isGuardrail: true,
+    requiredFields: [],
     settings: {
       rules: {
         description: undefined,
@@ -425,6 +391,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
     category: "custom",
     docsUrl: "",
     isGuardrail: true,
+    requiredFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation",
@@ -459,6 +426,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
     category: "custom",
     docsUrl: "",
     isGuardrail: false,
+    requiredFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation",
@@ -492,6 +460,7 @@ match on the exact text.
     category: "custom",
     docsUrl: "",
     isGuardrail: true,
+    requiredFields: [],
     settings: {
       field: {
         description: undefined,
@@ -533,6 +502,7 @@ This evaluator serves as a boilerplate for creating new evaluators.
     category: "other",
     docsUrl: "https://path/to/official/docs",
     isGuardrail: false,
+    requiredFields: ["output"],
     settings: {},
     result: {
       score: {
@@ -546,9 +516,10 @@ This evaluator serves as a boilerplate for creating new evaluators.
 This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
 including harassment, hate speech, self-harm, sexual content, and violence.
 `,
-    category: "policy",
+    category: "safety",
     docsUrl: "https://platform.openai.com/docs/guides/moderation/overview",
     isGuardrail: true,
+    requiredFields: [],
     settings: {
       model: {
         description:
@@ -588,6 +559,7 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
     isGuardrail: false,
+    requiredFields: ["input", "output"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -610,6 +582,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
     isGuardrail: false,
+    requiredFields: ["input", "contexts", "expected_output"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -632,6 +605,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
     isGuardrail: false,
+    requiredFields: ["contexts", "expected_output"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -654,6 +628,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
     isGuardrail: false,
+    requiredFields: ["output", "contexts"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -676,6 +651,7 @@ This metric evaluates whether all of the output relevant items present in the co
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
     isGuardrail: false,
+    requiredFields: ["input", "output", "contexts"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -698,6 +674,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
     isGuardrail: false,
+    requiredFields: ["output", "contexts"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -720,14 +697,14 @@ or if it's in a specific expected language.
     category: "quality",
     docsUrl: "https://github.com/pemistahl/lingua-py",
     isGuardrail: true,
+    requiredFields: ["input", "output"],
     settings: {
       check_for: {
         description: "What should be checked",
         default: "input_matches_output",
       },
       expected_language: {
-        description:
-          "(Optional) The specific language that the output is expected to be",
+        description: "The specific language that the output is expected to be",
         default: undefined,
       },
       min_words: {
@@ -762,10 +739,11 @@ threshold and the specific categories to check.
     docsUrl:
       "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
     isGuardrail: true,
+    requiredFields: [],
     settings: {
       severity_threshold: {
         description:
-          "The minimum severity level to consider content as unsafe.",
+          "The minimum severity level to consider content as unsafe, from 1 to 7.",
         default: 1,
       },
       categories: {
@@ -798,6 +776,7 @@ This evaluator checks for jailbreak-attempt in the input using Azure's Content S
     category: "safety",
     docsUrl: "",
     isGuardrail: true,
+    requiredFields: ["input"],
     settings: {},
     result: {
       passed: {

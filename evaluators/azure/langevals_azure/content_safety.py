@@ -26,11 +26,9 @@ class AzureContentSafetyCategories(BaseModel):
 
 
 class AzureContentSafetySettings(BaseModel):
-    severity_threshold: int = Field(
-        ge=1,
-        le=8,
+    severity_threshold: Literal[1, 2, 3, 4, 5, 6, 7] = Field(
         default=1,
-        description="The minimum severity level to consider content as unsafe.",
+        description="The minimum severity level to consider content as unsafe, from 1 to 7.",
     )
     categories: AzureContentSafetyCategories = Field(
         default=AzureContentSafetyCategories(),
