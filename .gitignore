@@ -1,7 +1,8 @@
 .pytest_cache
-.venv
 langevals.code-workspace
 .env
 __pycache__
 dist
 openapi.json
+.venv
+*/**/.venv
