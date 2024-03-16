@@ -53,7 +53,7 @@ install: ensure-poetry install-core install-evaluators
 
 start:
 	@echo "Starting the server..."
-	poetry run python langevals/server.py
+	poetry run python langevals/server.py $(filter-out $@,$(MAKECMDGOALS))
 
 run-docker:
 	@echo "Building and running the Docker container for the evaluator..."
