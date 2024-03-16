@@ -12,7 +12,6 @@ COPY pyproject.toml poetry.lock poetry.toml .
 COPY langevals_core/ langevals_core/
 RUN poetry install --only main
 
-COPY langevals/ langevals/
 COPY evaluators/$EVALUATOR evaluators/$EVALUATOR
 
 RUN poetry install --only main --extras=$EVALUATOR

@@ -64,7 +64,7 @@ def create_evaluator_routes(evaluator_cls):
 evaluators = load_evaluator_packages()
 for evaluator_name, evaluator_package in evaluators.items():
     module_name = evaluator_package.__name__.split("langevals_")[1]
-    if len(sys.argv) > 1 and module_name not in sys.argv[1].split(","):
+    if len(sys.argv) > 2 and sys.argv[1] == "--only" and module_name not in sys.argv[2].split(","):
         continue
     print(f"Loading {evaluator_package.__name__}")
     for evaluator_cls in get_evaluator_classes(evaluator_package):
