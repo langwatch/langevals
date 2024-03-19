@@ -75,8 +75,8 @@ class CustomBasicEvaluator(
         elif rule.rule == "not_contains":
             return rule.value not in field
         elif rule.rule == "matches_regex":
-            return bool(re.match(rule.value, field))
+            return bool(re.search(rule.value, field, re.MULTILINE))
         elif rule.rule == "not_matches_regex":
-            return not bool(re.match(rule.value, field))
+            return not bool(re.search(rule.value, field, re.MULTILINE))
         else:
             return False

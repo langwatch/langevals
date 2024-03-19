@@ -77,6 +77,22 @@ def test_custom_basic_evaluator_matches_regex():
     assert result.score == 1
     assert result.passed == True
 
+    entry = CustomBasicEntry(output="According to sources[1] this is a test")
+    evaluator = CustomBasicEvaluator(
+        settings=CustomBasicSettings(
+            rules=[
+                CustomBasicRule(
+                    field="output", rule="matches_regex", value="\\[[0-9]+\\]"
+                )
+            ]
+        )
+    )
+    result = evaluator.evaluate(entry)
+
+    assert result.status == "processed"
+    assert result.score == 1
+    assert result.passed == True
+
     entry = CustomBasicEntry(output="Your effort is really appreciated!")
     evaluator = CustomBasicEvaluator(
         settings=CustomBasicSettings(
