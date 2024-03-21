@@ -1,5 +1,6 @@
 .pytest_cache
 .venv
+*/**/.venv
 langevals.code-workspace
 .env
 __pycache__

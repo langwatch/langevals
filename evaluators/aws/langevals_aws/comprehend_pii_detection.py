@@ -169,7 +169,7 @@ class AWSComprehendPIIDetectionEvaluator(
 
     name = "Amazon Comprehend PII Detection"
     category = "safety"
-    env_vars = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
+    env_vars = ["AWS_COMPREHEND_ACCESS_KEY_ID", "AWS_COMPREHEND_SECRET_ACCESS_KEY"]
     docs_url = "https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html"
     is_guardrail = True
 
@@ -180,8 +180,8 @@ class AWSComprehendPIIDetectionEvaluator(
 
         client = boto3.client(
             "comprehend",
-            aws_access_key_id=self.get_env("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=self.get_env("AWS_SECRET_ACCESS_KEY"),
+            aws_access_key_id=self.get_env("AWS_COMPREHEND_ACCESS_KEY_ID"),
+            aws_secret_access_key=self.get_env("AWS_COMPREHEND_SECRET_ACCESS_KEY"),
             region_name=self.settings.aws_region,
         )
 
