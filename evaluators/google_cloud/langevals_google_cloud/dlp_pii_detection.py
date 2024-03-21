@@ -45,7 +45,7 @@ class GoogleCloudDLPPIIDetectionSettings(BaseModel):
 class GoogleCloudDLPPIIDetectionResult(EvaluationResult):
     score: float = Field(description="Amount of PII detected, 0 means no PII detected")
     passed: Optional[bool] = Field(
-        description="If true then no PII was detected, if false then at lease one PII was detected"
+        description="If true then no PII was detected, if false then at least one PII was detected"
     )
     raw_response: dict[str, Any]
 

@@ -16,6 +16,7 @@ def test_dlp_pii_detection():
     )
     result = evaluator.evaluate(entry)
 
+    assert result.status == "processed"
     assert result.score == 1
     assert result.passed is False
     assert (

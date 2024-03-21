@@ -302,6 +302,83 @@ export type Evaluators = {
       threshold: number;
     };
   };
+  "aws/comprehend_pii_detection": {
+    settings: {
+      entity_types: {
+        BANK_ACCOUNT_NUMBER: boolean;
+        BANK_ROUTING: boolean;
+        CREDIT_DEBIT_NUMBER: boolean;
+        CREDIT_DEBIT_CVV: boolean;
+        CREDIT_DEBIT_EXPIRY: boolean;
+        PIN: boolean;
+        EMAIL: boolean;
+        ADDRESS: boolean;
+        NAME: boolean;
+        PHONE: boolean;
+        SSN: boolean;
+        DATE_TIME: boolean;
+        PASSPORT_NUMBER: boolean;
+        DRIVER_ID: boolean;
+        URL: boolean;
+        AGE: boolean;
+        USERNAME: boolean;
+        PASSWORD: boolean;
+        AWS_ACCESS_KEY: boolean;
+        AWS_SECRET_KEY: boolean;
+        IP_ADDRESS: boolean;
+        MAC_ADDRESS: boolean;
+        LICENSE_PLATE: boolean;
+        VEHICLE_IDENTIFICATION_NUMBER: boolean;
+        UK_NATIONAL_INSURANCE_NUMBER: boolean;
+        CA_SOCIAL_INSURANCE_NUMBER: boolean;
+        US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER: boolean;
+        UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER: boolean;
+        IN_PERMANENT_ACCOUNT_NUMBER: boolean;
+        IN_NREGA: boolean;
+        INTERNATIONAL_BANK_ACCOUNT_NUMBER: boolean;
+        SWIFT_CODE: boolean;
+        UK_NATIONAL_HEALTH_SERVICE_NUMBER: boolean;
+        CA_HEALTH_NUMBER: boolean;
+        IN_AADHAAR: boolean;
+        IN_VOTER_NUMBER: boolean;
+      };
+      language_code:
+        | "en"
+        | "es"
+        | "fr"
+        | "de"
+        | "it"
+        | "pt"
+        | "ar"
+        | "hi"
+        | "ja"
+        | "ko"
+        | "zh"
+        | "zh-TW";
+      min_confidence: number;
+      aws_region:
+        | "us-east-1"
+        | "us-east-2"
+        | "us-west-1"
+        | "us-west-2"
+        | "ap-east-1"
+        | "ap-south-1"
+        | "ap-northeast-3"
+        | "ap-northeast-2"
+        | "ap-southeast-1"
+        | "ap-southeast-2"
+        | "ap-northeast-1"
+        | "ca-central-1"
+        | "eu-central-1"
+        | "eu-west-1"
+        | "eu-west-2"
+        | "eu-south-1"
+        | "eu-west-3"
+        | "eu-north-1"
+        | "me-south-1"
+        | "sa-east-1";
+    };
+  };
   "azure/content_safety": {
     settings: {
       severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -358,7 +435,7 @@ social security numbers. It allows customization of the detection threshold and 
       },
       passed: {
         description:
-          "If true then no PII was detected, if false then at lease one PII was detected",
+          "If true then no PII was detected, if false then at least one PII was detected",
       },
     },
   },
@@ -725,6 +802,84 @@ or if it's in a specific expected language.
       passed: {
         description:
           "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
+      },
+    },
+  },
+  "aws/comprehend_pii_detection": {
+    name: `Amazon Comprehend PII Detection`,
+    description: `
+Amazon Comprehend PII detects personally identifiable information in text, including phone numbers, email addresses, and
+social security numbers. It allows customization of the detection threshold and the specific types of PII to check.
+`,
+    category: "safety",
+    docsUrl: "https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html",
+    isGuardrail: true,
+    requiredFields: [],
+    settings: {
+      entity_types: {
+        description: "The types of PII to check for in the input.",
+        default: {
+          BANK_ACCOUNT_NUMBER: true,
+          BANK_ROUTING: true,
+          CREDIT_DEBIT_NUMBER: true,
+          CREDIT_DEBIT_CVV: true,
+          CREDIT_DEBIT_EXPIRY: true,
+          PIN: true,
+          EMAIL: true,
+          ADDRESS: true,
+          NAME: true,
+          PHONE: true,
+          SSN: true,
+          DATE_TIME: true,
+          PASSPORT_NUMBER: true,
+          DRIVER_ID: true,
+          URL: true,
+          AGE: true,
+          USERNAME: true,
+          PASSWORD: true,
+          AWS_ACCESS_KEY: true,
+          AWS_SECRET_KEY: true,
+          IP_ADDRESS: true,
+          MAC_ADDRESS: true,
+          LICENSE_PLATE: true,
+          VEHICLE_IDENTIFICATION_NUMBER: true,
+          UK_NATIONAL_INSURANCE_NUMBER: true,
+          CA_SOCIAL_INSURANCE_NUMBER: true,
+          US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER: true,
+          UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER: true,
+          IN_PERMANENT_ACCOUNT_NUMBER: true,
+          IN_NREGA: true,
+          INTERNATIONAL_BANK_ACCOUNT_NUMBER: true,
+          SWIFT_CODE: true,
+          UK_NATIONAL_HEALTH_SERVICE_NUMBER: true,
+          CA_HEALTH_NUMBER: true,
+          IN_AADHAAR: true,
+          IN_VOTER_NUMBER: true,
+        },
+      },
+      language_code: {
+        description:
+          "The language code of the input text for better PII detection, defaults to english.",
+        default: "en",
+      },
+      min_confidence: {
+        description:
+          "The minimum confidence required for failing the evaluation on a PII match.",
+        default: 0.5,
+      },
+      aws_region: {
+        description:
+          "The AWS region to use for running the PII detection, defaults to eu-central-1 for GDPR compliance.",
+        default: "eu-central-1",
+      },
+    },
+    result: {
+      score: {
+        description: "Amount of PII detected, 0 means no PII detected",
+      },
+      passed: {
+        description:
+          "If true then no PII was detected, if false then at least one PII was detected",
       },
     },
   },

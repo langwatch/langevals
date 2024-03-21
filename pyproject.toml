@@ -33,6 +33,7 @@ ragas = [ "langevals-ragas",]
 google_cloud = [ "langevals-google_cloud",]
 custom = [ "langevals-custom",]
 lingua = [ "langevals-lingua",]
+aws = [ "langevals-aws",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -70,5 +71,10 @@ optional = true
 
 [tool.poetry.dependencies.langevals-lingua]
 path = "evaluators/lingua"
+develop = true
+optional = true
+
+[tool.poetry.dependencies.langevals-aws]
+path = "evaluators/aws"
 develop = true
 optional = true
