@@ -99,7 +99,7 @@ class AWSComprehendPIIDetectionSettings(BaseModel):
 
 
 class AWSPIIEntityResult(TypedDict):
-    Type: Literal[
+    Name: Literal[
         "BANK_ACCOUNT_NUMBER",
         "BANK_ROUTING",
         "CREDIT_DEBIT_NUMBER",
@@ -139,12 +139,10 @@ class AWSPIIEntityResult(TypedDict):
         "IN_VOTER_NUMBER",
     ]
     Score: float
-    BeginOffset: int
-    EndOffset: int
 
 
 class AWSPIIEntityResults(TypedDict):
-    Entities: list[AWSPIIEntityResult]
+    Labels: list[AWSPIIEntityResult]
 
 
 class AWSComprehendPIIDetectionResult(EvaluationResult):
@@ -185,29 +183,29 @@ class AWSComprehendPIIDetectionEvaluator(
             region_name=self.settings.aws_region,
         )
 
-        response: AWSPIIEntityResults = client.detect_pii_entities(
+        response: AWSPIIEntityResults = client.contains_pii_entities(
             Text=content,
             LanguageCode=self.settings.language_code,
         )
 
-        response["Entities"] = [
+        response["Labels"] = [
             entity
-            for entity in response["Entities"]
-            if getattr(self.settings.entity_types, entity["Type"], False)
+            for entity in response["Labels"]
+            if getattr(self.settings.entity_types, entity["Name"], False)
             and entity["Score"] >= self.settings.min_confidence
         ]
 
         findings = [
-            f"{entity['Type']} (confidence: {entity['Score']:.2f})"
-            for entity in response["Entities"]
+            f"{entity['Name']} (confidence: {entity['Score']:.2f})"
+            for entity in response["Labels"]
         ]
 
         return AWSComprehendPIIDetectionResult(
-            score=len(response["Entities"]),
-            passed=len(response["Entities"]) == 0,
+            score=len(response["Labels"]),
+            passed=len(response["Labels"]) == 0,
             details=(
                 None
-                if len(response["Entities"]) == 0
+                if len(response["Labels"]) == 0
                 else f"PII detected: {', '.join(findings)}"
             ),
             raw_response=response,
