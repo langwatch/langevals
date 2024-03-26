@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "langevals-huggingface"
+version = "0.1.0"
+description = "LangEvals huggingface evaluators."
+authors = ["Yevhenii Budnyk <y.budnyk789@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langevals-core = { path = "../../langevals_core", develop = true }
+evaluate = "^0.4.1"
+bert-score = "^0.3.13"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+python-dotenv = "1.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

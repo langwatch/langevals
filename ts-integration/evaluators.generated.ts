@@ -1,7 +1,14 @@
 export type EvaluatorDefinition<T extends EvaluatorTypes> = {
   name: string;
   description: string;
-  category: "quality" | "rag" | "safety" | "policy" | "other" | "custom";
+  category:
+    | "quality"
+    | "rag"
+    | "safety"
+    | "policy"
+    | "other"
+    | "custom"
+    | "similarity";
   docsUrl?: string;
   isGuardrail: boolean;
   requiredFields: ("input" | "output" | "contexts" | "expected_output")[];
@@ -146,6 +153,9 @@ export type Evaluators = {
         violence_graphic: boolean;
       };
     };
+  };
+  "huggingface/bert_precision": {
+    settings: Record<string, never>;
   };
   "ragas/answer_relevancy": {
     settings: {
@@ -624,6 +634,23 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       score: {
         description:
           "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
+      },
+    },
+  },
+  "huggingface/bert_precision": {
+    name: `BERTPrecision`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, precision is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
       },
     },
   },

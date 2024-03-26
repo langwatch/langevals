@@ -34,6 +34,7 @@ google_cloud = [ "langevals-google_cloud",]
 custom = [ "langevals-custom",]
 lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
+huggingface = [ "langevals-huggingface",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -76,5 +77,10 @@ optional = true
 
 [tool.poetry.dependencies.langevals-aws]
 path = "evaluators/aws"
+develop = true
+optional = true
+
+[tool.poetry.dependencies.langevals-huggingface]
+path = "evaluators/huggingface"
 develop = true
 optional = true

@@ -6,7 +6,7 @@ from typing import ClassVar, Generic, List, Literal, Optional, TypeVar, get_type
 
 from pydantic import BaseModel, ConfigDict, Field
 
-EvalCategories = Literal["quality", "rag", "safety", "policy", "other", "custom"]
+EvalCategories = Literal["quality", "rag", "safety", "policy", "other", "custom", "similarity"]
 
 TSettings = TypeVar("TSettings", bound=BaseModel)
 

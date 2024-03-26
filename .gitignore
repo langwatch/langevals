@@ -6,3 +6,4 @@ dist
 openapi.json
 .venv
 */**/.venv
+.DS_Store
