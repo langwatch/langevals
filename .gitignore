@@ -7,3 +7,4 @@ openapi.json
 .venv
 */**/.venv
 .DS_Store
+notebooks/data/1.0
