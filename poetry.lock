@@ -1699,6 +1699,23 @@ type = "directory"
 url = "evaluators/huggingface"
 
 [[package]]
+name = "langevals-intent"
+version = "0.1.0"
+description = "LangEvals user intent classification."
+optional = true
+python-versions = "^3.11"
+files = []
+develop = true
+
+[package.dependencies]
+langevals-core = {path = "../../langevals_core", develop = true}
+openai = "1.13.3"
+
+[package.source]
+type = "directory"
+url = "evaluators/intent"
+
+[[package]]
 name = "langevals-lingua"
 version = "0.1.0"
 description = "LangEvals lingua evaluator for language detection."
@@ -4210,6 +4227,7 @@ custom = ["langevals-custom"]
 example = ["langevals-example"]
 google-cloud = ["langevals-google_cloud"]
 huggingface = ["langevals-huggingface"]
+intent = ["langevals-intent"]
 lingua = ["langevals-lingua"]
 openai = ["langevals-openai"]
 ragas = ["langevals-ragas"]
@@ -4217,4 +4235,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6750e867d00074638207f6fa54c9cedc572f4f54b6aded68bc14cff446b32a75"
+content-hash = "36ba54baf037ed5fdc88fbe553949c11bae1be697cb84380e715e78bc95772a0"

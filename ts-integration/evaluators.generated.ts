@@ -154,7 +154,18 @@ export type Evaluators = {
       };
     };
   };
+  "intent/off_topic": {
+    settings: {
+      allowed_topics: string[];
+    };
+  };
+  "huggingface/bert_f1": {
+    settings: Record<string, never>;
+  };
   "huggingface/bert_precision": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_recall": {
     settings: Record<string, never>;
   };
   "ragas/answer_relevancy": {
@@ -637,6 +648,48 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       },
     },
   },
+  "intent/off_topic": {
+    name: `Off Topic Evaluator`,
+    description: `
+This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    settings: {
+      allowed_topics: {
+        description:
+          "The list of topics that the chatbot is allowed to talk about",
+        default: ["other"],
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence level of the intent prediction",
+      },
+      passed: {
+        description: "Is the message concerning allowed topic",
+      },
+    },
+  },
+  "huggingface/bert_f1": {
+    name: `BERTF1`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, F1 is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
   "huggingface/bert_precision": {
     name: `BERTPrecision`,
     description: `
@@ -651,6 +704,23 @@ If everything in the generated text matches well with things in the expected tex
     result: {
       score: {
         description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_recall": {
+    name: `BERTRecall`,
+    description: `
+How much of the expected text is covered or represented in the generated text.
+If the generated text includes most or all of the important parts of the expected text, recall is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1 showing the recall of the model. ",
       },
     },
   },

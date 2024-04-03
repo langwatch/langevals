@@ -35,6 +35,7 @@ custom = [ "langevals-custom",]
 lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
+intent = [ "langevals-intent",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -82,5 +83,10 @@ optional = true
 
 [tool.poetry.dependencies.langevals-huggingface]
 path = "evaluators/huggingface"
+develop = true
+optional = true
+
+[tool.poetry.dependencies.langevals-intent]
+path = "evaluators/intent"
 develop = true
 optional = true
