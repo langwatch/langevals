@@ -24,6 +24,8 @@ def test_custom_llm_score_evaluator():
 
     assert result.status == "processed"
     assert result.score < 0.5
+    assert result.cost
+    assert result.cost.amount > 0
 
 
 def test_custom_llm_score_evaluator_skips_if_context_is_too_large():

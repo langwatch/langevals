@@ -26,6 +26,8 @@ def test_custom_llm_boolean_evaluator():
     assert result.status == "processed"
     assert result.score == 0
     assert result.passed == False
+    assert result.cost
+    assert result.cost.amount > 0
 
 
 def test_custom_llm_boolean_evaluator_skips_if_context_is_too_large():

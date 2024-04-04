@@ -7,10 +7,12 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     SingleEvaluationResult,
     EvaluationResultSkipped,
+    Money,
 )
 from pydantic import BaseModel, Field
 import litellm
 from litellm import ModelResponse, Choices, Message
+from litellm.utils import completion_cost
 
 
 class CustomLLMScoreEntry(EvaluatorEntry):
@@ -136,8 +138,10 @@ class CustomLLMScoreEvaluator(
         arguments = json.loads(
             cast(Message, choice.message).tool_calls[0].function.arguments
         )
+        cost = completion_cost(completion_response=response)
 
         return CustomLLMScoreResult(
             score=arguments["final_score"],
             details=arguments["scratchpad"],
+            cost=Money(amount=cost, currency="USD") if cost else None,
         )
