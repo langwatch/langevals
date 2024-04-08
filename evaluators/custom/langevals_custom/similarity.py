@@ -60,7 +60,7 @@ class CustomSimilarityEvaluator(
             return target_value_embeddings
 
         content = entry.input if self.settings.field == "input" else entry.output
-        if content is None:
+        if not content:
             return EvaluationResultSkipped(details="No content to evaluate")
         entry_embeddings = self.get_embeddings(content)
         if isinstance(entry_embeddings, EvaluationResultSkipped):

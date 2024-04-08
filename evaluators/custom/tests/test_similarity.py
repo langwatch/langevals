@@ -90,3 +90,19 @@ def test_custom_semantic_similarity_long_context():
         result.details
         == "Total tokens exceed the maximum of 8192 tokens: 30002 tokens used"
     )
+
+
+def test_custom_semantic_similarity_empty_input_or_output():
+    entry = CustomSimilarityEntry(output="")
+    evaluator = CustomSimilarityEvaluator(
+        settings=CustomSimilaritySettings(
+            field="output",
+            rule="is_similar_to",
+            value="first code",
+            threshold=0.1,
+        )
+    )
+    result = evaluator.evaluate(entry)
+
+    assert result.status == "skipped"
+    assert result.details == "No content to evaluate"
