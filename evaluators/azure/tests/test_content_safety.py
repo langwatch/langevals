@@ -63,3 +63,17 @@ def test_content_safety_with_severity_threshold():
     assert result.status == "processed"
     assert result.passed
     assert result.details is None
+
+
+def test_content_safety_long_input():
+    settings = AzureContentSafetySettings()
+    evaluator = AzureContentSafetyEvaluator(settings=settings)
+
+    input_text = "lorem ipsum dolor " * 1000
+    params = AzureContentSafetyEntry(input=input_text)
+
+    result = evaluator.evaluate(params)
+
+    assert result.status == "processed"
+    assert result.passed
+    assert result.details is None

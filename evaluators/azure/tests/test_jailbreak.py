@@ -32,3 +32,15 @@ def test_jailbreak_detection():
 
     assert empty_result.status == "skipped"
     assert empty_result.details == "Input is empty"
+
+
+def test_jailbreak_long_input():
+    evaluator = AzureJailbreakEvaluator(settings=AzureJailbreakSettings())
+
+    jailbreak_result = evaluator.evaluate(
+        AzureJailbreakEntry(input="lorem ipsum dolor " * 100)
+    )
+
+    assert jailbreak_result.status == "processed"
+    assert jailbreak_result.score == 0
+    assert jailbreak_result.passed

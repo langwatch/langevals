@@ -87,6 +87,11 @@ class GoogleCloudDLPPIIDetectionEvaluator(
             if settings_info_types[info_type]
         ]
 
+        if len(content) > 524288:
+            raise ValueError(
+                "Content exceeds the maximum length of 524288 bytes allowed by Google PII Detection"
+            )
+
         response = dlp_client.inspect_content(
             request={
                 "parent": f"projects/{credentials.project_id}/locations/global",

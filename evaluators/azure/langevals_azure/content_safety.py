@@ -75,7 +75,7 @@ class AzureContentSafetyEvaluator(
         if not content:
             return EvaluationResultSkipped(details="Input and output are both empty")
         request = AnalyzeTextOptions(
-            text=content,
+            text=content[0:10000],
             categories=[
                 key
                 for key in self.settings.categories.model_dump().keys()

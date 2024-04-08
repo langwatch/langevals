@@ -4,93 +4,6 @@ from langevals_lingua.language_detection import (
     LinguaLanguageDetectionSettings,
 )
 
-# describe("LanguageCheck Integration", () => {
-#   it("evaluates language check with a real request", async () => {
-#     const sampleTrace: Trace = {
-#       trace_id: "integration-test-language",
-#       project_id: "integration-test",
-#       metadata: {},
-#       input: { value: "hello how is it going my friend? testing" },
-#       output: { value: "ola como vai voce eu vou bem obrigado" },
-#       metrics: {},
-#       timestamps: { started_at: Date.now(), inserted_at: Date.now() },
-#     };
-
-#     const parameters: Checks["language_check"]["parameters"] = {
-#       checkFor: "input_matches_output",
-#       expectedLanguage: "any",
-#     };
-
-#     const result = await languageCheck(sampleTrace, [], parameters);
-
-#     expect(result.status).toBe("failed");
-#     expect(result.value).toBe(0);
-#   });
-
-#   it("evaluates language check with a specific expected language", async () => {
-#     const sampleTrace: Trace = {
-#       trace_id: "integration-test-language-specific",
-#       project_id: "integration-test",
-#       metadata: {},
-#       input: { value: "hello how is it going my friend? testing" },
-#       output: { value: "hello how is it going my friend? testing" },
-#       metrics: {},
-#       timestamps: { started_at: Date.now(), inserted_at: Date.now() },
-#     };
-
-#     const parameters: Checks["language_check"]["parameters"] = {
-#       checkFor: "input_matches_output",
-#       expectedLanguage: "EN",
-#     };
-
-#     const result = await languageCheck(sampleTrace, [], parameters);
-#     expect(result.status).toBe("succeeded");
-#     expect(result.value).toBe(1);
-#   });
-
-#   it("passes if it could not detect language", async () => {
-#     const sampleTrace: Trace = {
-#       trace_id: "integration-test-language-specific",
-#       project_id: "integration-test",
-#       metadata: {},
-#       input: { value: "small text" },
-#       output: { value: "small text" },
-#       metrics: {},
-#       timestamps: { started_at: Date.now(), inserted_at: Date.now() },
-#     };
-
-#     const parameters: Checks["language_check"]["parameters"] = {
-#       checkFor: "input_matches_output",
-#       expectedLanguage: "EN",
-#     };
-
-#     const result = await languageCheck(sampleTrace, [], parameters);
-#     expect(result.status).toBe("succeeded");
-#     expect(result.value).toBe(1);
-#   });
-
-#   it("should be okay if 'any' language is expected", async () => {
-#     const sampleTrace: Trace = {
-#       trace_id: "integration-test-language-specific",
-#       project_id: "integration-test",
-#       metadata: {},
-#       input: { value: "small text" },
-#       output: { value: "hello how is it going my friend? testing" },
-#       metrics: {},
-#       timestamps: { started_at: Date.now(), inserted_at: Date.now() },
-#     };
-
-#     const parameters: Checks["language_check"]["parameters"] = {
-#       checkFor: "input_matches_output",
-#       expectedLanguage: "any",
-#     };
-
-#     const result = await languageCheck(sampleTrace, [], parameters);
-#     expect(result.status).toBe("succeeded");
-#     expect(result.value).toBe(1);
-#   });
-# });
-
 
 def test_language_detection_evaluator():
     entry = LinguaLanguageDetectionEntry(
@@ -163,3 +76,23 @@ def test_language_detection_evaluator_any_language():
     assert result.passed == True
     assert result.score == 1
     assert result.details == "Languages detected: EN"
+
+
+def test_language_detection_evaluator_long_context():
+    entry = LinguaLanguageDetectionEntry(
+        input="lorem ipsum dolor " * 10000,
+        output="cogito ergo modus operandi",
+    )
+    evaluator = LinguaLanguageDetectionEvaluator(
+        settings=LinguaLanguageDetectionSettings(
+            check_for="input_matches_output", expected_language=None, min_words=0
+        )
+    )
+    result = evaluator.evaluate(entry)
+
+    assert result.status == "processed"
+    assert result.passed == True
+    assert result.score == 1
+    assert (
+        result.details == "Input languages detected: LA. Output languages detected: LA"
+    )

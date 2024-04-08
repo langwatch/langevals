@@ -49,16 +49,20 @@ class AzureJailbreakEvaluator(
             "Content-Type": "application/json",
             "Ocp-Apim-Subscription-Key": key,
         }
-        body = {"text": content}
 
-        with Client() as client:
-            response: Response = client.post(url, headers=headers, json=body)
+        detected = False
+        for i in range(0, len(content), 1000):
+            body = {"text": content[i : i + 1000]}
+            with Client() as client:
+                response: Response = client.post(url, headers=headers, json=body)
 
-        if response.is_error:
-            raise ValueError(f"Error in API response: {response.text}")
+            if response.is_error:
+                raise ValueError(f"Error in API response: {response.text}")
 
-        result = response.json()
-        detected = result.get("jailbreakAnalysis", {}).get("detected", False)
+            result = response.json()
+            detected = result.get("jailbreakAnalysis", {}).get("detected", False)
+            if detected:
+                break
 
         return EvaluationResult(
             score=1 if detected else 0,

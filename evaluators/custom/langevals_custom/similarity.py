@@ -56,10 +56,15 @@ class CustomSimilarityEvaluator(
 
     def evaluate(self, entry: CustomSimilarityEntry) -> SingleEvaluationResult:
         target_value_embeddings = self.get_embeddings(self.settings.value)
+        if isinstance(target_value_embeddings, EvaluationResultSkipped):
+            return target_value_embeddings
+
         content = entry.input if self.settings.field == "input" else entry.output
         if content is None:
             return EvaluationResultSkipped(details="No content to evaluate")
         entry_embeddings = self.get_embeddings(content)
+        if isinstance(entry_embeddings, EvaluationResultSkipped):
+            return entry_embeddings
 
         cosine_similarity = np.dot(target_value_embeddings, entry_embeddings) / (
             np.linalg.norm(target_value_embeddings) * np.linalg.norm(entry_embeddings)
@@ -85,6 +90,12 @@ class CustomSimilarityEvaluator(
 
     def get_embeddings(self, text: str):
         vendor, model = self.settings.embedding_model.split("/")
+
+        total_tokens = len(litellm.encode(model=model, text=text))
+        if total_tokens > 8192:
+            return EvaluationResultSkipped(
+                details=f"Total tokens exceed the maximum of 8192 tokens: {total_tokens} tokens used"
+            )
 
         if vendor == "openai":
             response = litellm.embedding(

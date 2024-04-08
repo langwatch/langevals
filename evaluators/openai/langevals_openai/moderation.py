@@ -72,7 +72,7 @@ class OpenAIModerationEvaluator(
         results: list[SingleEvaluationResult] = []
 
         contents = [
-            "\n\n".join([entry.input or "", entry.output or ""]).strip()
+            "\n\n".join([entry.input or "", entry.output or ""]).strip()[0:10_000]
             for entry in data
         ]
         response = client.moderations.create(input=contents)
