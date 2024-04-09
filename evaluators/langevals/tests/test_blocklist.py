@@ -1,14 +1,14 @@
-from langevals_langevals.blacklist import (
-    BlacklistEvaluator,
-    BlacklistEntry,
-    BlacklistSettings,
+from langevals_langevals.blocklist import (
+    BlocklistEvaluator,
+    BlocklistEntry,
+    BlocklistSettings,
 )
 
 
 def test_blacklist_evaluator_fail():
-    entry = BlacklistEntry(output="Is Man City better than Arsenal?", input="liverpool")
-    settings = BlacklistSettings(competitors=["Man City", "Liverpool"])
-    evaluator = BlacklistEvaluator(settings=settings)
+    entry = BlocklistEntry(output="Is Man City better than Arsenal?", input="liverpool")
+    settings = BlocklistSettings(competitors=["Man City", "Liverpool"])
+    evaluator = BlocklistEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
@@ -17,11 +17,11 @@ def test_blacklist_evaluator_fail():
 
 
 def test_blacklist_evaluator_pass():
-    entry = BlacklistEntry(
+    entry = BlocklistEntry(
         output="Highly likely yes!", input="Is Arsenal winning the EPL this season?"
     )
-    settings = BlacklistSettings(competitors=["Man City", "Liverpool"])
-    evaluator = BlacklistEvaluator(settings=settings)
+    settings = BlocklistSettings(competitors=["Man City", "Liverpool"])
+    evaluator = BlocklistEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
@@ -30,12 +30,12 @@ def test_blacklist_evaluator_pass():
 
 
 def test_blacklist_evaluator_lowercase():
-    entry = BlacklistEntry(
+    entry = BlocklistEntry(
         output="Is Arsenal winning the EPL this season?",
         input="man ciTy is going to win the Champions League",
     )
-    settings = BlacklistSettings(competitors=["Man City", "Liverpool"])
-    evaluator = BlacklistEvaluator(settings=settings)
+    settings = BlocklistSettings(competitors=["Man City", "Liverpool"])
+    evaluator = BlocklistEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"

@@ -9,18 +9,18 @@ from typing import List, Optional
 import re
 
 
-class BlacklistEntry(EvaluatorEntry):
+class BlocklistEntry(EvaluatorEntry):
     output: Optional[str] = None
     input: Optional[str] = None
 
 
-class BlacklistSettings(BaseModel):
+class BlocklistSettings(BaseModel):
     competitors: List[str] = Field(
         default=[""], description="The competitors that must not be mentioned."
     )
 
 
-class BlacklistResult(EvaluationResult):
+class BlocklistResult(EvaluationResult):
     score: float = Field(
         description="Number of competitors mentioned in the input and output"
     )
@@ -33,20 +33,20 @@ class BlacklistResult(EvaluationResult):
     # )
 
 
-class BlacklistEvaluator(
-    BaseEvaluator[BlacklistEntry, BlacklistSettings, BlacklistResult]
+class BlocklistEvaluator(
+    BaseEvaluator[BlocklistEntry, BlocklistSettings, BlocklistResult]
 ):
     """
     This evaluator checks if any of the specified competitors was mentioned
     """
 
-    name = "Competitor Blacklist"
+    name = "Competitor Blocklist"
     category = "other"
     env_vars = ["NECESSARY_ENV_VAR"]
     docs_url = "https://path/to/official/docs"
     is_guardrail = True
 
-    def evaluate(self, entry: BlacklistEntry) -> SingleEvaluationResult:
+    def evaluate(self, entry: BlocklistEntry) -> SingleEvaluationResult:
         passed = True
         escaped_words = [re.escape(word) for word in self.settings.competitors]
         pattern_str = "|".join(escaped_words)
@@ -57,6 +57,6 @@ class BlacklistEvaluator(
             passed = False
         if output_mentioned:
             passed = False
-        return BlacklistResult(
+        return BlocklistResult(
             score=len(input_mentioned) + len(output_mentioned), passed=passed
         )
