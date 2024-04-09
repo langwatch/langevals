@@ -4228,7 +4228,6 @@ custom = ["langevals-custom"]
 example = ["langevals-example"]
 google-cloud = ["langevals-google_cloud"]
 huggingface = ["langevals-huggingface"]
-intent = []
 langevals = ["langevals-langevals"]
 lingua = ["langevals-lingua"]
 openai = ["langevals-openai"]
@@ -4237,4 +4236,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "644b2a6e412dc63ac82206f00171ab252d39bc73bd09d94df6a7736ec501b081"
+content-hash = "cf910d7d1ddebd771b124ba72f47e3c0ba14d25f09e8602682653c41164a5bf3"
