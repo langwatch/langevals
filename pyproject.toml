@@ -35,7 +35,6 @@ custom = [ "langevals-custom",]
 lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
-intent = [ "langevals-intent",]
 langevals = [ "langevals-langevals",]
 
 [tool.poetry.dependencies.langevals-core]
