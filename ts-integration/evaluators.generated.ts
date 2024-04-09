@@ -156,7 +156,18 @@ export type Evaluators = {
   };
   "intent/off_topic": {
     settings: {
-      allowed_topics: string[];
+      allowed_topics: string[][];
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      random: {
+        topic: string;
+        description: string;
+      }[];
     };
   };
   "huggingface/bert_f1": {
@@ -660,8 +671,23 @@ This evaluator checks if the user message is concerning one of the allowed topic
     settings: {
       allowed_topics: {
         description:
-          "The list of topics that the chatbot is allowed to talk about",
-        default: ["other"],
+          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
+        default: [
+          ["other", "Any other topic"],
+          ["simple_chat", "Smalltalk with user"],
+          [
+            "programming_question",
+            "Question concerning programming and software development",
+          ],
+        ],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      random: {
+        description: undefined,
+        default: [],
       },
     },
     result: {
