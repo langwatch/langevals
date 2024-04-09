@@ -30,6 +30,7 @@ def get_evaluator_classes(evaluator_package):
     evaluator_classes: list[BaseEvaluator] = []
     package_path = evaluator_package.__path__
     for _, module_name, _ in pkgutil.walk_packages(package_path):
+        print(f"Loading {evaluator_package.__name__}.{module_name}")
         module = importlib.import_module(f"{evaluator_package.__name__}.{module_name}")
         for name, cls in module.__dict__.items():
             if (

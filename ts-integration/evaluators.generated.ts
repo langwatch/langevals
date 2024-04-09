@@ -154,22 +154,6 @@ export type Evaluators = {
       };
     };
   };
-  "intent/off_topic": {
-    settings: {
-      allowed_topics: string[][];
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      random: {
-        topic: string;
-        description: string;
-      }[];
-    };
-  };
   "huggingface/bert_f1": {
     settings: Record<string, never>;
   };
@@ -178,6 +162,26 @@ export type Evaluators = {
   };
   "huggingface/bert_recall": {
     settings: Record<string, never>;
+  };
+  "langevals/blocklist": {
+    settings: {
+      competitors: string[];
+    };
+  };
+  "langevals/off_topic": {
+    settings: {
+      allowed_topics: {
+        topic: string;
+        description: string;
+      }[];
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+    };
   };
   "ragas/answer_relevancy": {
     settings: {
@@ -659,46 +663,6 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       },
     },
   },
-  "intent/off_topic": {
-    name: `Off Topic Evaluator`,
-    description: `
-This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
-`,
-    category: "other",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: ["input"],
-    settings: {
-      allowed_topics: {
-        description:
-          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
-        default: [
-          ["other", "Any other topic"],
-          ["simple_chat", "Smalltalk with user"],
-          [
-            "programming_question",
-            "Question concerning programming and software development",
-          ],
-        ],
-      },
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
-      },
-      random: {
-        description: undefined,
-        default: [],
-      },
-    },
-    result: {
-      score: {
-        description: "Confidence level of the intent prediction",
-      },
-      passed: {
-        description: "Is the message concerning allowed topic",
-      },
-    },
-  },
   "huggingface/bert_f1": {
     name: `BERTF1`,
     description: `
@@ -747,6 +711,73 @@ If the generated text includes most or all of the important parts of the expecte
     result: {
       score: {
         description: "Score from 0 to 1 showing the recall of the model. ",
+      },
+    },
+  },
+  "langevals/blocklist": {
+    name: `Competitor Blocklist`,
+    description: `
+This evaluator checks if any of the specified competitors was mentioned
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    settings: {
+      competitors: {
+        description: "The competitors that must not be mentioned.",
+        default: [""],
+      },
+    },
+    result: {
+      score: {
+        description: "Number of competitors mentioned in the input and output",
+      },
+      passed: {
+        description: "Is the message containing explicit mention of competitor",
+      },
+    },
+  },
+  "langevals/off_topic": {
+    name: `Off Topic Evaluator`,
+    description: `
+This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    settings: {
+      allowed_topics: {
+        description:
+          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
+        default: [
+          {
+            topic: "other",
+            description: "Any other topic",
+          },
+          {
+            topic: "simple_chat",
+            description: "Smalltalk with user",
+          },
+          {
+            topic: "programming_question",
+            description:
+              "Question concerning programming and software development",
+          },
+        ],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence level of the intent prediction",
+      },
+      passed: {
+        description: "Is the message concerning allowed topic",
       },
     },
   },
