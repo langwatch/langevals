@@ -27,10 +27,6 @@ class BlocklistResult(EvaluationResult):
     passed: Optional[bool] = Field(
         description="Is the message containing explicit mention of competitor"
     )
-    # details: Optional[str] = Field(
-    #     default="Input or Output contained the mention of the competitor",
-    #     description="Where the competitor mention was detected",
-    # )
 
 
 class BlocklistEvaluator(
@@ -57,6 +53,14 @@ class BlocklistEvaluator(
             passed = False
         if output_mentioned:
             passed = False
+
+        details = None
+        if not passed:
+            details = "Competitors mentioned: " + ", ".join(
+                input_mentioned + output_mentioned
+            )
         return BlocklistResult(
-            score=len(input_mentioned) + len(output_mentioned), passed=passed
+            score=len(input_mentioned) + len(output_mentioned),
+            passed=passed,
+            details=details,
         )

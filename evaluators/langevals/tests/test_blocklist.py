@@ -14,6 +14,7 @@ def test_blacklist_evaluator_fail():
     assert result.status == "processed"
     assert result.score == 2
     assert result.passed == False
+    assert result.details == "Competitors mentioned: liverpool, Man City"
 
 
 def test_blacklist_evaluator_pass():
