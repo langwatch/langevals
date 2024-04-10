@@ -1699,6 +1699,24 @@ type = "directory"
 url = "evaluators/huggingface"
 
 [[package]]
+name = "langevals-langevals"
+version = "0.1.0"
+description = "LangEvals house-made classification."
+optional = true
+python-versions = "^3.11"
+files = []
+develop = true
+
+[package.dependencies]
+langevals-core = {path = "../../langevals_core", develop = true}
+litellm = "^1.31.3"
+openai = "1.13.3"
+
+[package.source]
+type = "directory"
+url = "evaluators/langevals"
+
+[[package]]
 name = "langevals-lingua"
 version = "0.1.0"
 description = "LangEvals lingua evaluator for language detection."
@@ -4210,6 +4228,7 @@ custom = ["langevals-custom"]
 example = ["langevals-example"]
 google-cloud = ["langevals-google_cloud"]
 huggingface = ["langevals-huggingface"]
+langevals = ["langevals-langevals"]
 lingua = ["langevals-lingua"]
 openai = ["langevals-openai"]
 ragas = ["langevals-ragas"]
@@ -4217,4 +4236,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6750e867d00074638207f6fa54c9cedc572f4f54b6aded68bc14cff446b32a75"
+content-hash = "cf910d7d1ddebd771b124ba72f47e3c0ba14d25f09e8602682653c41164a5bf3"

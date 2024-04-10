@@ -76,12 +76,19 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
             f"Unsupported field type for typescript conversion: {field} on {definitions.category}/{definitions.evaluator_name} settings"
         )
 
-    for field_name, field in definitions.settings_type.model_fields.items():
-        default = (
-            field.default.model_dump()
-            if isinstance(field.default, BaseModel)
-            else field.default
+    def dump_model_type(value):
+        return (
+            value.model_dump()
+            if isinstance(value, BaseModel)
+            else (
+                [dump_model_type(v) for v in value]
+                if isinstance(value, list)
+                else value
+            )
         )
+
+    for field_name, field in definitions.settings_type.model_fields.items():
+        default = dump_model_type(field.default)
         evaluator_info["settingsDescriptions"][field_name] = {
             "description": field.description,
             "default": default,

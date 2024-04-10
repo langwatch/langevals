@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "langevals-langevals"
+version = "0.1.0"
+description = "LangEvals house-made classification."
+authors = ["Yevhenii Budnyk <y.budnyk789@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+litellm = "^1.31.3"
+langevals-core = { path = "../../langevals_core", develop = true }
+openai = "1.13.3"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+python-dotenv = "1.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
