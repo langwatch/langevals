@@ -20,19 +20,17 @@ class OffTopicEntry(EvaluatorEntry):
 
 
 class AllowedTopic(BaseModel):
-    topic: str 
+    topic: str
     description: str
 
 
 class OffTopicSettings(BaseModel):
     allowed_topics: List[AllowedTopic] = Field(
         default=[
-            AllowedTopic(topic="other", description="Any other topic"),
-            AllowedTopic(topic="simple_chat", description="Smalltalk with user"),
-            AllowedTopic(topic="programming_question", description="Question concerning programming and software development")
+            AllowedTopic(topic="simple_chat", description="Smalltalk with the user"),
+            AllowedTopic(topic="company", description="Questions about the company, what we do, etc"),
         ],
         description="The list of topics and their short descriptions that the chatbot is allowed to talk about",
-        min_length=3
     )
     model: Literal[
         "openai/gpt-3.5-turbo-1106",
@@ -45,7 +43,7 @@ class OffTopicSettings(BaseModel):
         default="openai/gpt-3.5-turbo-0125",
         description="The model to use for evaluation",
     )
-    
+
 
 
 class OffTopicResult(EvaluationResult):
