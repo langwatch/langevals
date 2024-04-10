@@ -131,6 +131,11 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
         for field_name, field in definitions.entry_type.model_fields.items()
         if not is_field_optional(field)
     ]
+    evaluator_info["optionalFields"] = [
+        field_name
+        for field_name, field in definitions.entry_type.model_fields.items()
+        if is_field_optional(field)
+    ]
 
     return evaluator_info
 
@@ -145,6 +150,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"    docsUrl?: string;\n"
         f"    isGuardrail: boolean;\n"
         f'    requiredFields: ("input" | "output" | "contexts" | "expected_output")[];\n'
+        f'    optionalFields: ("input" | "output" | "contexts" | "expected_output")[];\n'
         f"    settings: {{\n"
         f'        [K in keyof Evaluators[T]["settings"]]: {{\n'
         f"        description?: string;\n"
@@ -209,6 +215,9 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         )
         ts_definitions += (
             f'    requiredFields: {json.dumps(evaluator_info["requiredFields"])},\n'
+        )
+        ts_definitions += (
+            f'    optionalFields: {json.dumps(evaluator_info["optionalFields"])},\n'
         )
         ts_definitions += f'    settings: {json.dumps(evaluator_info["settingsDescriptions"], indent=6).replace(": null", ": undefined")},\n'
         ts_definitions += (

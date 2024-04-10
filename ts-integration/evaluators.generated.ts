@@ -12,6 +12,7 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
   docsUrl?: string;
   isGuardrail: boolean;
   requiredFields: ("input" | "output" | "contexts" | "expected_output")[];
+  optionalFields: ("input" | "output" | "contexts" | "expected_output")[];
   settings: {
     [K in keyof Evaluators[T]["settings"]]: {
       description?: string;
@@ -152,35 +153,6 @@ export type Evaluators = {
         violence: boolean;
         violence_graphic: boolean;
       };
-    };
-  };
-  "huggingface/bert_f1": {
-    settings: Record<string, never>;
-  };
-  "huggingface/bert_precision": {
-    settings: Record<string, never>;
-  };
-  "huggingface/bert_recall": {
-    settings: Record<string, never>;
-  };
-  "langevals/blocklist": {
-    settings: {
-      competitors: string[];
-    };
-  };
-  "langevals/off_topic": {
-    settings: {
-      allowed_topics: {
-        topic: string;
-        description: string;
-      }[];
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
     };
   };
   "ragas/answer_relevancy": {
@@ -445,6 +417,7 @@ social security numbers. It allows customization of the detection threshold and 
     docsUrl: "https://cloud.google.com/sensitive-data-protection/docs/apis",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output"],
     settings: {
       info_types: {
         description: "The types of PII to check for in the input.",
@@ -484,6 +457,7 @@ Allows you to check for simple text matches or regex evaluation.
     docsUrl: "",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output"],
     settings: {
       rules: {
         description: undefined,
@@ -505,6 +479,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
     docsUrl: "",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output", "contexts"],
     settings: {
       model: {
         description: "The model to use for evaluation",
@@ -540,6 +515,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
     docsUrl: "",
     isGuardrail: false,
     requiredFields: [],
+    optionalFields: ["input", "output", "contexts"],
     settings: {
       model: {
         description: "The model to use for evaluation",
@@ -574,6 +550,7 @@ match on the exact text.
     docsUrl: "",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output"],
     settings: {
       field: {
         description: undefined,
@@ -616,6 +593,7 @@ This evaluator serves as a boilerplate for creating new evaluators.
     docsUrl: "https://path/to/official/docs",
     isGuardrail: false,
     requiredFields: ["output"],
+    optionalFields: [],
     settings: {},
     result: {
       score: {
@@ -633,6 +611,7 @@ including harassment, hate speech, self-harm, sexual content, and violence.
     docsUrl: "https://platform.openai.com/docs/guides/moderation/overview",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output"],
     settings: {
       model: {
         description:
@@ -663,124 +642,6 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       },
     },
   },
-  "huggingface/bert_f1": {
-    name: `BERTF1`,
-    description: `
-How well the words in the generated text match with anything in the expected text.
-If everything in the generated text matches well with things in the expected text, F1 is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1.",
-      },
-    },
-  },
-  "huggingface/bert_precision": {
-    name: `BERTPrecision`,
-    description: `
-How well the words in the generated text match with anything in the expected text.
-If everything in the generated text matches well with things in the expected text, precision is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1.",
-      },
-    },
-  },
-  "huggingface/bert_recall": {
-    name: `BERTRecall`,
-    description: `
-How much of the expected text is covered or represented in the generated text.
-If the generated text includes most or all of the important parts of the expected text, recall is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1 showing the recall of the model. ",
-      },
-    },
-  },
-  "langevals/blocklist": {
-    name: `Competitor Blocklist`,
-    description: `
-This evaluator checks if any of the specified competitors was mentioned
-`,
-    category: "other",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: [],
-    settings: {
-      competitors: {
-        description: "The competitors that must not be mentioned.",
-        default: [""],
-      },
-    },
-    result: {
-      score: {
-        description: "Number of competitors mentioned in the input and output",
-      },
-      passed: {
-        description: "Is the message containing explicit mention of competitor",
-      },
-    },
-  },
-  "langevals/off_topic": {
-    name: `Off Topic Evaluator`,
-    description: `
-This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
-`,
-    category: "other",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: ["input"],
-    settings: {
-      allowed_topics: {
-        description:
-          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
-        default: [
-          {
-            topic: "other",
-            description: "Any other topic",
-          },
-          {
-            topic: "simple_chat",
-            description: "Smalltalk with user",
-          },
-          {
-            topic: "programming_question",
-            description:
-              "Question concerning programming and software development",
-          },
-        ],
-      },
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
-      },
-    },
-    result: {
-      score: {
-        description: "Confidence level of the intent prediction",
-      },
-      passed: {
-        description: "Is the message concerning allowed topic",
-      },
-    },
-  },
   "ragas/answer_relevancy": {
     name: `Ragas Answer Relevancy`,
     description: `
@@ -791,6 +652,7 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
       "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
     isGuardrail: false,
     requiredFields: ["input", "output"],
+    optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -814,6 +676,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
       "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
     isGuardrail: false,
     requiredFields: ["input", "contexts", "expected_output"],
+    optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -837,6 +700,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
       "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
     isGuardrail: false,
     requiredFields: ["contexts", "expected_output"],
+    optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -860,6 +724,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
       "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
     isGuardrail: false,
     requiredFields: ["output", "contexts"],
+    optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -883,6 +748,7 @@ This metric evaluates whether all of the output relevant items present in the co
       "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
     isGuardrail: false,
     requiredFields: ["input", "output", "contexts"],
+    optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -906,6 +772,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
       "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
     isGuardrail: false,
     requiredFields: ["output", "contexts"],
+    optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
@@ -929,6 +796,7 @@ or if it's in a specific expected language.
     docsUrl: "https://github.com/pemistahl/lingua-py",
     isGuardrail: true,
     requiredFields: ["input", "output"],
+    optionalFields: [],
     settings: {
       check_for: {
         description: "What should be checked",
@@ -969,6 +837,7 @@ social security numbers. It allows customization of the detection threshold and 
     docsUrl: "https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output"],
     settings: {
       entity_types: {
         description: "The types of PII to check for in the input.",
@@ -1049,6 +918,7 @@ threshold and the specific categories to check.
       "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
     isGuardrail: true,
     requiredFields: [],
+    optionalFields: ["input", "output"],
     settings: {
       severity_threshold: {
         description:
@@ -1086,6 +956,7 @@ This evaluator checks for jailbreak-attempt in the input using Azure's Content S
     docsUrl: "",
     isGuardrail: true,
     requiredFields: ["input"],
+    optionalFields: [],
     settings: {},
     result: {
       passed: {
