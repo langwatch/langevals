@@ -672,7 +672,7 @@ including harassment, hate speech, self-harm, sexual content, and violence.
     },
   },
   "huggingface/bert_f1": {
-    name: `BERTF1`,
+    name: `BERT F1 Score`,
     description: `
 How well the words in the generated text match with anything in the expected text.
 If everything in the generated text matches well with things in the expected text, F1 is high.
@@ -690,7 +690,7 @@ If everything in the generated text matches well with things in the expected tex
     },
   },
   "huggingface/bert_precision": {
-    name: `BERTPrecision`,
+    name: `BERT Precision Score`,
     description: `
 How well the words in the generated text match with anything in the expected text.
 If everything in the generated text matches well with things in the expected text, precision is high.
@@ -708,7 +708,7 @@ If everything in the generated text matches well with things in the expected tex
     },
   },
   "huggingface/bert_recall": {
-    name: `BERTRecall`,
+    name: `BERT Recall Score`,
     description: `
 How much of the expected text is covered or represented in the generated text.
 If the generated text includes most or all of the important parts of the expected text, recall is high.
@@ -730,7 +730,7 @@ If the generated text includes most or all of the important parts of the expecte
     description: `
 This evaluator checks if any of the specified competitors was mentioned
 `,
-    category: "other",
+    category: "policy",
     docsUrl: "https://path/to/official/docs",
     isGuardrail: true,
     requiredFields: [],
@@ -755,7 +755,7 @@ This evaluator checks if any of the specified competitors was mentioned
     description: `
 This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
 `,
-    category: "other",
+    category: "policy",
     docsUrl: "https://path/to/official/docs",
     isGuardrail: true,
     requiredFields: ["input"],

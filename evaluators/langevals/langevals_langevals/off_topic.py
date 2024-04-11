@@ -65,7 +65,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
     """
 
     name = "Off Topic Evaluator"
-    category = "other"
+    category = "policy"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
     default_settings = OffTopicSettings()
     docs_url = "https://path/to/official/docs"  # The URL to the official documentation of the evaluator

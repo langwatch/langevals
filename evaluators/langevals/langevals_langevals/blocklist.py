@@ -37,7 +37,7 @@ class BlocklistEvaluator(
     """
 
     name = "Competitor Blocklist"
-    category = "other"
+    category = "policy"
     env_vars = []
     default_settings = BlocklistSettings()
     docs_url = "https://path/to/official/docs"
