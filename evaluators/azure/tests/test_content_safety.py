@@ -66,8 +66,7 @@ def test_content_safety_with_severity_threshold():
 
 
 def test_content_safety_long_input():
-    settings = AzureContentSafetySettings()
-    evaluator = AzureContentSafetyEvaluator(settings=settings)
+    evaluator = AzureContentSafetyEvaluator()
 
     input_text = "lorem ipsum dolor " * 1000
     params = AzureContentSafetyEntry(input=input_text)

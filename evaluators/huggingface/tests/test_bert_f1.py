@@ -6,6 +6,8 @@ from langevals_huggingface.bert_f1 import (
 
 
 def test_bert_f1_evaluator():
+    BertF1Evaluator.preload()
+
     entry = BertF1Entry(
         output="Mark Rutte is the president of the Netherlands",
         expected_output="Mark Rutte is the prime minister of the Neterlands.",

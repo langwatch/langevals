@@ -52,6 +52,7 @@ class CustomSimilarityEvaluator(
     name = "Semantic Similarity Evaluator"
     category = "custom"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+    default_settings = CustomSimilaritySettings()
     is_guardrail = True
 
     def evaluate(self, entry: CustomSimilarityEntry) -> SingleEvaluationResult:

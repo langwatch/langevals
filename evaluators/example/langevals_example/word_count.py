@@ -41,6 +41,7 @@ class ExampleWordCountEvaluator(
     env_vars = [
         "NECESSARY_ENV_VAR"
     ]  # The environment variables that are necessary for the evaluator to run
+    default_settings = ExampleWordCountSettings()  # The default settings for the evaluator in case no settings are provided
     docs_url = "https://path/to/official/docs"  # The URL to the official documentation of the evaluator
     is_guardrail = False  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
 

@@ -21,6 +21,7 @@ class RagasAnswerRelevancyEvaluator(
     name = "Ragas Answer Relevancy"
     category = "rag"
     env_vars = env_vars
+    default_settings = RagasSettings()
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html"
     is_guardrail = False
 

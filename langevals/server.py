@@ -49,6 +49,8 @@ def create_evaluator_routes(evaluator_cls):
             json_schema_extra={"example": {}},
         )
 
+    evaluator_cls.preload()
+
     @app.post(
         f"/{module_name}/{evaluator_name}/evaluate",
         name=f"{module_name}_{evaluator_name}_evaluate",
@@ -64,7 +66,11 @@ def create_evaluator_routes(evaluator_cls):
 evaluators = load_evaluator_packages()
 for evaluator_name, evaluator_package in evaluators.items():
     module_name = evaluator_package.__name__.split("langevals_")[1]
-    if len(sys.argv) > 2 and sys.argv[1] == "--only" and module_name not in sys.argv[2].split(","):
+    if (
+        len(sys.argv) > 2
+        and sys.argv[1] == "--only"
+        and module_name not in sys.argv[2].split(",")
+    ):
         continue
     print(f"Loading {evaluator_package.__name__}")
     for evaluator_cls in get_evaluator_classes(evaluator_package):
@@ -80,6 +86,9 @@ async def validation_exception_handler(request: Request, exc: ValidationError):
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--preload":
+        print("Preloading done")
+        return
     if len(sys.argv) > 1 and sys.argv[1] == "--export-openapi-json":
         import json
 

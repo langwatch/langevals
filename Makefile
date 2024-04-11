@@ -51,6 +51,10 @@ install: ensure-poetry install-core install-evaluators
 	poetry install --all-extras
 	make setup && poetry lock --no-update && poetry install --all-extras
 
+preload:
+	@echo "Preloading evaluators..."
+	poetry run python langevals/server.py --preload
+
 start:
 	@echo "Starting the server..."
 	poetry run python langevals/server.py $(filter-out $@,$(MAKECMDGOALS))

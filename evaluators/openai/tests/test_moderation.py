@@ -11,7 +11,7 @@ from langevals_openai.moderation import (
 
 
 def test_moderation_integration():
-    evaluator = OpenAIModerationEvaluator(settings=OpenAIModerationSettings())
+    evaluator = OpenAIModerationEvaluator()
 
     results = evaluator.evaluate_batch(
         data=[

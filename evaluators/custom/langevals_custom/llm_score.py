@@ -59,6 +59,7 @@ class CustomLLMScoreEvaluator(
     name = "Custom LLM Score Evaluator"
     category = "custom"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+    default_settings = CustomLLMScoreSettings()
     is_guardrail = False
 
     def evaluate(self, entry: CustomLLMScoreEntry) -> SingleEvaluationResult:

@@ -2,11 +2,22 @@ from dataclasses import dataclass
 import os
 from abc import ABC
 import traceback
-from typing import ClassVar, Generic, List, Literal, Optional, TypeVar, get_type_hints
+from typing import (
+    ClassVar,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    Type,
+    TypeVar,
+    get_type_hints,
+)
 
 from pydantic import BaseModel, ConfigDict, Field
 
-EvalCategories = Literal["quality", "rag", "safety", "policy", "other", "custom", "similarity"]
+EvalCategories = Literal[
+    "quality", "rag", "safety", "policy", "other", "custom", "similarity"
+]
 
 TSettings = TypeVar("TSettings", bound=BaseModel)
 
@@ -54,7 +65,7 @@ class EvaluatorEntry(BaseModel):
                 and subclass_fields_types[field] not in expected_types
             ):
                 raise TypeError(
-                    f"Field '{field}' in {cls.__name__} must be of type {expected_type.__name__}, got {subclass_fields_types[field].__name__}"
+                    f"Field '{field}' in {cls.__name__} must be of type {expected_types}, got {subclass_fields_types[field].__name__}"
                 )
 
 
@@ -118,7 +129,8 @@ class EnvMissingException(Exception):
 
 
 class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
-    settings: TSettings
+    default_settings: ClassVar[TSettings]  # type: ignore
+    settings: TSettings = Field(default=None)
     env: Optional[dict[str, str]] = None
     entry: Optional[TEntry] = (
         None  # dummy field just to read the type later when creating the routes
@@ -132,6 +144,18 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     env_vars: ClassVar[list[str]] = []
     docs_url: ClassVar[str] = ""
     is_guardrail: ClassVar[bool] = False
+    __preloaded: ClassVar[bool] = False
+
+    def __init__(self, **kwargs):
+        if "settings" not in kwargs:
+            kwargs["settings"] = self.default_settings
+        super().__init__(**kwargs)
+        if not self.__preloaded:
+            self.__class__.preload()
+
+    @classmethod
+    def preload(cls):
+        cls.__preloaded = True
 
     def get_env(self, var: str):
         if var not in self.env_vars and (self.env is None or var not in self.env):

@@ -38,7 +38,8 @@ class BlocklistEvaluator(
 
     name = "Competitor Blocklist"
     category = "other"
-    env_vars = ["NECESSARY_ENV_VAR"]
+    env_vars = []
+    default_settings = BlocklistSettings()
     docs_url = "https://path/to/official/docs"
     is_guardrail = True
 

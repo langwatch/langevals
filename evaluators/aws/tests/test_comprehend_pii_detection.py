@@ -5,7 +5,6 @@ dotenv.load_dotenv()
 from langevals_aws.comprehend_pii_detection import (
     AWSComprehendPIIDetectionEvaluator,
     AWSComprehendPIIDetectionEntry,
-    AWSComprehendPIIDetectionSettings,
 )
 
 
@@ -13,9 +12,7 @@ def test_dlp_pii_detection():
     entry = AWSComprehendPIIDetectionEntry(
         input="hey there, my email is foo at bar dot com"
     )
-    evaluator = AWSComprehendPIIDetectionEvaluator(
-        settings=AWSComprehendPIIDetectionSettings()
-    )
+    evaluator = AWSComprehendPIIDetectionEvaluator()
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"

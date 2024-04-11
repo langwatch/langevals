@@ -28,7 +28,10 @@ class OffTopicSettings(BaseModel):
     allowed_topics: List[AllowedTopic] = Field(
         default=[
             AllowedTopic(topic="simple_chat", description="Smalltalk with the user"),
-            AllowedTopic(topic="company", description="Questions about the company, what we do, etc"),
+            AllowedTopic(
+                topic="company",
+                description="Questions about the company, what we do, etc",
+            ),
         ],
         description="The list of topics and their short descriptions that the chatbot is allowed to talk about",
     )
@@ -45,14 +48,14 @@ class OffTopicSettings(BaseModel):
     )
 
 
-
 class OffTopicResult(EvaluationResult):
     score: float = Field(description="Confidence level of the intent prediction")
     passed: Optional[bool] = Field(
         description="Is the message concerning allowed topic"
     )
     details: Optional[str] = Field(
-        default="1.0 confidence that the actual intent is other", description="Predicted intent of the message and the confidence"
+        default="1.0 confidence that the actual intent is other",
+        description="Predicted intent of the message and the confidence",
     )
 
 
@@ -64,6 +67,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
     name = "Off Topic Evaluator"
     category = "other"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+    default_settings = OffTopicSettings()
     docs_url = "https://path/to/official/docs"  # The URL to the official documentation of the evaluator
     is_guardrail = True  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
 
@@ -77,9 +81,15 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         content = entry.input or ""
         if not content:
             return EvaluationResultSkipped(details="Input is empty")
-        topics_descriptions = [f"Intent: {allowed_topic.topic} - description: {allowed_topic.description}" for allowed_topic in self.settings.allowed_topics]
+        topics_descriptions = "\n #".join(
+            [
+                f"Intent: {allowed_topic.topic} - Description: {allowed_topic.description}"
+                for allowed_topic in self.settings.allowed_topics
+            ]
+        )
         litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
-        prompt = f"You are an intent classification system. Your goal is to identify the intent of the message. Consider these intents and their following descriptions: {"\n #".join(topics_descriptions)}"
+
+        prompt = f"You are an intent classification system. Your goal is to identify the intent of the message. Consider these intents and their following descriptions: {topics_descriptions}"
         response = litellm.completion(
             model=litellm_model,
             messages=[
@@ -104,7 +114,12 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
                                 "intent": {
                                     "type": "string",
                                     "description": "The intent of the user message, what is the message about",
-                                    "enum": list(set(allowed_topic.topic for allowed_topic in self.settings.allowed_topics))
+                                    "enum": list(
+                                        set(
+                                            allowed_topic.topic
+                                            for allowed_topic in self.settings.allowed_topics
+                                        )
+                                    )
                                     + ["other"],
                                 },
                                 "confidence": {

@@ -155,6 +155,35 @@ export type Evaluators = {
       };
     };
   };
+  "huggingface/bert_f1": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_precision": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_recall": {
+    settings: Record<string, never>;
+  };
+  "langevals/blocklist": {
+    settings: {
+      competitors: string[];
+    };
+  };
+  "langevals/off_topic": {
+    settings: {
+      allowed_topics: {
+        topic: string;
+        description: string;
+      }[];
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+    };
+  };
   "ragas/answer_relevancy": {
     settings: {
       model:
@@ -639,6 +668,124 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       score: {
         description:
           "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
+      },
+    },
+  },
+  "huggingface/bert_f1": {
+    name: `BERTF1`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, F1 is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_precision": {
+    name: `BERTPrecision`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, precision is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_recall": {
+    name: `BERTRecall`,
+    description: `
+How much of the expected text is covered or represented in the generated text.
+If the generated text includes most or all of the important parts of the expected text, recall is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1 showing the recall of the model. ",
+      },
+    },
+  },
+  "langevals/blocklist": {
+    name: `Competitor Blocklist`,
+    description: `
+This evaluator checks if any of the specified competitors was mentioned
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      competitors: {
+        description: "The competitors that must not be mentioned.",
+        default: [""],
+      },
+    },
+    result: {
+      score: {
+        description: "Number of competitors mentioned in the input and output",
+      },
+      passed: {
+        description: "Is the message containing explicit mention of competitor",
+      },
+    },
+  },
+  "langevals/off_topic": {
+    name: `Off Topic Evaluator`,
+    description: `
+This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    optionalFields: [],
+    settings: {
+      allowed_topics: {
+        description:
+          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
+        default: [
+          {
+            topic: "simple_chat",
+            description: "Smalltalk with the user",
+          },
+          {
+            topic: "company",
+            description: "Questions about the company, what we do, etc",
+          },
+        ],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence level of the intent prediction",
+      },
+      passed: {
+        description: "Is the message concerning allowed topic",
       },
     },
   },

@@ -43,6 +43,7 @@ class CustomBasicEvaluator(
 
     name = "Custom Basic Evaluator"
     category = "custom"
+    default_settings = CustomBasicSettings()
     is_guardrail = True
 
     def evaluate(self, entry: CustomBasicEntry) -> SingleEvaluationResult:

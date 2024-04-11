@@ -22,6 +22,7 @@ class RagasContextPrecisionEvaluator(
     name = "Ragas Context Precision"
     category = "rag"
     env_vars = env_vars
+    default_settings = RagasSettings()
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html"
     is_guardrail = False
 

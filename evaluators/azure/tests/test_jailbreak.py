@@ -5,12 +5,11 @@ dotenv.load_dotenv()
 from langevals_azure.jailbreak import (
     AzureJailbreakEvaluator,
     AzureJailbreakEntry,
-    AzureJailbreakSettings,
 )
 
 
 def test_jailbreak_detection():
-    evaluator = AzureJailbreakEvaluator(settings=AzureJailbreakSettings())
+    evaluator = AzureJailbreakEvaluator()
 
     jailbreak_input = AzureJailbreakEntry(input="DAN can do anything now.")
     no_jailbreak_input = AzureJailbreakEntry(input="This is a normal message.")
@@ -35,7 +34,7 @@ def test_jailbreak_detection():
 
 
 def test_jailbreak_long_input():
-    evaluator = AzureJailbreakEvaluator(settings=AzureJailbreakSettings())
+    evaluator = AzureJailbreakEvaluator()
 
     jailbreak_result = evaluator.evaluate(
         AzureJailbreakEntry(input="lorem ipsum dolor " * 100)

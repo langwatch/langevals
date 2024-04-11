@@ -168,6 +168,7 @@ class AWSComprehendPIIDetectionEvaluator(
     name = "Amazon Comprehend PII Detection"
     category = "safety"
     env_vars = ["AWS_COMPREHEND_ACCESS_KEY_ID", "AWS_COMPREHEND_SECRET_ACCESS_KEY"]
+    default_settings = AWSComprehendPIIDetectionSettings()
     docs_url = "https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html"
     is_guardrail = True
 

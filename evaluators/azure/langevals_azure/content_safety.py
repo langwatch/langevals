@@ -62,6 +62,7 @@ class AzureContentSafetyEvaluator(
     name = "Azure Content Safety"
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
+    default_settings = AzureContentSafetySettings()
     docs_url = "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text"
     is_guardrail = True
 

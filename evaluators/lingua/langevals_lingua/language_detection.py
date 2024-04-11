@@ -125,13 +125,6 @@ class LinguaLanguageDetectionResult(EvaluationResult):
     raw_response: LinguaLanguageDetectionRawResponse
 
 
-detector = (
-    LanguageDetectorBuilder.from_all_languages()
-    .with_preloaded_language_models()
-    .build()
-)
-
-
 class LinguaLanguageDetectionEvaluator(
     BaseEvaluator[
         LinguaLanguageDetectionEntry,
@@ -146,8 +139,18 @@ class LinguaLanguageDetectionEvaluator(
 
     name = "Lingua Language Detection"
     category = "quality"
+    default_settings = LinguaLanguageDetectionSettings()
     docs_url = "https://github.com/pemistahl/lingua-py"
     is_guardrail = True
+
+    @classmethod
+    def preload(cls):
+        cls.detector = (
+            LanguageDetectorBuilder.from_all_languages()
+            .with_preloaded_language_models()
+            .build()
+        )
+        super().preload()
 
     def evaluate(self, entry: LinguaLanguageDetectionEntry) -> SingleEvaluationResult:
         words = entry.input.split(" ")
@@ -162,7 +165,9 @@ class LinguaLanguageDetectionEvaluator(
                 details=f"Skipped because the output has less than {self.settings.min_words} words"
             )
 
-        output_languages = detector.compute_language_confidence_values(entry.output)
+        output_languages = self.detector.compute_language_confidence_values(
+            entry.output
+        )
         output_languages = dict(
             [
                 (lang.language.iso_code_639_1.name, lang.value)
@@ -189,7 +194,7 @@ class LinguaLanguageDetectionEvaluator(
                 ),
             )
 
-        input_languages = detector.compute_language_confidence_values(entry.input)
+        input_languages = self.detector.compute_language_confidence_values(entry.input)
         input_languages = dict(
             [
                 (lang.language.iso_code_639_1.name, lang.value)

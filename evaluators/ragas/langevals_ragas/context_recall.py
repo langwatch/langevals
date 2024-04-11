@@ -21,6 +21,7 @@ class RagasContextRecallEvaluator(
     name = "Ragas Context Recall"
     category = "rag"
     env_vars = env_vars
+    default_settings = RagasSettings()
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html"
     is_guardrail = False
 

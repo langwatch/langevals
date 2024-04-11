@@ -21,6 +21,7 @@ class RagasContextRelevancyEvaluator(
     name = "Ragas Context Relevancy"
     category = "rag"
     env_vars = env_vars
+    default_settings = RagasSettings()
     docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html"
     is_guardrail = False
 

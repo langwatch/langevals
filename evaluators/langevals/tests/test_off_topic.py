@@ -62,8 +62,7 @@ def test_off_topic_evaluator():
 
 def test_off_topic_evaluator_default():
     entry = OffTopicEntry(input="Hey there, how are you?")
-    settings = OffTopicSettings()
-    evaluator = OffTopicEvaluator(settings=settings)
+    evaluator = OffTopicEvaluator()
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"

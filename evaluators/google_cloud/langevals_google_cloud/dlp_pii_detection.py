@@ -65,6 +65,7 @@ class GoogleCloudDLPPIIDetectionEvaluator(
     name = "Google Cloud DLP PII Detection"
     category = "safety"
     env_vars = ["GOOGLE_CREDENTIALS_JSON"]
+    default_settings = GoogleCloudDLPPIIDetectionSettings()
     docs_url = "https://cloud.google.com/sensitive-data-protection/docs/apis"
     is_guardrail = True
 

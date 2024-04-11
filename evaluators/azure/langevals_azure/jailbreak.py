@@ -34,6 +34,7 @@ class AzureJailbreakEvaluator(
     name = "Azure Jailbreak Detection"
     category = "safety"
     env_vars = ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"]
+    default_settings = AzureJailbreakSettings()
     is_guardrail = True
 
     def evaluate(self, entry: AzureJailbreakEntry) -> SingleEvaluationResult:
