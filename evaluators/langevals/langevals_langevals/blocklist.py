@@ -16,7 +16,7 @@ class BlocklistEntry(EvaluatorEntry):
 
 class BlocklistSettings(BaseModel):
     competitors: List[str] = Field(
-        default=[""], description="The competitors that must not be mentioned."
+        default=["OpenAI", "Google", "Microsoft"], description="The competitors that must not be mentioned."
     )
 
 

@@ -489,8 +489,15 @@ Allows you to check for simple text matches or regex evaluation.
     optionalFields: ["input", "output"],
     settings: {
       rules: {
-        description: undefined,
-        default: [],
+        description:
+          "List of rules to check, the message must pass all of them",
+        default: [
+          {
+            field: "output",
+            rule: "not_contains",
+            value: "artificial intelligence",
+          },
+        ],
       },
     },
     result: {
@@ -738,7 +745,7 @@ This evaluator checks if any of the specified competitors was mentioned
     settings: {
       competitors: {
         description: "The competitors that must not be mentioned.",
-        default: [""],
+        default: ["OpenAI", "Google", "Microsoft"],
       },
     },
     result: {

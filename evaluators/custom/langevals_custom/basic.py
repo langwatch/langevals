@@ -26,7 +26,9 @@ class CustomBasicRule(BaseModel):
 
 
 class CustomBasicSettings(BaseModel):
-    rules: list[CustomBasicRule] = []
+    rules: list[CustomBasicRule] = Field(default=[
+        CustomBasicRule(field="output", rule="not_contains", value="artificial intelligence"),
+    ], description="List of rules to check, the message must pass all of them")
 
 
 class CustomBasicResult(EvaluationResult):

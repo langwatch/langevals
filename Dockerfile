@@ -16,7 +16,7 @@ COPY evaluators/$EVALUATOR evaluators/$EVALUATOR
 
 RUN poetry install --only main --extras=$EVALUATOR
 COPY langevals/ langevals/
-RUN poetry run python langevals/server.py --preload
+RUN PYTHONPATH="." poetry run python langevals/server.py --preload
 
 COPY . .
 
