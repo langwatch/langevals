@@ -147,7 +147,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         cost = completion_cost(completion_response=response)
         return OffTopicResult(
             score=float(confidence),
-            details=f"{confidence} confidence that the actual intent is {intent}",
+            details=f"Detected intent: {intent}",
             passed=passed,
             cost=Money(amount=cost, currency="USD") if cost else None,
         )

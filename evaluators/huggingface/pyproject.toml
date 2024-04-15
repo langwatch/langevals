@@ -10,10 +10,20 @@ python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
 evaluate = "^0.4.1"
 bert-score = "^0.3.13"
+# Force CPU-only version of torch
+torch = [
+  { version = "^2.2.2+cpu", source = "pytorch_cpu", markers = "sys_platform == 'linux'" },
+  { version = "^2.2.2", source = "pypi", markers = "sys_platform != 'linux'" },
+]
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
 python-dotenv = "1.0.1"
+
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

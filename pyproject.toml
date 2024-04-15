@@ -8,6 +8,10 @@ version = "0.1.2"
 description = "A platform to evaluate LLM outputs using various evaluators."
 authors = [ "Rogerio Chaves <rogerio@langwatch.ai>",]
 license = "MIT"
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -16,6 +20,17 @@ hypercorn = "^0.16.0"
 pydantic = "^2.6.4"
 python-dotenv = "1.0.1"
 mangum = "^0.17.0"
+[[tool.poetry.dependencies.torch]]
+version = "^2.2.2+cpu"
+optional = true
+source = "pytorch_cpu"
+markers = "sys_platform == 'linux'"
+
+[[tool.poetry.dependencies.torch]]
+version = "^2.2.2"
+optional = true
+source = "pypi"
+markers = "sys_platform != 'linux'"
 
 [tool.poetry.scripts]
 langevals-server = "langevals.server:main"
