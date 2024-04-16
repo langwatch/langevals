@@ -9,7 +9,7 @@ from langevals_core.base_evaluator import (
 import litellm
 from litellm import get_max_tokens 
 from litellm import ModelResponse, Choices, Message
-from litellm.utils import completion_cost
+from litellm.utils import completion_cost, trim_messages
 from pydantic import BaseModel, Field
 from typing import Optional, List, Literal, cast
 import json
@@ -90,19 +90,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         if max_tokens_retrieved is None:
             raise ValueError("Model not mapped yet, cannot retrieve max tokens.")
         llm_max_tokens: int = int(max_tokens_retrieved)
-        # llm_max_tokens: int = int(get_max_tokens(litellm_model)) if get_max_tokens(litellm_model) else self.settings.max_tokens
-        total_tokens = len(
-            litellm.encode(
-                model=litellm_model, text=f"{prompt} {content}"
-            )
-        )
-        
-        max_tokens = min(self.settings.max_tokens, int(llm_max_tokens)) if self.settings.max_tokens else int(llm_max_tokens)
-        
-        if total_tokens > max_tokens:
-            return EvaluationResultSkipped(
-                details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
-            )
+        max_tokens = min(self.settings.max_tokens, llm_max_tokens) if self.settings.max_tokens else llm_max_tokens
         messages = [
                 {
                     "role": "system",
@@ -113,6 +101,8 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
                     "content": content,
                 },
         ]
+        messages = cast(List[dict[str, str]], trim_messages(messages, litellm_model, max_tokens=max_tokens))
+
         response = litellm.completion(
             model=litellm_model,
             messages=messages,
@@ -141,7 +131,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
                     },
                 },
             ],
-            tool_choice={"type": "function", "function": {"name": "identify_intent"}},  # type: ignore
+            tool_choice={"type": "function", "function": {"name": "identify_intent"}}, #type: ignore
         )
         response = cast(ModelResponse, response)
         choice = cast(Choices, response.choices[0])
