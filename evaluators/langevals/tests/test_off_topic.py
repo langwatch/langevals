@@ -62,7 +62,8 @@ def test_off_topic_evaluator():
 
 def test_off_topic_evaluator_default():
     entry = OffTopicEntry(input="Hey there, how are you?")
-    evaluator = OffTopicEvaluator()
+    settings = OffTopicSettings()
+    evaluator = OffTopicEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
@@ -73,3 +74,12 @@ def test_off_topic_evaluator_default():
     )
     assert result.cost
     assert result.cost.amount > 0
+
+
+def test_off_topic_evaluator_long():
+    entry = OffTopicEntry(input="lorem ipsum" * 100000)
+    settings = OffTopicSettings()
+    evaluator = OffTopicEvaluator(settings=settings)
+    result = evaluator.evaluate(entry)
+
+    assert result.status == "skipped"
