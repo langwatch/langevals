@@ -1,14 +1,16 @@
-from langevals_langevals.blocklist import (
-    BlocklistEvaluator,
-    BlocklistEntry,
-    BlocklistSettings,
+from langevals_langevals.competitor_blocklist import (
+    CompetitorBlocklistEvaluator,
+    CompetitorBlocklistEntry,
+    CompetitorBlocklistSettings,
 )
 
 
 def test_blacklist_evaluator_fail():
-    entry = BlocklistEntry(output="Is Man City better than Arsenal?", input="liverpool")
-    settings = BlocklistSettings(competitors=["Man City", "Liverpool"])
-    evaluator = BlocklistEvaluator(settings=settings)
+    entry = CompetitorBlocklistEntry(
+        output="Is Man City better than Arsenal?", input="liverpool"
+    )
+    settings = CompetitorBlocklistSettings(competitors=["Man City", "Liverpool"])
+    evaluator = CompetitorBlocklistEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
@@ -18,11 +20,11 @@ def test_blacklist_evaluator_fail():
 
 
 def test_blacklist_evaluator_pass():
-    entry = BlocklistEntry(
+    entry = CompetitorBlocklistEntry(
         output="Highly likely yes!", input="Is Arsenal winning the EPL this season?"
     )
-    settings = BlocklistSettings(competitors=["Man City", "Liverpool"])
-    evaluator = BlocklistEvaluator(settings=settings)
+    settings = CompetitorBlocklistSettings(competitors=["Man City", "Liverpool"])
+    evaluator = CompetitorBlocklistEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
@@ -31,12 +33,12 @@ def test_blacklist_evaluator_pass():
 
 
 def test_blacklist_evaluator_lowercase():
-    entry = BlocklistEntry(
+    entry = CompetitorBlocklistEntry(
         output="Is Arsenal winning the EPL this season?",
         input="man ciTy is going to win the Champions League",
     )
-    settings = BlocklistSettings(competitors=["Man City", "Liverpool"])
-    evaluator = BlocklistEvaluator(settings=settings)
+    settings = CompetitorBlocklistSettings(competitors=["Man City", "Liverpool"])
+    evaluator = CompetitorBlocklistEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"

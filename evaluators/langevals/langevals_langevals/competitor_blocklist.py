@@ -9,18 +9,19 @@ from typing import List, Optional
 import re
 
 
-class BlocklistEntry(EvaluatorEntry):
+class CompetitorBlocklistEntry(EvaluatorEntry):
     output: Optional[str] = None
     input: Optional[str] = None
 
 
-class BlocklistSettings(BaseModel):
+class CompetitorBlocklistSettings(BaseModel):
     competitors: List[str] = Field(
-        default=["OpenAI", "Google", "Microsoft"], description="The competitors that must not be mentioned."
+        default=["OpenAI", "Google", "Microsoft"],
+        description="The competitors that must not be mentioned.",
     )
 
 
-class BlocklistResult(EvaluationResult):
+class CompetitorBlocklistResult(EvaluationResult):
     score: float = Field(
         description="Number of competitors mentioned in the input and output"
     )
@@ -29,8 +30,10 @@ class BlocklistResult(EvaluationResult):
     )
 
 
-class BlocklistEvaluator(
-    BaseEvaluator[BlocklistEntry, BlocklistSettings, BlocklistResult]
+class CompetitorBlocklistEvaluator(
+    BaseEvaluator[
+        CompetitorBlocklistEntry, CompetitorBlocklistSettings, CompetitorBlocklistResult
+    ]
 ):
     """
     This evaluator checks if any of the specified competitors was mentioned
@@ -39,11 +42,11 @@ class BlocklistEvaluator(
     name = "Competitor Blocklist"
     category = "policy"
     env_vars = []
-    default_settings = BlocklistSettings()
+    default_settings = CompetitorBlocklistSettings()
     docs_url = "https://path/to/official/docs"
     is_guardrail = True
 
-    def evaluate(self, entry: BlocklistEntry) -> SingleEvaluationResult:
+    def evaluate(self, entry: CompetitorBlocklistEntry) -> SingleEvaluationResult:
         passed = True
         escaped_words = [re.escape(word) for word in self.settings.competitors]
         pattern_str = "|".join(escaped_words)
@@ -60,7 +63,7 @@ class BlocklistEvaluator(
             details = "Competitors mentioned: " + ", ".join(
                 input_mentioned + output_mentioned
             )
-        return BlocklistResult(
+        return CompetitorBlocklistResult(
             score=len(input_mentioned) + len(output_mentioned),
             passed=passed,
             details=details,
