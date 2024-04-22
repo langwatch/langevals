@@ -6,7 +6,6 @@ from langevals_langevals.competitor_llm import (
     CompetitorLLMEvaluator,
     CompetitorLLMEntry,
     CompetitorLLMSettings,
-    Company,
 )
 
 
@@ -15,7 +14,8 @@ def test_competitor_llm_evaluator():
         input="Which other video or music streaming platforms would you recommend?"
     )
     settings = CompetitorLLMSettings(
-        company=Company(name="YouTube", description="Video broadcasting platform"),
+        name="YouTube",
+        description="Video broadcasting platform",
     )
     evaluator = CompetitorLLMEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
@@ -30,7 +30,7 @@ def test_competitor_llm_evaluator():
 
     entry = CompetitorLLMEntry(input="How many videos are stored on YouTube?")
     settings = CompetitorLLMSettings(
-        company=Company(name="YouTube", description="Video brodcasting platform")
+        name="YouTube", description="Video brodcasting platform"
     )
     evaluator = CompetitorLLMEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
@@ -44,7 +44,8 @@ def test_competitor_llm_evaluator():
 
     entry = CompetitorLLMEntry(output="Is YouTube bigger than Vimeo?")
     settings = CompetitorLLMSettings(
-        company=Company(name="YouTube", description="Video brodcasting platform"),
+        name="YouTube",
+        description="Video brodcasting platform",
     )
     evaluator = CompetitorLLMEvaluator(settings=settings)
     result = evaluator.evaluate(entry)

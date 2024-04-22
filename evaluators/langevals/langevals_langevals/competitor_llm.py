@@ -18,25 +18,15 @@ from langevals_core.base_evaluator import (
 )
 
 
-class Company(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-
-
 class CompetitorLLMEntry(EvaluatorEntry):
     output: Optional[str] = None
     input: Optional[str] = None
 
 
 class CompetitorLLMSettings(BaseModel):
-    company: Company = Field(
-        default=[
-            Company(
-                name="LangWatch",
-                description="We are providing the LLM observability and evaluation of your chatbot communication",
-            )
-        ],
-        description="Description of what your company is specializing at",
+    name: Optional[str] = "LangWatch"
+    description: Optional[str] = (
+        "We are providing an LLM observability and evaluation platform"
     )
     model: Literal[
         "openai/gpt-3.5-turbo-1106",
@@ -89,7 +79,7 @@ class CompetitorLLMEvaluator(
         content += "\n" + entry.output if entry.output else ""
         if not content:
             return EvaluationResultSkipped(details="Input and Output are empty")
-        your_company_description = f"Your company is {self.settings.company.name} - {self.settings.company.description}"
+        your_company_description = f"Your company is {self.settings.name} - {self.settings.description}"
         litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
         prompt = f"""You are a competitor detection system. Your task is to determine whether a question explicitly or implicitly refers to any competitors.
         This includes: comparisons between our brand and others, direct inquiries about competitors' products or services, and any mention of similar industries.
