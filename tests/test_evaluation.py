@@ -2,15 +2,15 @@ from langevals_example.word_count import (
     ExampleWordCountEvaluator,
     ExampleWordCountResult,
 )
-from langevals_langevals.blocklist import (
-    BlocklistEvaluator,
-    BlocklistResult,
-    BlocklistSettings,
+from langevals_langevals.competitor_blocklist import (
+    CompetitorBlocklistEvaluator,
+    CompetitorBlocklistResult,
+    CompetitorBlocklistSettings,
 )
 import langevals
 import pandas as pd
 
-from langevals.evaluate import EvaluationResultSet, _pandas_to_generic_entries
+from langevals.evaluation import EvaluationResultSet, _pandas_to_generic_entries
 
 
 def test_run_simple_evaluation():
@@ -26,7 +26,9 @@ def test_run_simple_evaluation():
         entries,
         [
             ExampleWordCountEvaluator(),
-            BlocklistEvaluator(settings=BlocklistSettings(competitors=["Bob"])),
+            CompetitorBlocklistEvaluator(
+                settings=CompetitorBlocklistSettings(competitors=["Bob"])
+            ),
         ],
     )
 
@@ -39,9 +41,9 @@ def test_run_simple_evaluation():
             ExampleWordCountResult(score=4, details="Words found: My, name, is, Bob"),
         ],
         [
-            BlocklistResult(score=0, passed=True),
-            BlocklistResult(score=0, passed=True),
-            BlocklistResult(
+            CompetitorBlocklistResult(score=0, passed=True),
+            CompetitorBlocklistResult(score=0, passed=True),
+            CompetitorBlocklistResult(
                 score=1, passed=False, details="Competitors mentioned: Bob"
             ),
         ],
@@ -71,7 +73,7 @@ def test_run_simple_evaluation():
                 "cost": None,
             },
         ],
-        "blocklist": [
+        "competitor_blocklist": [
             {
                 "status": "processed",
                 "score": 0.0,
@@ -96,20 +98,23 @@ def test_run_simple_evaluation():
         ],
     }
 
-    assert results.to_pandas().to_dict() == pd.DataFrame(
-        {
-            "input": ["hello", "how are you?", "what is your name?"],
-            "output": ["hi", "I am a chatbot, no feelings", "My name is Bob"],
-            "word_count": [1.0, 6.0, 4.0],
-            "word_count_details": [
-                "Words found: hi",
-                "Words found: I, am, a, chatbot,, no, feelings",
-                "Words found: My, name, is, Bob",
-            ],
-            "blocklist": [True, True, False],
-            "blocklist_details": [None, None, "Competitors mentioned: Bob"],
-        }
-    ).to_dict()
+    assert (
+        results.to_pandas().to_dict()
+        == pd.DataFrame(
+            {
+                "input": ["hello", "how are you?", "what is your name?"],
+                "output": ["hi", "I am a chatbot, no feelings", "My name is Bob"],
+                "word_count": [1.0, 6.0, 4.0],
+                "word_count_details": [
+                    "Words found: hi",
+                    "Words found: I, am, a, chatbot,, no, feelings",
+                    "Words found: My, name, is, Bob",
+                ],
+                "competitor_blocklist": [True, True, False],
+                "competitor_blocklist_details": [None, None, "Competitors mentioned: Bob"],
+            }
+        ).to_dict()
+    )
 
 
 # TODO: accept huggingface datasets as input as well (maybe find an example for the readme? load_dataset("explodinggradients/amnesty_qa", "english_v2"))
