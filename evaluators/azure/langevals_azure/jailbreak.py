@@ -65,7 +65,7 @@ class AzureJailbreakEvaluator(
             if detected:
                 break
 
-        return EvaluationResult(
+        return AzureJailbreakResult(
             score=1 if detected else 0,
             passed=not detected,
             details="Jailbreak attempt detected" if detected else None,

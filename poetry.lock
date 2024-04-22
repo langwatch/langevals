@@ -1623,6 +1623,7 @@ files = []
 develop = true
 
 [package.dependencies]
+pandas = "^2.2.2"
 pydantic = "^2.6.4"
 
 [package.source]
@@ -2213,7 +2214,7 @@ test = ["pytest (>=7.2)", "pytest-cov (>=4.0)"]
 name = "numpy"
 version = "1.26.4"
 description = "Fundamental package for array computing in Python"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "numpy-1.26.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9ff0f4f29c51e2803569d7a51c2304de5554655a60c5d776e35b4a41413830d0"},
@@ -2493,7 +2494,7 @@ files = [
 name = "pandas"
 version = "2.2.2"
 description = "Powerful data structures for data analysis, time series, and statistics"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "pandas-2.2.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:90c6fca2acf139569e74e8781709dccb6fe25940488755716d1d354d6bc58bce"},
@@ -2965,7 +2966,7 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
-optional = true
+optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 files = [
     {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
@@ -2993,7 +2994,7 @@ cli = ["click (>=5.0)"]
 name = "pytz"
 version = "2024.1"
 description = "World timezone definitions, modern and historical"
-optional = true
+optional = false
 python-versions = "*"
 files = [
     {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
@@ -3411,7 +3412,7 @@ torch = ["safetensors[numpy]", "torch (>=1.10)"]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 files = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
@@ -3986,7 +3987,7 @@ typing-extensions = ">=3.7.4"
 name = "tzdata"
 version = "2024.1"
 description = "Provider of IANA time zone data"
-optional = true
+optional = false
 python-versions = ">=2"
 files = [
     {file = "tzdata-2024.1-py2.py3-none-any.whl", hash = "sha256:9068bc196136463f5245e51efda838afa15aaeca9903f49050dfa2679db4d252"},
@@ -4274,4 +4275,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "61177eb59ce61601b813cf969aaf05ac9661651454146f7ff5e561ca847fa314"
+content-hash = "d1fd88694ab1b01ee579a666fa9539fd9e70ecb25fe1c73919ac61444336b2b8"

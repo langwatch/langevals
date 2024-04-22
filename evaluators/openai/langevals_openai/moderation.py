@@ -122,7 +122,7 @@ class OpenAIModerationEvaluator(
             )
 
             results.append(
-                EvaluationResult(score=score, passed=passed, details=details)
+                OpenAIModerationResult(score=score, passed=passed, details=details)
             )
 
         return results

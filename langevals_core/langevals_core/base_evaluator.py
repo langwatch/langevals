@@ -14,6 +14,7 @@ from typing import (
 )
 
 from pydantic import BaseModel, ConfigDict, Field
+import pandas as pd
 
 EvalCategories = Literal[
     "quality", "rag", "safety", "policy", "other", "custom", "similarity"
@@ -48,7 +49,7 @@ class EvaluatorEntry(BaseModel):
                 Optional[List[str]],
                 Optional[list[str]],
             ],
-            "expected_output": [str],
+            "expected_output": [str, Optional[str]],
         }
 
         subclass_fields_types = get_type_hints(cls)

@@ -102,4 +102,4 @@ class AzureContentSafetyEvaluator(
         )
         details = "Detected " + details if details else None
 
-        return EvaluationResult(score=score, passed=passed, details=details)
+        return AzureContentSafetyResult(score=score, passed=passed, details=details)

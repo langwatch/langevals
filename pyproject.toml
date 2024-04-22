@@ -20,6 +20,7 @@ hypercorn = "^0.16.0"
 pydantic = "^2.6.4"
 python-dotenv = "1.0.1"
 mangum = "^0.17.0"
+pandas = "^2.2.2"
 [[tool.poetry.dependencies.torch]]
 version = "^2.2.2+cpu"
 optional = true
