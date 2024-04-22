@@ -66,10 +66,10 @@ class CompetitorLLMEvaluator(
     BaseEvaluator[CompetitorLLMEntry, CompetitorLLMSettings, CompetitorLLMResult]
 ):
     """
-    This evaluator checks if any of the specified competitors was mentioned
+    This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
     """
 
-    name = "CompetitorLLM check"
+    name = "Competitor LLM check"
     category = "policy"
     env_vars = []
     default_settings = CompetitorLLMSettings()
@@ -92,8 +92,8 @@ class CompetitorLLMEvaluator(
         your_company_description = f"Your company is {self.settings.company.name} - {self.settings.company.description}"
         litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
         prompt = f"""You are a competitor detection system. Your task is to determine whether a question explicitly or implicitly refers to any competitors.
-        This includes: comparisons between our brand and others, direct inquiries about competitors' products or services, and any mention of similar industries. 
-        Remember that {your_company_description}. 
+        This includes: comparisons between our brand and others, direct inquiries about competitors' products or services, and any mention of similar industries.
+        Remember that {your_company_description}.
         If a question pertains to a related industry but not directly to our company, treat it as an implicit reference to competitors."""
         max_tokens_retrieved = get_max_tokens(litellm_model)
         if max_tokens_retrieved is None:

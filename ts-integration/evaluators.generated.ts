@@ -164,9 +164,25 @@ export type Evaluators = {
   "huggingface/bert_recall": {
     settings: Record<string, never>;
   };
-  "langevals/blocklist": {
+  "langevals/competitor_blocklist": {
     settings: {
       competitors: string[];
+    };
+  };
+  "langevals/competitor_llm": {
+    settings: {
+      company: {
+        name?: string;
+        description?: string;
+      };
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
   };
   "langevals/off_topic": {
@@ -182,6 +198,7 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      max_tokens: number;
     };
   };
   "ragas/answer_relevancy": {
@@ -189,10 +206,15 @@ export type Evaluators = {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
   };
@@ -201,10 +223,15 @@ export type Evaluators = {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
   };
@@ -213,10 +240,15 @@ export type Evaluators = {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
   };
@@ -225,10 +257,15 @@ export type Evaluators = {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
   };
@@ -237,10 +274,15 @@ export type Evaluators = {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
   };
@@ -249,10 +291,15 @@ export type Evaluators = {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
   };
@@ -732,7 +779,7 @@ If the generated text includes most or all of the important parts of the expecte
       },
     },
   },
-  "langevals/blocklist": {
+  "langevals/competitor_blocklist": {
     name: `Competitor Blocklist`,
     description: `
 This evaluator checks if any of the specified competitors was mentioned
@@ -754,6 +801,45 @@ This evaluator checks if any of the specified competitors was mentioned
       },
       passed: {
         description: "Is the message containing explicit mention of competitor",
+      },
+    },
+  },
+  "langevals/competitor_llm": {
+    name: `Competitor LLM check`,
+    description: `
+This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      company: {
+        description: "Description of what your company is specializing at",
+        default: [
+          {
+            name: "LangWatch",
+            description:
+              "We are providing the LLM observability and evaluation of your chatbot communication",
+          },
+        ],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence that the message is competitor free",
+      },
+      passed: {
+        description: "Is the message related to the competitors",
       },
     },
   },
@@ -786,6 +872,10 @@ This evaluator checks if the user message is concerning one of the allowed topic
         description: "The model to use for evaluation",
         default: "openai/gpt-3.5-turbo-0125",
       },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
     },
     result: {
       score: {
@@ -812,6 +902,10 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
@@ -835,6 +929,10 @@ This metric evaluates whether all of the ground-truth relevant items present in 
       model: {
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -860,6 +958,10 @@ This evaluator measures the extent to which the retrieved context aligns with th
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
@@ -883,6 +985,10 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
       model: {
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -908,6 +1014,10 @@ This metric evaluates whether all of the output relevant items present in the co
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
       },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
@@ -931,6 +1041,10 @@ This evaluator assesses the extent to which the generated answer is consistent w
       model: {
         description: "The model to use for evaluation.",
         default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
