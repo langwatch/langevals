@@ -171,8 +171,8 @@ export type Evaluators = {
   };
   "langevals/competitor_llm": {
     settings: {
-      name?: string;
-      description?: string;
+      name: string;
+      description: string;
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
@@ -814,11 +814,11 @@ This evaluator use an LLM-as-judge to check if the conversation is related to co
     optionalFields: ["output", "input"],
     settings: {
       name: {
-        description: undefined,
+        description: "The name of your company",
         default: "LangWatch",
       },
       description: {
-        description: undefined,
+        description: "Description of what your company is specializing at",
         default:
           "We are providing an LLM observability and evaluation platform",
       },
