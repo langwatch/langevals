@@ -35,6 +35,7 @@ class RagasSettings(BaseModel):
     model: Literal[
         "openai/gpt-3.5-turbo-1106",
         "openai/gpt-3.5-turbo-0125",
+        "openai/gpt-3.5-turbo-16k",
         "openai/gpt-4-1106-preview",
         "openai/gpt-4-0125-preview",
         "azure/gpt-35-turbo-1106",
@@ -42,6 +43,14 @@ class RagasSettings(BaseModel):
     ] = Field(
         default="openai/gpt-3.5-turbo-1106",
         description="The model to use for evaluation.",
+    )
+    embeddings_model: Literal[
+        "openai/text-embedding-ada-002",
+        "openai/text-embedding-3-small",
+        "azure/text-embedding-ada-002",
+    ] = Field(
+        default="openai/text-embedding-ada-002",
+        description="The model to use for embeddings.",
     )
     max_tokens: int = Field(
         default=2048,
@@ -63,6 +72,7 @@ def evaluate_ragas(
     settings: RagasSettings = RagasSettings(),
 ):
     vendor, model = settings.model.split("/")
+    embeddings_vendor, embeddings_model = settings.embeddings_model.split("/")
 
     if vendor == "openai":
         gpt = ChatOpenAI(
@@ -70,10 +80,6 @@ def evaluate_ragas(
             api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
         )
         gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
-        embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
-        )
     elif vendor == "azure":
         gpt = AzureChatOpenAI(
             model=model.replace(".", ""),
@@ -82,15 +88,22 @@ def evaluate_ragas(
             api_key=evaluator.get_env("AZURE_API_KEY"),  # type: ignore
         )
         gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
+    else:
+        raise ValueError(f"Invalid model: {settings.model}")
+
+    if embeddings_vendor == "openai":
+        embeddings = OpenAIEmbeddings(
+            model=embeddings_model,
+            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
+        )
+    elif embeddings_vendor == "azure":
         embeddings = AzureOpenAIEmbeddings(
-            azure_deployment="text-embedding-ada-002",  # TODO: upgrate to text-embedding-3-small as soon as it is also available on azure: https://learn.microsoft.com/en-us/answers/questions/1531681/openai-new-embeddings-model
-            model="text-embedding-ada-002",
+            azure_deployment=embeddings_model,
+            model=embeddings_model,
             api_version="2023-05-15",
             azure_endpoint=evaluator.get_env("AZURE_API_BASE") or "",
             api_key=evaluator.get_env("AZURE_API_KEY"),  # type: ignore
         )
-    else:
-        raise ValueError(f"Invalid model: {settings.model}")
 
     answer_relevancy.llm = gpt_wrapper
     answer_relevancy.embeddings = embeddings  # type: ignore
