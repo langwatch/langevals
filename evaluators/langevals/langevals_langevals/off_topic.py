@@ -1,5 +1,5 @@
 import litellm
-from litellm import get_max_tokens 
+from litellm import get_max_tokens
 from litellm import ModelResponse, Choices, Message
 from litellm.utils import completion_cost, trim_messages
 
@@ -23,19 +23,20 @@ class OffTopicEntry(EvaluatorEntry):
 
 
 class AllowedTopic(BaseModel):
-    topic: str 
+    topic: str
     description: str
 
 
 class OffTopicSettings(BaseModel):
     allowed_topics: List[AllowedTopic] = Field(
         default=[
-            AllowedTopic(topic="other", description="Any other topic"),
-            AllowedTopic(topic="simple_chat", description="Smalltalk with user"),
-            AllowedTopic(topic="programming_question", description="Question concerning programming and software development")
+            AllowedTopic(topic="simple_chat", description="Smalltalk with the user"),
+            AllowedTopic(
+                topic="company",
+                description="Questions about the company, what we do, etc",
+            ),
         ],
         description="The list of topics and their short descriptions that the chatbot is allowed to talk about",
-        min_length=3
     )
     model: Literal[
         "openai/gpt-3.5-turbo-1106",
@@ -48,9 +49,10 @@ class OffTopicSettings(BaseModel):
         default="openai/gpt-3.5-turbo-0125",
         description="The model to use for evaluation",
     )
-    max_tokens: int = Field(default=get_max_tokens("gpt-3.5-turbo-0125"), description="Max tokens allowed for evaluation")
-    
-    
+    max_tokens: int = Field(
+        default=get_max_tokens("gpt-3.5-turbo-0125"),
+        description="Max tokens allowed for evaluation",
+    )
 
 
 class OffTopicResult(EvaluationResult):
@@ -59,7 +61,8 @@ class OffTopicResult(EvaluationResult):
         description="Is the message concerning allowed topic"
     )
     details: Optional[str] = Field(
-        default="1.0 confidence that the actual intent is other", description="Predicted intent of the message and the confidence"
+        default="1.0 confidence that the actual intent is other",
+        description="Predicted intent of the message and the confidence",
     )
 
 
@@ -69,7 +72,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
     """
 
     name = "Off Topic Evaluator"
-    category = "other"
+    category = "policy"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
     docs_url = "https://path/to/official/docs"  # The URL to the official documentation of the evaluator
     is_guardrail = True  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
@@ -84,26 +87,38 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         content = entry.input or ""
         if not content:
             return EvaluationResultSkipped(details="Input is empty")
-        topics_descriptions = [f"Intent: {allowed_topic.topic} - description: {allowed_topic.description}" for allowed_topic in self.settings.allowed_topics]
+        topics_descriptions = "\n #".join(
+            [
+                f"Intent: {allowed_topic.topic} - Description: {allowed_topic.description}"
+                for allowed_topic in self.settings.allowed_topics
+            ]
+        )
         litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
-        prompt = f"You are an intent classification system. Your goal is to identify the intent of the message. Consider these intents and their following descriptions: {"\n #".join(topics_descriptions)}"
+        prompt = f"You are an intent classification system. Your goal is to identify the intent of the message. Consider these intents and their following descriptions: {topics_descriptions}"
 
         max_tokens_retrieved = get_max_tokens(litellm_model)
         if max_tokens_retrieved is None:
             raise ValueError("Model not mapped yet, cannot retrieve max tokens.")
         llm_max_tokens: int = int(max_tokens_retrieved)
-        max_tokens = min(self.settings.max_tokens, llm_max_tokens) if self.settings.max_tokens else llm_max_tokens
+        max_tokens = (
+            min(self.settings.max_tokens, llm_max_tokens)
+            if self.settings.max_tokens
+            else llm_max_tokens
+        )
         messages = [
-                {
-                    "role": "system",
-                    "content": prompt,
-                },
-               {
-                    "role": "user",
-                    "content": content,
-                },
+            {
+                "role": "system",
+                "content": prompt,
+            },
+            {
+                "role": "user",
+                "content": content,
+            },
         ]
-        messages = cast(List[dict[str, str]], trim_messages(messages, litellm_model, max_tokens=max_tokens))
+        messages = cast(
+            List[dict[str, str]],
+            trim_messages(messages, litellm_model, max_tokens=max_tokens),
+        )
 
         response = litellm.completion(
             model=litellm_model,
@@ -120,7 +135,12 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
                                 "intent": {
                                     "type": "string",
                                     "description": "The intent of the user message, what is the message about",
-                                    "enum": list(set(allowed_topic.topic for allowed_topic in self.settings.allowed_topics))
+                                    "enum": list(
+                                        set(
+                                            allowed_topic.topic
+                                            for allowed_topic in self.settings.allowed_topics
+                                        )
+                                    )
                                     + ["other"],
                                 },
                                 "confidence": {
@@ -133,7 +153,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
                     },
                 },
             ],
-            tool_choice={"type": "function", "function": {"name": "identify_intent"}}, #type: ignore
+            tool_choice={"type": "function", "function": {"name": "identify_intent"}},  # type: ignore
         )
         response = cast(ModelResponse, response)
         choice = cast(Choices, response.choices[0])
@@ -148,7 +168,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         cost = completion_cost(completion_response=response)
         return OffTopicResult(
             score=float(confidence),
-            details=f"{confidence} confidence that the actual intent is {intent}",
+            details=f"Detected intent: {intent}",
             passed=passed,
             cost=Money(amount=cost, currency="USD") if cost else None,
         )
