@@ -1,4 +1,4 @@
-![Discord](https://img.shields.io/discord/1227886780536324106?logo=discord&label=Discord)
+[![Discord](https://img.shields.io/discord/1227886780536324106?logo=discord&label=Discord)](https://discord.gg/DdZNf4uS)
 
 # LangEvals
 
