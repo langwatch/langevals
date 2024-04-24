@@ -1,3 +1,5 @@
+![Discord](https://img.shields.io/discord/1227886780536324106?logo=discord&label=Discord)
+
 # LangEvals
 
 LangEvals aggregates various language model evaluators into a single platform, providing a standard interface for a multitude of scores and LLM guardrails, for you to protect and benchmark your LLM models and pipelines.
