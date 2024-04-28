@@ -66,11 +66,21 @@ run-docker:
 
 check-evaluator-versions:
 	@echo "Checking all evaluator versions for changes..."
-	@(cd langevals_core && ../scripts/check_version_bump.sh); \
+	@(cd langevals_core && ../scripts/check_version_bump.sh --bump; exit_status=$$?; \
+		if [ $$exit_status -eq 3 ]; then \
+			echo "[Auto Bump] Bumping poetry version"; \
+			poetry version patch; \
+		fi); \
 	for dir in evaluators/*; do \
 		if [ -d "$$dir" ]; then \
 			echo "Checking $$dir"; \
-			(cd "$$dir" && git add pyproject.toml && python ../../scripts/replace_develop_dependencies.py pyproject.toml && ../../scripts/check_version_bump.sh; exit_status=$$?; git checkout pyproject.toml; exit $$exit_status); \
+			(cd "$$dir" && git add pyproject.toml && python ../../scripts/replace_develop_dependencies.py pyproject.toml && ../../scripts/check_version_bump.sh --bump; exit_status=$$?; git checkout pyproject.toml; \
+				if [ $$exit_status -eq 3 ]; then \
+					echo "[Auto Bump] Bumping poetry version"; \
+					poetry version patch; \
+				else \
+					exit $$exit_status; \
+				fi); \
 		fi \
 	done
 

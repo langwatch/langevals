@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-huggingface"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals huggingface evaluators."
 authors = ["Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
