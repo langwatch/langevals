@@ -59,7 +59,7 @@ Results:
 
 ### Unit Test Evaluations with PyTest
 
-Using various pytest plugins together with LangEvals makes a powerful combination to be able to write unit tests for LLMs and prevent regressions. Due to the probabilistic nature of LLMs, some extra care is needed.
+Using various pytest plugins together with LangEvals makes a powerful combination to be able to write unit tests for LLMs and prevent regressions. Due to the probabilistic nature of LLMs, some extra care is needed as you will see below.
 
 #### Simple assertions - entity extraction test example
 
@@ -132,15 +132,15 @@ def test_extracts_the_right_address(entry, model):
     assert address.model_dump_json() == entry.expected_output
 ```
 
-In the example above, our test actually becomes 9, checking for address extraction correctness each of the three samples against three different models `gpt-3.5-turbo`, `gpt-4-turbo` and `groq/llama3`, this is done by the `@pytest.mark.parametrize` annotation and the `product` function to combine entries and models. The actual assertion is a simple `assert` with `==` comparison.
+In the example above, our test actually becomes 9 tests, checking for address extraction correctness in each of the 3 samples against 3 different models `gpt-3.5-turbo`, `gpt-4-turbo` and `groq/llama3`. This is done by the `@pytest.mark.parametrize` annotation and the `product` function to combine entries and models. The actual assertion is a simple `assert` with `==` comparison as you can see in the last line.
 
-Then, we use [flaky](https://github.com/box/flaky) library for retries with `@pytest.mark.flaky(max_runs=3)`, this allows us to effectively do a 3-shot attempt with our LLM, you can also ensure the majority of the attempts are correct by using `@pytest.mark.flaky(max_runs=3, min_passes=2)`.
+Appart from `parametrize`, we also use the [flaky](https://github.com/box/flaky) library for retries with `@pytest.mark.flaky(max_runs=3)`, this allows us to effectively do a 3-shot prompting with our LLM. If you wish, you can also ensure the majority of the attempts are correct by using `@pytest.mark.flaky(max_runs=3, min_passes=2)`.
 
-Lastly, we use the `@pytest.mark.pass_rate` annotation provided by LangEvals, this allow the test to pass even if some examples fail, as they do, for example by the model guessing "United States" instead of "USA" for the country field. Since LLMs are probabilistic, this is necessary for bringing more stability to your test suite, while still ensuring a minimum threshold of accuracy, which in our case is 60%.
+Lastly, we use the `@pytest.mark.pass_rate` annotation provided by LangEvals, this allow the test to pass even if some samples fail, as they do for example when the model guesses "United States" instead of "USA" for the country field. Since LLMs are probabilistic, this is necessary for bringing more stability to your test suite, while still ensuring a minimum threshold of accuracy, which in our case is defined as `0.6` (60%).
 
 #### Using LangEvals Evaluators - LLM-as-a-Judge
 
-As things get more advanced and less objective to have exact string matches, we can then rely on LangEvals evaluators for validating many aspects of the LLM inputs and outputs. For complete flexibility, we can use LLM-as-a-judge for example, by relying on LangEval's, `CustomLLMBooleanEvaluator`, in the example below we validate if the recipes generated are vegetarian, and expect more than 80% to be:
+As things get more nuanced and less objective, exact string matches are no longer possible. We can then rely on LangEvals evaluators for validating many aspects of the LLM inputs and outputs. For complete flexibility, we can use for example a custom LLM-as-a-judge, with `CustomLLMBooleanEvaluator`. In the example below we validate that more than 80% of the recipes generated are vegetarian:
 
 ```python
 from langevals import expect
@@ -191,7 +191,7 @@ Notice we use the `expect` assertion util, this helps making it easier to run th
 
 #### Using LangEvals Evaluators - Out of the box evaluators
 
-Just like `CustomLLMBooleanEvaluator`, you can use any other evaluator available from LangEvals to prevent regression on a variety of cases, for example, here we check the LLM answers always in english, regardless of the question language, and that the answers are relevant:
+Just like `CustomLLMBooleanEvaluator`, you can use any other evaluator available from LangEvals to prevent regression on a variety of cases, for example, here we check that the LLM answers are always in english, regardless of the language used in the question, we also measure how relevant the answers are to the question:
 
 ```python
 entries = pd.DataFrame(
@@ -236,7 +236,7 @@ def test_language_and_relevancy(entry):
     ).to_be_greater_than(0.8)
 ```
 
-In this example we are now not only validating a boolean assertion, but also making sure that 80% of our samples keep a answer relevancy score above 0.8 from the Ragas Answer Relevancy Evaluator.
+In this example we are now not only validating a boolean assertion, but also making sure that 80% of our samples keep an answer relevancy score above 0.8 from the Ragas Answer Relevancy Evaluator.
 
 # Contributing
 
