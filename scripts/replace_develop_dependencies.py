@@ -27,9 +27,10 @@ def prepare_for_publishing(pyproject_path: Path):
             # Replace the local path with the latest version
             dependencies[dep] = f"^{latest_version}"
 
-    torch = data["tool"]["poetry"]["dependencies"]["torch"]
-    if isinstance(torch, list) and "+cpu" in torch[0].get("version"):
-        torch[0]["version"] = torch[0]["version"].replace("+cpu", "")
+    if "torch" in dependencies:
+        torch = dependencies["torch"]
+        if isinstance(torch, list) and "+cpu" in torch[0].get("version"):
+            torch[0]["version"] = torch[0]["version"].replace("+cpu", "")
 
     with open(pyproject_path, "w") as file:
         toml.dump(data, file)
