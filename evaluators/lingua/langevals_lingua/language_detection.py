@@ -183,7 +183,7 @@ class LinguaLanguageDetectionEvaluator(
         if self.settings.check_for == "output_matches_language":
             passed = (
                 self.settings.expected_language is None
-                or self.settings.expected_language not in output_languages
+                or self.settings.expected_language in output_languages
             )
             return LinguaLanguageDetectionResult(
                 score=len(output_languages),

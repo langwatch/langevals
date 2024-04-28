@@ -1,3 +1,4 @@
+from itertools import product
 import pytest
 import pandas as pd
 
@@ -35,25 +36,29 @@ entries = pd.DataFrame(
                 number=900,
                 street_name="Avenida Paulista",
                 city="São Paulo",
-                country="Brasil",
+                country="Brazil",
             ).model_dump_json(),
         ],
     }
 )
 
+models = ["gpt-3.5-turbo", "gpt-4-turbo", "groq/llama3-70b-8192"]
+
 client = instructor.from_litellm(completion)
 
 
-# @pytest.mark.asyncio_cooperative # Waiting for issue: https://github.com/willemt/pytest-asyncio-cooperative/issues/65
-@pytest.mark.parametrize("index, entry", entries.iterrows())
+# @pytest.mark.asyncio_cooperative  # Waiting for issue: https://github.com/willemt/pytest-asyncio-cooperative/issues/65
+@pytest.mark.parametrize("entry, model", product(entries.itertuples(), models))
 @pytest.mark.flaky(max_runs=3)
 @pytest.mark.pass_rate(0.6)
-def test_extracts_the_right_address(index, entry):
+def test_extracts_the_right_address(entry, model):
     address = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model,
         response_model=Address,
-        messages=[{"role": "user", "content": entry.input}],
+        messages=[
+            {"role": "user", "content": entry.input},
+        ],
         temperature=0.0,
     )
 
-    assert address.model_dump_json() == entry["expected_output"]
+    assert address.model_dump_json() == entry.expected_output

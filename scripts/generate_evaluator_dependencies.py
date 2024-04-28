@@ -17,10 +17,14 @@ evaluator_packages = [
     if os.path.isdir(os.path.join(evaluators_dir, d))
 ]
 
+package_names = []
 for package in evaluator_packages:
     package_name = f"langevals-{package}"
+    package_names.append(package_name)
     generated_dependencies += f'{package_name} = {{ path = "evaluators/{package}", develop = true, optional = true }}\n'
     generated_extras += f'{package} = ["{package_name}"]\n'
+
+generated_extras += 'all = ["' + '", "'.join(package_names) + '"]'
 
 pyproject_data["tool"]["poetry"]["dependencies"].update(
     toml.loads(generated_dependencies)

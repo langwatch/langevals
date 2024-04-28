@@ -10,6 +10,7 @@ from typing import (
     Optional,
     Type,
     TypeVar,
+    get_args,
     get_type_hints,
 )
 

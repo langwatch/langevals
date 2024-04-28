@@ -45,9 +45,6 @@ instructor = "^1.2.2"
 pytest-xdist = "^3.5.0"
 flaky = "^3.8.1"
 
-[tool.poetry.plugins]
-pytest11 = { pass_rate_plugin = "langevals.pytest_plugins.pass_rate_plugin" }
-
 [tool.poetry.extras]
 azure = [ "langevals-azure",]
 openai = [ "langevals-openai",]
@@ -59,6 +56,7 @@ lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
+all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-aws", "langevals-huggingface", "langevals-custom", "langevals-openai",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -113,3 +111,10 @@ optional = true
 path = "evaluators/langevals"
 develop = true
 optional = true
+
+[tool.poetry.plugins.pytest11]
+pass_rate_plugin = "langevals.pytest_plugins.pass_rate_plugin"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+
