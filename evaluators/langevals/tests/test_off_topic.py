@@ -24,10 +24,7 @@ def test_off_topic_evaluator():
 
     assert result.status == "processed"
     assert result.score >= 0.75
-    assert (
-        result.details
-        == f"{result.score} confidence that the actual intent is email_delete"
-    )
+    assert result.details == f"Detected intent: email_delete"
     assert result.cost
     assert result.cost.amount > 0
 
@@ -53,9 +50,7 @@ def test_off_topic_evaluator():
 
     assert result.status == "processed"
     assert result.score >= 0.75
-    assert (
-        result.details == f"{result.score} confidence that the actual intent is other"
-    )
+    assert result.details == f"Detected intent: other"
     assert result.cost
     assert result.cost.amount > 0
 
@@ -68,10 +63,7 @@ def test_off_topic_evaluator_default():
 
     assert result.status == "processed"
     assert result.score >= 0.75
-    assert (
-        result.details
-        == f"{result.score} confidence that the actual intent is simple_chat"
-    )
+    assert result.details == f"Detected intent: simple_chat"
     assert result.cost
     assert result.cost.amount > 0
 
@@ -99,10 +91,7 @@ def test_off_topic_evaluator_long():
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
-    assert (
-        result.details
-        == f"{result.score} confidence that the actual intent is landscape_description"
-    )
+    assert result.details == f"Detected intent: landscape_description"
 
 
 def test_off_topic_evaluator_long_2():
@@ -128,10 +117,7 @@ def test_off_topic_evaluator_long_2():
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
-    assert (
-        result.details
-        == f"{result.score} confidence that the actual intent is romantic_story"
-    )
+    assert result.details == f"Detected intent: romantic_story"
 
 
 long_text = (
