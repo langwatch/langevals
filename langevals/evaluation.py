@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
@@ -80,11 +81,17 @@ def evaluate(
     entries: pd.DataFrame, evaluators: list[BaseEvaluator]
 ) -> EvaluationResultSet:
     entries_ = _pandas_to_generic_entries(entries)
-    result_set: list[BatchEvaluationResult] = []
-    # TODO: process this in parallel (maybe copy python-sdk batch eval?)
-    # TODO: add tqdm, be sure to handle it on the evaluate_batch_below
-    for evaluator in evaluators:
-        result_set.append(evaluator.evaluate_batch(entries_))
+    result_set: list[BatchEvaluationResult] = [[]] * len(evaluators)
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_index = {
+            executor.submit(evaluator.evaluate_batch, entries_): idx
+            for idx, evaluator in enumerate(evaluators)
+        }
+
+        for future in as_completed(future_to_index):
+            idx = future_to_index[future]
+            result_set[idx] = future.result()
 
     return EvaluationResultSet(
         entries=entries_, evaluators=evaluators, results=result_set

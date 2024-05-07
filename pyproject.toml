@@ -117,4 +117,3 @@ pass_rate_plugin = "langevals.pytest_plugins.pass_rate_plugin"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"
-

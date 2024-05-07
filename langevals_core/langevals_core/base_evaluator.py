@@ -16,6 +16,8 @@ from typing import (
 
 from pydantic import BaseModel, ConfigDict, Field
 import pandas as pd
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 EvalCategories = Literal[
     "quality", "rag", "safety", "policy", "other", "custom", "similarity"
@@ -178,22 +180,33 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
-    def evaluate_batch(self, data: List[TEntry]) -> BatchEvaluationResult:
-        results = []
-        for entry in data:
-            try:
-                results.append(self.evaluate(entry))
-            except BaseException as exception:
-                results.append(
-                    EvaluationResultError(
-                        error_type=type(exception).__name__,
-                        message=str(exception),
-                        traceback=list(
-                            traceback.TracebackException.from_exception(
-                                exception
-                            ).format()
-                        ),
-                    )
-                )
+    def _evaluate_entry(self, entry):
+        try:
+            return self.evaluate(entry)
+        except Exception as exception:
+            return EvaluationResultError(
+                error_type=type(exception).__name__,
+                message=str(exception),
+                traceback=list(
+                    traceback.TracebackException.from_exception(exception).format()
+                ),
+            )
+
+    def evaluate_batch(self, data: List[TEntry], index=0) -> BatchEvaluationResult:
+        results: list[SingleEvaluationResult] = [
+            EvaluationResultSkipped(details="not processed")
+        ] * len(data)
+        # Use max_workers=None to use as many workers as there are CPUs
+        with ThreadPoolExecutor(max_workers=50) as executor:
+            future_to_index = {
+                executor.submit(self._evaluate_entry, entry): idx
+                for idx, entry in enumerate(data)
+            }
+
+            with tqdm(total=len(future_to_index), position=index) as progress:
+                for future in as_completed(future_to_index):
+                    idx = future_to_index[future]
+                    results[idx] = future.result()
+                    progress.update(1)
 
         return results

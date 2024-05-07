@@ -10,6 +10,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResultSkipped,
 )
+from tqdm import tqdm
 
 
 class OpenAIModerationEntry(EvaluatorEntry):
@@ -66,7 +67,7 @@ class OpenAIModerationEvaluator(
     is_guardrail = True
 
     def evaluate_batch(
-        self, data: list[OpenAIModerationEntry]
+        self, data: list[OpenAIModerationEntry], index = 0
     ) -> BatchEvaluationResult:
         client = OpenAI(api_key=self.get_env("OPENAI_API_KEY"))
 
@@ -77,7 +78,7 @@ class OpenAIModerationEvaluator(
             for entry in data
         ]
         response = client.moderations.create(input=contents)
-        for index, moderation_result in enumerate(response.results):
+        for index, moderation_result in tqdm(enumerate(response.results), position=index):
             if not contents[index]:
                 results.append(
                     EvaluationResultSkipped(details="Input and output are both empty")
