@@ -64,21 +64,6 @@ export type Money = {
 };
 
 export type Evaluators = {
-  "azure/content_safety": {
-    settings: {
-      severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-      categories: {
-        Hate: boolean;
-        SelfHarm: boolean;
-        Sexual: boolean;
-        Violence: boolean;
-      };
-      output_type: "FourSeverityLevels" | "EightSeverityLevels";
-    };
-  };
-  "azure/jailbreak": {
-    settings: Record<string, never>;
-  };
   "openai/moderation": {
     settings: {
       model: "text-moderation-stable" | "text-moderation-latest";
@@ -99,6 +84,50 @@ export type Evaluators = {
   };
   "example/word_count": {
     settings: Record<string, never>;
+  };
+  "huggingface/bert_f1": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_precision": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_recall": {
+    settings: Record<string, never>;
+  };
+  "langevals/competitor_blocklist": {
+    settings: {
+      competitors: string[];
+    };
+  };
+  "langevals/competitor_llm": {
+    settings: {
+      name: string;
+      description: string;
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      max_tokens: number;
+    };
+  };
+  "langevals/off_topic": {
+    settings: {
+      allowed_topics: {
+        topic: string;
+        description: string;
+      }[];
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      max_tokens: number;
+    };
   };
   "ragas/answer_relevancy": {
     settings: {
@@ -202,54 +231,81 @@ export type Evaluators = {
       max_tokens: number;
     };
   };
-  "custom/basic": {
+  "aws/comprehend_pii_detection": {
     settings: {
-      rules: {
-        field: "input" | "output";
-        rule:
-          | "contains"
-          | "not_contains"
-          | "matches_regex"
-          | "not_matches_regex";
-        value: string;
-      }[];
-    };
-  };
-  "custom/llm_boolean": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      prompt: string;
-      max_tokens: number;
-    };
-  };
-  "custom/llm_score": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      prompt: string;
-      max_tokens: number;
-    };
-  };
-  "custom/similarity": {
-    settings: {
-      field: "input" | "output";
-      rule: "is_not_similar_to" | "is_similar_to";
-      value: string;
-      threshold: number;
-      embedding_model:
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
+      entity_types: {
+        BANK_ACCOUNT_NUMBER: boolean;
+        BANK_ROUTING: boolean;
+        CREDIT_DEBIT_NUMBER: boolean;
+        CREDIT_DEBIT_CVV: boolean;
+        CREDIT_DEBIT_EXPIRY: boolean;
+        PIN: boolean;
+        EMAIL: boolean;
+        ADDRESS: boolean;
+        NAME: boolean;
+        PHONE: boolean;
+        SSN: boolean;
+        DATE_TIME: boolean;
+        PASSPORT_NUMBER: boolean;
+        DRIVER_ID: boolean;
+        URL: boolean;
+        AGE: boolean;
+        USERNAME: boolean;
+        PASSWORD: boolean;
+        AWS_ACCESS_KEY: boolean;
+        AWS_SECRET_KEY: boolean;
+        IP_ADDRESS: boolean;
+        MAC_ADDRESS: boolean;
+        LICENSE_PLATE: boolean;
+        VEHICLE_IDENTIFICATION_NUMBER: boolean;
+        UK_NATIONAL_INSURANCE_NUMBER: boolean;
+        CA_SOCIAL_INSURANCE_NUMBER: boolean;
+        US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER: boolean;
+        UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER: boolean;
+        IN_PERMANENT_ACCOUNT_NUMBER: boolean;
+        IN_NREGA: boolean;
+        INTERNATIONAL_BANK_ACCOUNT_NUMBER: boolean;
+        SWIFT_CODE: boolean;
+        UK_NATIONAL_HEALTH_SERVICE_NUMBER: boolean;
+        CA_HEALTH_NUMBER: boolean;
+        IN_AADHAAR: boolean;
+        IN_VOTER_NUMBER: boolean;
+      };
+      language_code:
+        | "en"
+        | "es"
+        | "fr"
+        | "de"
+        | "it"
+        | "pt"
+        | "ar"
+        | "hi"
+        | "ja"
+        | "ko"
+        | "zh"
+        | "zh-TW";
+      min_confidence: number;
+      aws_region:
+        | "us-east-1"
+        | "us-east-2"
+        | "us-west-1"
+        | "us-west-2"
+        | "ap-east-1"
+        | "ap-south-1"
+        | "ap-northeast-3"
+        | "ap-northeast-2"
+        | "ap-southeast-1"
+        | "ap-southeast-2"
+        | "ap-northeast-1"
+        | "ca-central-1"
+        | "eu-central-1"
+        | "eu-west-1"
+        | "eu-west-2"
+        | "eu-south-1"
+        | "eu-west-3"
+        | "eu-north-1"
+        | "me-south-1"
+        | "sa-east-1";
     };
   };
   "lingua/language_detection": {
@@ -335,108 +391,36 @@ export type Evaluators = {
       threshold: number;
     };
   };
-  "aws/comprehend_pii_detection": {
+  "azure/content_safety": {
     settings: {
-      entity_types: {
-        BANK_ACCOUNT_NUMBER: boolean;
-        BANK_ROUTING: boolean;
-        CREDIT_DEBIT_NUMBER: boolean;
-        CREDIT_DEBIT_CVV: boolean;
-        CREDIT_DEBIT_EXPIRY: boolean;
-        PIN: boolean;
-        EMAIL: boolean;
-        ADDRESS: boolean;
-        NAME: boolean;
-        PHONE: boolean;
-        SSN: boolean;
-        DATE_TIME: boolean;
-        PASSPORT_NUMBER: boolean;
-        DRIVER_ID: boolean;
-        URL: boolean;
-        AGE: boolean;
-        USERNAME: boolean;
-        PASSWORD: boolean;
-        AWS_ACCESS_KEY: boolean;
-        AWS_SECRET_KEY: boolean;
-        IP_ADDRESS: boolean;
-        MAC_ADDRESS: boolean;
-        LICENSE_PLATE: boolean;
-        VEHICLE_IDENTIFICATION_NUMBER: boolean;
-        UK_NATIONAL_INSURANCE_NUMBER: boolean;
-        CA_SOCIAL_INSURANCE_NUMBER: boolean;
-        US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER: boolean;
-        UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER: boolean;
-        IN_PERMANENT_ACCOUNT_NUMBER: boolean;
-        IN_NREGA: boolean;
-        INTERNATIONAL_BANK_ACCOUNT_NUMBER: boolean;
-        SWIFT_CODE: boolean;
-        UK_NATIONAL_HEALTH_SERVICE_NUMBER: boolean;
-        CA_HEALTH_NUMBER: boolean;
-        IN_AADHAAR: boolean;
-        IN_VOTER_NUMBER: boolean;
+      severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+      categories: {
+        Hate: boolean;
+        SelfHarm: boolean;
+        Sexual: boolean;
+        Violence: boolean;
       };
-      language_code:
-        | "en"
-        | "es"
-        | "fr"
-        | "de"
-        | "it"
-        | "pt"
-        | "ar"
-        | "hi"
-        | "ja"
-        | "ko"
-        | "zh"
-        | "zh-TW";
-      min_confidence: number;
-      aws_region:
-        | "us-east-1"
-        | "us-east-2"
-        | "us-west-1"
-        | "us-west-2"
-        | "ap-east-1"
-        | "ap-south-1"
-        | "ap-northeast-3"
-        | "ap-northeast-2"
-        | "ap-southeast-1"
-        | "ap-southeast-2"
-        | "ap-northeast-1"
-        | "ca-central-1"
-        | "eu-central-1"
-        | "eu-west-1"
-        | "eu-west-2"
-        | "eu-south-1"
-        | "eu-west-3"
-        | "eu-north-1"
-        | "me-south-1"
-        | "sa-east-1";
+      output_type: "FourSeverityLevels" | "EightSeverityLevels";
     };
   };
-  "langevals/competitor_blocklist": {
-    settings: {
-      competitors: string[];
-    };
+  "azure/jailbreak": {
+    settings: Record<string, never>;
   };
-  "langevals/competitor_llm": {
+  "custom/basic": {
     settings: {
-      name: string;
-      description: string;
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      max_tokens: number;
-    };
-  };
-  "langevals/off_topic": {
-    settings: {
-      allowed_topics: {
-        topic: string;
-        description: string;
+      rules: {
+        field: "input" | "output";
+        rule:
+          | "contains"
+          | "not_contains"
+          | "matches_regex"
+          | "not_matches_regex";
+        value: string;
       }[];
+    };
+  };
+  "custom/llm_boolean": {
+    settings: {
       model:
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-3.5-turbo-0125"
@@ -444,17 +428,33 @@ export type Evaluators = {
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-1106-preview";
+      prompt: string;
       max_tokens: number;
     };
   };
-  "huggingface/bert_f1": {
-    settings: Record<string, never>;
+  "custom/llm_score": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      prompt: string;
+      max_tokens: number;
+    };
   };
-  "huggingface/bert_precision": {
-    settings: Record<string, never>;
-  };
-  "huggingface/bert_recall": {
-    settings: Record<string, never>;
+  "custom/similarity": {
+    settings: {
+      field: "input" | "output";
+      rule: "is_not_similar_to" | "is_similar_to";
+      value: string;
+      threshold: number;
+      embedding_model:
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+    };
   };
   "google_cloud/dlp_pii_detection": {
     settings: {
@@ -481,65 +481,6 @@ export type Evaluators = {
 export const AVAILABLE_EVALUATORS: {
   [K in EvaluatorTypes]: EvaluatorDefinition<K>;
 } = {
-  "azure/content_safety": {
-    name: `Azure Content Safety`,
-    description: `
-This evaluator detects potentially unsafe content in text, including hate speech,
-self-harm, sexual content, and violence. It allows customization of the severity
-threshold and the specific categories to check.
-`,
-    category: "safety",
-    docsUrl:
-      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["input", "output"],
-    settings: {
-      severity_threshold: {
-        description:
-          "The minimum severity level to consider content as unsafe, from 1 to 7.",
-        default: 1,
-      },
-      categories: {
-        description: "The categories of moderation to check for.",
-        default: {
-          Hate: true,
-          SelfHarm: true,
-          Sexual: true,
-          Violence: true,
-        },
-      },
-      output_type: {
-        description:
-          "The type of severity levels to return on the full 0-7 severity scale, it can be either the trimmed version with four values (0, 2, 4, 6 scores) or the whole range.",
-        default: "FourSeverityLevels",
-      },
-    },
-    result: {
-      score: {
-        description:
-          "The severity level of the detected content from 0 to 7. A higher score indicates higher severity.",
-      },
-    },
-  },
-  "azure/jailbreak": {
-    name: `Azure Jailbreak Detection`,
-    description: `
-This evaluator checks for jailbreak-attempt in the input using Azure's Content Safety API.
-`,
-    category: "safety",
-    docsUrl: "",
-    isGuardrail: true,
-    requiredFields: ["input"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      passed: {
-        description:
-          "If true then no jailbreak was detected, if false then a jailbreak was detected",
-      },
-    },
-  },
   "openai/moderation": {
     name: `OpenAI Moderation`,
     description: `
@@ -595,6 +536,166 @@ This evaluator serves as a boilerplate for creating new evaluators.
     result: {
       score: {
         description: "How many words are there in the output, split by space",
+      },
+    },
+  },
+  "huggingface/bert_f1": {
+    name: `BERT F1 Score`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, F1 is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_precision": {
+    name: `BERT Precision Score`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, precision is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_recall": {
+    name: `BERT Recall Score`,
+    description: `
+How much of the expected text is covered or represented in the generated text.
+If the generated text includes most or all of the important parts of the expected text, recall is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1 showing the recall of the model. ",
+      },
+    },
+  },
+  "langevals/competitor_blocklist": {
+    name: `Competitor Blocklist`,
+    description: `
+This evaluator checks if any of the specified competitors was mentioned
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      competitors: {
+        description: "The competitors that must not be mentioned.",
+        default: ["OpenAI", "Google", "Microsoft"],
+      },
+    },
+    result: {
+      score: {
+        description: "Number of competitors mentioned in the input and output",
+      },
+      passed: {
+        description: "Is the message containing explicit mention of competitor",
+      },
+    },
+  },
+  "langevals/competitor_llm": {
+    name: `Competitor LLM check`,
+    description: `
+This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      name: {
+        description: "The name of your company",
+        default: "LangWatch",
+      },
+      description: {
+        description: "Description of what your company is specializing at",
+        default:
+          "We are providing an LLM observability and evaluation platform",
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence that the message is competitor free",
+      },
+      passed: {
+        description: "Is the message related to the competitors",
+      },
+    },
+  },
+  "langevals/off_topic": {
+    name: `Off Topic Evaluator`,
+    description: `
+This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    optionalFields: [],
+    settings: {
+      allowed_topics: {
+        description:
+          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
+        default: [
+          {
+            topic: "simple_chat",
+            description: "Smalltalk with the user",
+          },
+          {
+            topic: "company",
+            description: "Questions about the company, what we do, etc",
+          },
+        ],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence level of the intent prediction",
+      },
+      passed: {
+        description: "Is the message concerning allowed topic",
       },
     },
   },
@@ -766,6 +867,185 @@ This evaluator assesses the extent to which the generated answer is consistent w
     },
     result: {},
   },
+  "aws/comprehend_pii_detection": {
+    name: `Amazon Comprehend PII Detection`,
+    description: `
+Amazon Comprehend PII detects personally identifiable information in text, including phone numbers, email addresses, and
+social security numbers. It allows customization of the detection threshold and the specific types of PII to check.
+`,
+    category: "safety",
+    docsUrl: "https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      entity_types: {
+        description: "The types of PII to check for in the input.",
+        default: {
+          BANK_ACCOUNT_NUMBER: true,
+          BANK_ROUTING: true,
+          CREDIT_DEBIT_NUMBER: true,
+          CREDIT_DEBIT_CVV: true,
+          CREDIT_DEBIT_EXPIRY: true,
+          PIN: true,
+          EMAIL: true,
+          ADDRESS: true,
+          NAME: true,
+          PHONE: true,
+          SSN: true,
+          DATE_TIME: true,
+          PASSPORT_NUMBER: true,
+          DRIVER_ID: true,
+          URL: true,
+          AGE: true,
+          USERNAME: true,
+          PASSWORD: true,
+          AWS_ACCESS_KEY: true,
+          AWS_SECRET_KEY: true,
+          IP_ADDRESS: true,
+          MAC_ADDRESS: true,
+          LICENSE_PLATE: true,
+          VEHICLE_IDENTIFICATION_NUMBER: true,
+          UK_NATIONAL_INSURANCE_NUMBER: true,
+          CA_SOCIAL_INSURANCE_NUMBER: true,
+          US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER: true,
+          UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER: true,
+          IN_PERMANENT_ACCOUNT_NUMBER: true,
+          IN_NREGA: true,
+          INTERNATIONAL_BANK_ACCOUNT_NUMBER: true,
+          SWIFT_CODE: true,
+          UK_NATIONAL_HEALTH_SERVICE_NUMBER: true,
+          CA_HEALTH_NUMBER: true,
+          IN_AADHAAR: true,
+          IN_VOTER_NUMBER: true,
+        },
+      },
+      language_code: {
+        description:
+          "The language code of the input text for better PII detection, defaults to english.",
+        default: "en",
+      },
+      min_confidence: {
+        description:
+          "The minimum confidence required for failing the evaluation on a PII match.",
+        default: 0.5,
+      },
+      aws_region: {
+        description:
+          "The AWS region to use for running the PII detection, defaults to eu-central-1 for GDPR compliance.",
+        default: "eu-central-1",
+      },
+    },
+    result: {
+      score: {
+        description: "Amount of PII detected, 0 means no PII detected",
+      },
+      passed: {
+        description:
+          "If true then no PII was detected, if false then at least one PII was detected",
+      },
+    },
+  },
+  "lingua/language_detection": {
+    name: `Lingua Language Detection`,
+    description: `
+This evaluator detects the language of the input and output text to check for example if the generated answer is in the same language as the prompt,
+or if it's in a specific expected language.
+`,
+    category: "quality",
+    docsUrl: "https://github.com/pemistahl/lingua-py",
+    isGuardrail: true,
+    requiredFields: ["input", "output"],
+    optionalFields: [],
+    settings: {
+      check_for: {
+        description: "What should be checked",
+        default: "input_matches_output",
+      },
+      expected_language: {
+        description: "The specific language that the output is expected to be",
+        default: undefined,
+      },
+      min_words: {
+        description:
+          "Minimum number of words to check, as the language detection can be unreliable for very short texts. Inputs shorter than the minimum will be skipped.",
+        default: 7,
+      },
+      threshold: {
+        description:
+          "Minimum confidence threshold for the language detection. If the confidence is lower than this, the evaluation will be skipped.",
+        default: 0.25,
+      },
+    },
+    result: {
+      score: {
+        description: "How many languages were detected",
+      },
+      passed: {
+        description:
+          "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
+      },
+    },
+  },
+  "azure/content_safety": {
+    name: `Azure Content Safety`,
+    description: `
+This evaluator detects potentially unsafe content in text, including hate speech,
+self-harm, sexual content, and violence. It allows customization of the severity
+threshold and the specific categories to check.
+`,
+    category: "safety",
+    docsUrl:
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      severity_threshold: {
+        description:
+          "The minimum severity level to consider content as unsafe, from 1 to 7.",
+        default: 1,
+      },
+      categories: {
+        description: "The categories of moderation to check for.",
+        default: {
+          Hate: true,
+          SelfHarm: true,
+          Sexual: true,
+          Violence: true,
+        },
+      },
+      output_type: {
+        description:
+          "The type of severity levels to return on the full 0-7 severity scale, it can be either the trimmed version with four values (0, 2, 4, 6 scores) or the whole range.",
+        default: "FourSeverityLevels",
+      },
+    },
+    result: {
+      score: {
+        description:
+          "The severity level of the detected content from 0 to 7. A higher score indicates higher severity.",
+      },
+    },
+  },
+  "azure/jailbreak": {
+    name: `Azure Jailbreak Detection`,
+    description: `
+This evaluator checks for jailbreak-attempt in the input using Azure's Content Safety API.
+`,
+    category: "safety",
+    docsUrl: "",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      passed: {
+        description:
+          "If true then no jailbreak was detected, if false then a jailbreak was detected",
+      },
+    },
+  },
   "custom/basic": {
     name: `Custom Basic Evaluator`,
     description: `
@@ -906,286 +1186,6 @@ match on the exact text.
       passed: {
         description:
           "Passes if the cosine similarity crosses the threshold for the defined rule",
-      },
-    },
-  },
-  "lingua/language_detection": {
-    name: `Lingua Language Detection`,
-    description: `
-This evaluator detects the language of the input and output text to check for example if the generated answer is in the same language as the prompt,
-or if it's in a specific expected language.
-`,
-    category: "quality",
-    docsUrl: "https://github.com/pemistahl/lingua-py",
-    isGuardrail: true,
-    requiredFields: ["input", "output"],
-    optionalFields: [],
-    settings: {
-      check_for: {
-        description: "What should be checked",
-        default: "input_matches_output",
-      },
-      expected_language: {
-        description: "The specific language that the output is expected to be",
-        default: undefined,
-      },
-      min_words: {
-        description:
-          "Minimum number of words to check, as the language detection can be unreliable for very short texts. Inputs shorter than the minimum will be skipped.",
-        default: 7,
-      },
-      threshold: {
-        description:
-          "Minimum confidence threshold for the language detection. If the confidence is lower than this, the evaluation will be skipped.",
-        default: 0.25,
-      },
-    },
-    result: {
-      score: {
-        description: "How many languages were detected",
-      },
-      passed: {
-        description:
-          "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
-      },
-    },
-  },
-  "aws/comprehend_pii_detection": {
-    name: `Amazon Comprehend PII Detection`,
-    description: `
-Amazon Comprehend PII detects personally identifiable information in text, including phone numbers, email addresses, and
-social security numbers. It allows customization of the detection threshold and the specific types of PII to check.
-`,
-    category: "safety",
-    docsUrl: "https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["input", "output"],
-    settings: {
-      entity_types: {
-        description: "The types of PII to check for in the input.",
-        default: {
-          BANK_ACCOUNT_NUMBER: true,
-          BANK_ROUTING: true,
-          CREDIT_DEBIT_NUMBER: true,
-          CREDIT_DEBIT_CVV: true,
-          CREDIT_DEBIT_EXPIRY: true,
-          PIN: true,
-          EMAIL: true,
-          ADDRESS: true,
-          NAME: true,
-          PHONE: true,
-          SSN: true,
-          DATE_TIME: true,
-          PASSPORT_NUMBER: true,
-          DRIVER_ID: true,
-          URL: true,
-          AGE: true,
-          USERNAME: true,
-          PASSWORD: true,
-          AWS_ACCESS_KEY: true,
-          AWS_SECRET_KEY: true,
-          IP_ADDRESS: true,
-          MAC_ADDRESS: true,
-          LICENSE_PLATE: true,
-          VEHICLE_IDENTIFICATION_NUMBER: true,
-          UK_NATIONAL_INSURANCE_NUMBER: true,
-          CA_SOCIAL_INSURANCE_NUMBER: true,
-          US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER: true,
-          UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER: true,
-          IN_PERMANENT_ACCOUNT_NUMBER: true,
-          IN_NREGA: true,
-          INTERNATIONAL_BANK_ACCOUNT_NUMBER: true,
-          SWIFT_CODE: true,
-          UK_NATIONAL_HEALTH_SERVICE_NUMBER: true,
-          CA_HEALTH_NUMBER: true,
-          IN_AADHAAR: true,
-          IN_VOTER_NUMBER: true,
-        },
-      },
-      language_code: {
-        description:
-          "The language code of the input text for better PII detection, defaults to english.",
-        default: "en",
-      },
-      min_confidence: {
-        description:
-          "The minimum confidence required for failing the evaluation on a PII match.",
-        default: 0.5,
-      },
-      aws_region: {
-        description:
-          "The AWS region to use for running the PII detection, defaults to eu-central-1 for GDPR compliance.",
-        default: "eu-central-1",
-      },
-    },
-    result: {
-      score: {
-        description: "Amount of PII detected, 0 means no PII detected",
-      },
-      passed: {
-        description:
-          "If true then no PII was detected, if false then at least one PII was detected",
-      },
-    },
-  },
-  "langevals/competitor_blocklist": {
-    name: `Competitor Blocklist`,
-    description: `
-This evaluator checks if any of the specified competitors was mentioned
-`,
-    category: "policy",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["output", "input"],
-    settings: {
-      competitors: {
-        description: "The competitors that must not be mentioned.",
-        default: ["OpenAI", "Google", "Microsoft"],
-      },
-    },
-    result: {
-      score: {
-        description: "Number of competitors mentioned in the input and output",
-      },
-      passed: {
-        description: "Is the message containing explicit mention of competitor",
-      },
-    },
-  },
-  "langevals/competitor_llm": {
-    name: `Competitor LLM check`,
-    description: `
-This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
-`,
-    category: "policy",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["output", "input"],
-    settings: {
-      name: {
-        description: "The name of your company",
-        default: "LangWatch",
-      },
-      description: {
-        description: "Description of what your company is specializing at",
-        default:
-          "We are providing an LLM observability and evaluation platform",
-      },
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
-    result: {
-      score: {
-        description: "Confidence that the message is competitor free",
-      },
-      passed: {
-        description: "Is the message related to the competitors",
-      },
-    },
-  },
-  "langevals/off_topic": {
-    name: `Off Topic Evaluator`,
-    description: `
-This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
-`,
-    category: "policy",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: ["input"],
-    optionalFields: [],
-    settings: {
-      allowed_topics: {
-        description:
-          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
-        default: [
-          {
-            topic: "simple_chat",
-            description: "Smalltalk with the user",
-          },
-          {
-            topic: "company",
-            description: "Questions about the company, what we do, etc",
-          },
-        ],
-      },
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
-    result: {
-      score: {
-        description: "Confidence level of the intent prediction",
-      },
-      passed: {
-        description: "Is the message concerning allowed topic",
-      },
-    },
-  },
-  "huggingface/bert_f1": {
-    name: `BERT F1 Score`,
-    description: `
-How well the words in the generated text match with anything in the expected text.
-If everything in the generated text matches well with things in the expected text, F1 is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1.",
-      },
-    },
-  },
-  "huggingface/bert_precision": {
-    name: `BERT Precision Score`,
-    description: `
-How well the words in the generated text match with anything in the expected text.
-If everything in the generated text matches well with things in the expected text, precision is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1.",
-      },
-    },
-  },
-  "huggingface/bert_recall": {
-    name: `BERT Recall Score`,
-    description: `
-How much of the expected text is covered or represented in the generated text.
-If the generated text includes most or all of the important parts of the expected text, recall is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1 showing the recall of the model. ",
       },
     },
   },

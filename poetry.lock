@@ -1945,7 +1945,7 @@ extended-testing = ["lxml (>=5.1.0,<6.0.0)"]
 
 [[package]]
 name = "langevals-aws"
-version = "0.1.1"
+version = "0.1.2"
 description = "LangEvals integration for AWS APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -1962,7 +1962,7 @@ url = "evaluators/aws"
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.2"
+version = "0.1.3"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -1980,7 +1980,7 @@ url = "evaluators/azure"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.2"
+version = "0.1.3"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -1990,6 +1990,7 @@ develop = true
 [package.dependencies]
 pandas = "^2.2.2"
 pydantic = "^2.6.4"
+tqdm = "^4.66.4"
 
 [package.source]
 type = "directory"
@@ -1997,7 +1998,7 @@ url = "langevals_core"
 
 [[package]]
 name = "langevals-custom"
-version = "0.1.1"
+version = "0.1.2"
 description = "Custom evaluators you can build using other LLMs to do the eval, semantic matching or simple regexes or string matching."
 optional = true
 python-versions = "^3.11"
@@ -2015,7 +2016,7 @@ url = "evaluators/custom"
 
 [[package]]
 name = "langevals-example"
-version = "0.1.2"
+version = "0.1.3"
 description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
@@ -2031,7 +2032,7 @@ url = "evaluators/example"
 
 [[package]]
 name = "langevals-google-cloud"
-version = "0.1.2"
+version = "0.1.3"
 description = "LangEvals integration for Google Cloud APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -2048,7 +2049,7 @@ url = "evaluators/google_cloud"
 
 [[package]]
 name = "langevals-huggingface"
-version = "0.1.1"
+version = "0.1.2"
 description = "LangEvals huggingface evaluators."
 optional = true
 python-versions = "^3.11"
@@ -2070,7 +2071,7 @@ url = "evaluators/huggingface"
 
 [[package]]
 name = "langevals-langevals"
-version = "0.1.1"
+version = "0.1.2"
 description = "LangEvals house-made classification."
 optional = true
 python-versions = "^3.11"
@@ -2088,7 +2089,7 @@ url = "evaluators/langevals"
 
 [[package]]
 name = "langevals-lingua"
-version = "0.1.1"
+version = "0.1.2"
 description = "LangEvals lingua evaluator for language detection."
 optional = true
 python-versions = "^3.11"
@@ -2105,7 +2106,7 @@ url = "evaluators/lingua"
 
 [[package]]
 name = "langevals-openai"
-version = "0.1.2"
+version = "0.1.3"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -2115,6 +2116,7 @@ develop = true
 [package.dependencies]
 langevals-core = {path = "../../langevals_core", develop = true}
 openai = "1.13.3"
+tqdm = "^4.66.4"
 
 [package.source]
 type = "directory"
@@ -2122,7 +2124,7 @@ url = "evaluators/openai"
 
 [[package]]
 name = "langevals-ragas"
-version = "0.1.2"
+version = "0.1.3"
 description = "LangEvals Ragas evaluator"
 optional = true
 python-versions = "^3.11"
@@ -5076,4 +5078,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2a14c8b04f8f237b4810fe97b1f9e053b30df481c919924ae43cac3aa9a2eb7d"
+content-hash = "6ce1541c4eeac33decf42175158fb040272f15faddc11eae11997d839e1d5c2f"

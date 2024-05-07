@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-custom"
-version = "0.1.1"
+version = "0.1.2"
 description = "Custom evaluators you can build using other LLMs to do the eval, semantic matching or simple regexes or string matching."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"
