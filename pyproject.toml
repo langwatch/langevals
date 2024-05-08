@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "langevals"
-version = "0.1.4"
+version = "0.1.5"
 description = "A platform to evaluate LLM outputs using various evaluators."
 authors = [ "Rogerio Chaves <rogerio@langwatch.ai>",]
 license = "MIT"

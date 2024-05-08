@@ -98,7 +98,7 @@ def test_context_utilization():
         RagasContextUtilizationEntry(
             input="What is the capital of France?",
             output="Paris is the capital of France.",
-            contexts=["France is a country in Europe.", "Paris is a city in France."],
+            contexts=["France is a country in Europe.", "Paris is a city in France whose capital is Paris."],
         )
     )
 

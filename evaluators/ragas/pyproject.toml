@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-ragas"
-version = "0.1.3"
+version = "0.1.4"
 description = "LangEvals Ragas evaluator"
 authors = ["Your Name <your.email@example.com>"]
 license = "MIT"
