@@ -1,5 +1,7 @@
+from contextlib import contextmanager
 import math
 from typing import List, Literal, Optional
+import warnings
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
@@ -27,6 +29,12 @@ from ragas.metrics import (
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
 import litellm
+from tqdm import tqdm
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from tqdm.notebook import tqdm as tqdm_notebook
+from functools import partialmethod
 
 env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
 
@@ -154,7 +162,9 @@ def evaluate_ragas(
     )
 
     with get_openai_callback() as cb:
-        result = evaluate(dataset, metrics=[ragas_metric])
+        with disable_tqdm():
+            result = evaluate(dataset, metrics=[ragas_metric])
+
         score = result[metric]
 
     if math.isnan(score):
@@ -164,3 +174,17 @@ def evaluate_ragas(
         score=score,
         cost=Money(amount=cb.total_cost, currency="USD"),
     )
+
+
+# Hack to disable tqdm output from Ragas and use the one from langevals instead
+@contextmanager
+def disable_tqdm():
+    prev_init = tqdm.__init__
+    prev_init_notebook = tqdm_notebook.__init__
+    tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)  # type: ignore
+    tqdm_notebook.__init__ = partialmethod(tqdm_notebook.__init__, disable=True)  # type: ignore
+
+    yield
+
+    tqdm.__init__ = prev_init
+    tqdm_notebook.__init__ = prev_init_notebook

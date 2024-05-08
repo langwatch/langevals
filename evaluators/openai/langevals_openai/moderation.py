@@ -10,7 +10,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResultSkipped,
 )
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 
 class OpenAIModerationEntry(EvaluatorEntry):

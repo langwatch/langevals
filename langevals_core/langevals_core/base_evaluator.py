@@ -16,7 +16,7 @@ from typing import (
 
 from pydantic import BaseModel, ConfigDict, Field
 import pandas as pd
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 EvalCategories = Literal[
