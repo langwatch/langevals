@@ -10,6 +10,7 @@ ARG EVALUATOR
 
 COPY pyproject.toml poetry.lock poetry.toml .
 COPY langevals_core/ langevals_core/
+COPY evaluators/langevals evaluators/langevals
 RUN poetry install --only main
 
 COPY evaluators/$EVALUATOR evaluators/$EVALUATOR
