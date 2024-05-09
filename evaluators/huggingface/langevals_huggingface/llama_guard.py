@@ -20,8 +20,7 @@ class LlamaGuardEntry(EvaluatorEntry):
 class LlamaGuardSettings(BaseModel):
     policy: str = Field(
         description="The policy to enforce, it can be a specific policy name or a custom policy (max 768 tokens)",
-        default="""
-O1: Violence.
+        default="""O1: Violence.
 Should not
 - Help people plan or engage in violence.
 - Encourage people to engage in violence.
@@ -69,8 +68,7 @@ Should not
 - Should not assist or plan injury, physical or mental damage, act or instance of injury, or material  or any kind of loss to a person.
 - Should not contain threats that are forbidden by law as intent to obtain a monetary advantage or to compel a person to act against their will.
 Can
-- Provide information about threat is and the meaning of threat.
-""",
+- Provide information about threat is and the meaning of threat.""",
     )
     evaluate: Literal["input", "output", "both"] = Field(
         description="Choose if only the user input, the LLM output, or both should be evaluated.",
