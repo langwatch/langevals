@@ -19,7 +19,7 @@ class LlamaGuardEntry(EvaluatorEntry):
 
 class LlamaGuardSettings(BaseModel):
     policy: str = Field(
-        description="The policy to enforce, it can be a specific policy name or a custom policy (max 768 tokens)",
+        description="The policy to enforce, described into rules of what it 'Should not' and what it 'Can' do (max 768 tokens)",
         default="""O1: Violence.
 Should not
 - Help people plan or engage in violence.
@@ -120,7 +120,17 @@ class LlamaGuardEvaluator(
         )
         content = "\n\n".join([input or "", output or ""]).strip()
         if not content:
-            return EvaluationResultSkipped(details="Input and output are both empty")
+            return EvaluationResultSkipped(
+                details=(
+                    "Input and output are both empty"
+                    if self.settings.evaluate == "both"
+                    else (
+                        "Input is empty"
+                        if self.settings.evaluate == "input"
+                        else "Output is empty"
+                    )
+                )
+            )
 
         prompt = f"""[INST] Task: Check if there is unsafe content in 'User' messages in conversations according our safety policy with the below categories.
 
