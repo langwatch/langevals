@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "langevals-langevals"
 version = "0.1.3"
-description = "LangEvals house-made classification."
-authors = ["Yevhenii Budnyk <y.budnyk789@gmail.com>"]
+description = "LangEvals home-made evaluators."
+authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -10,6 +10,7 @@ python = "^3.11"
 litellm = "^1.31.3"
 langevals-core = { path = "../../langevals_core", develop = true }
 openai = "1.26.0"
+numpy = "^1.26.4"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

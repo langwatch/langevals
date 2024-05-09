@@ -2,7 +2,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
-from langevals_custom.similarity import (
+from langevals_langevals.similarity import (
     CustomSimilarityEvaluator,
     CustomSimilarityEntry,
     CustomSimilaritySettings,

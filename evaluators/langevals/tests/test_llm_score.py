@@ -2,7 +2,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
-from langevals_custom.llm_score import (
+from langevals_langevals.llm_score import (
     CustomLLMScoreEvaluator,
     CustomLLMScoreEntry,
     CustomLLMScoreSettings,

@@ -1,4 +1,4 @@
-from langevals_custom.basic import (
+from langevals_langevals.basic import (
     CustomBasicEvaluator,
     CustomBasicEntry,
     CustomBasicRule,

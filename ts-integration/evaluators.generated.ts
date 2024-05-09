@@ -64,173 +64,6 @@ export type Money = {
 };
 
 export type Evaluators = {
-  "openai/moderation": {
-    settings: {
-      model: "text-moderation-stable" | "text-moderation-latest";
-      categories: {
-        harassment: boolean;
-        harassment_threatening: boolean;
-        hate: boolean;
-        hate_threatening: boolean;
-        self_harm: boolean;
-        self_harm_instructions: boolean;
-        self_harm_intent: boolean;
-        sexual: boolean;
-        sexual_minors: boolean;
-        violence: boolean;
-        violence_graphic: boolean;
-      };
-    };
-  };
-  "example/word_count": {
-    settings: Record<string, never>;
-  };
-  "huggingface/bert_f1": {
-    settings: Record<string, never>;
-  };
-  "huggingface/bert_precision": {
-    settings: Record<string, never>;
-  };
-  "huggingface/bert_recall": {
-    settings: Record<string, never>;
-  };
-  "langevals/competitor_blocklist": {
-    settings: {
-      competitors: string[];
-    };
-  };
-  "langevals/competitor_llm": {
-    settings: {
-      name: string;
-      description: string;
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      max_tokens: number;
-    };
-  };
-  "langevals/off_topic": {
-    settings: {
-      allowed_topics: {
-        topic: string;
-        description: string;
-      }[];
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      max_tokens: number;
-    };
-  };
-  "ragas/answer_relevancy": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_precision": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_recall": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_relevancy": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_utilization": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/faithfulness": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
   "aws/comprehend_pii_detection": {
     settings: {
       entity_types: {
@@ -406,7 +239,112 @@ export type Evaluators = {
   "azure/jailbreak": {
     settings: Record<string, never>;
   };
-  "custom/basic": {
+  "ragas/answer_relevancy": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_precision": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_recall": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_relevancy": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_utilization": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/faithfulness": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "openai/text-embedding-3-small"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "example/word_count": {
+    settings: Record<string, never>;
+  };
+  "langevals/basic": {
     settings: {
       rules: {
         field: "input" | "output";
@@ -419,7 +357,26 @@ export type Evaluators = {
       }[];
     };
   };
-  "custom/llm_boolean": {
+  "langevals/competitor_blocklist": {
+    settings: {
+      competitors: string[];
+    };
+  };
+  "langevals/competitor_llm": {
+    settings: {
+      name: string;
+      description: string;
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      max_tokens: number;
+    };
+  };
+  "langevals/llm_boolean": {
     settings: {
       model:
         | "openai/gpt-3.5-turbo-1106"
@@ -432,7 +389,7 @@ export type Evaluators = {
       max_tokens: number;
     };
   };
-  "custom/llm_score": {
+  "langevals/llm_score": {
     settings: {
       model:
         | "openai/gpt-3.5-turbo-1106"
@@ -445,7 +402,23 @@ export type Evaluators = {
       max_tokens: number;
     };
   };
-  "custom/similarity": {
+  "langevals/off_topic": {
+    settings: {
+      allowed_topics: {
+        topic: string;
+        description: string;
+      }[];
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-1106-preview";
+      max_tokens: number;
+    };
+  };
+  "langevals/similarity": {
     settings: {
       field: "input" | "output";
       rule: "is_not_similar_to" | "is_similar_to";
@@ -455,6 +428,33 @@ export type Evaluators = {
         | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
     };
+  };
+  "openai/moderation": {
+    settings: {
+      model: "text-moderation-stable" | "text-moderation-latest";
+      categories: {
+        harassment: boolean;
+        harassment_threatening: boolean;
+        hate: boolean;
+        hate_threatening: boolean;
+        self_harm: boolean;
+        self_harm_instructions: boolean;
+        self_harm_intent: boolean;
+        sexual: boolean;
+        sexual_minors: boolean;
+        violence: boolean;
+        violence_graphic: boolean;
+      };
+    };
+  };
+  "huggingface/bert_f1": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_precision": {
+    settings: Record<string, never>;
+  };
+  "huggingface/bert_recall": {
+    settings: Record<string, never>;
   };
   "google_cloud/dlp_pii_detection": {
     settings: {
@@ -481,392 +481,6 @@ export type Evaluators = {
 export const AVAILABLE_EVALUATORS: {
   [K in EvaluatorTypes]: EvaluatorDefinition<K>;
 } = {
-  "openai/moderation": {
-    name: `OpenAI Moderation`,
-    description: `
-This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
-including harassment, hate speech, self-harm, sexual content, and violence.
-`,
-    category: "safety",
-    docsUrl: "https://platform.openai.com/docs/guides/moderation/overview",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["input", "output"],
-    settings: {
-      model: {
-        description:
-          "The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
-        default: "text-moderation-stable",
-      },
-      categories: {
-        description: "The categories of content to check for moderation.",
-        default: {
-          harassment: true,
-          harassment_threatening: true,
-          hate: true,
-          hate_threatening: true,
-          self_harm: true,
-          self_harm_instructions: true,
-          self_harm_intent: true,
-          sexual: true,
-          sexual_minors: true,
-          violence: true,
-          violence_graphic: true,
-        },
-      },
-    },
-    result: {
-      score: {
-        description:
-          "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
-      },
-    },
-  },
-  "example/word_count": {
-    name: `Example Evaluator`,
-    description: `
-This evaluator serves as a boilerplate for creating new evaluators.
-`,
-    category: "other",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: false,
-    requiredFields: ["output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "How many words are there in the output, split by space",
-      },
-    },
-  },
-  "huggingface/bert_f1": {
-    name: `BERT F1 Score`,
-    description: `
-How well the words in the generated text match with anything in the expected text.
-If everything in the generated text matches well with things in the expected text, F1 is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1.",
-      },
-    },
-  },
-  "huggingface/bert_precision": {
-    name: `BERT Precision Score`,
-    description: `
-How well the words in the generated text match with anything in the expected text.
-If everything in the generated text matches well with things in the expected text, precision is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1.",
-      },
-    },
-  },
-  "huggingface/bert_recall": {
-    name: `BERT Recall Score`,
-    description: `
-How much of the expected text is covered or represented in the generated text.
-If the generated text includes most or all of the important parts of the expected text, recall is high.
-`,
-    category: "similarity",
-    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
-    isGuardrail: false,
-    requiredFields: ["output", "expected_output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "Score from 0 to 1 showing the recall of the model. ",
-      },
-    },
-  },
-  "langevals/competitor_blocklist": {
-    name: `Competitor Blocklist`,
-    description: `
-This evaluator checks if any of the specified competitors was mentioned
-`,
-    category: "policy",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["output", "input"],
-    settings: {
-      competitors: {
-        description: "The competitors that must not be mentioned.",
-        default: ["OpenAI", "Google", "Microsoft"],
-      },
-    },
-    result: {
-      score: {
-        description: "Number of competitors mentioned in the input and output",
-      },
-      passed: {
-        description: "Is the message containing explicit mention of competitor",
-      },
-    },
-  },
-  "langevals/competitor_llm": {
-    name: `Competitor LLM check`,
-    description: `
-This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
-`,
-    category: "policy",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["output", "input"],
-    settings: {
-      name: {
-        description: "The name of your company",
-        default: "LangWatch",
-      },
-      description: {
-        description: "Description of what your company is specializing at",
-        default:
-          "We are providing an LLM observability and evaluation platform",
-      },
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
-    result: {
-      score: {
-        description: "Confidence that the message is competitor free",
-      },
-      passed: {
-        description: "Is the message related to the competitors",
-      },
-    },
-  },
-  "langevals/off_topic": {
-    name: `Off Topic Evaluator`,
-    description: `
-This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
-`,
-    category: "policy",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: true,
-    requiredFields: ["input"],
-    optionalFields: [],
-    settings: {
-      allowed_topics: {
-        description:
-          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
-        default: [
-          {
-            topic: "simple_chat",
-            description: "Smalltalk with the user",
-          },
-          {
-            topic: "company",
-            description: "Questions about the company, what we do, etc",
-          },
-        ],
-      },
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
-    result: {
-      score: {
-        description: "Confidence level of the intent prediction",
-      },
-      passed: {
-        description: "Is the message concerning allowed topic",
-      },
-    },
-  },
-  "ragas/answer_relevancy": {
-    name: `Ragas Answer Relevancy`,
-    description: `
-This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
-    isGuardrail: false,
-    requiredFields: ["input", "output"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_precision": {
-    name: `Ragas Context Precision`,
-    description: `
-This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
-    isGuardrail: false,
-    requiredFields: ["input", "contexts", "expected_output"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_recall": {
-    name: `Ragas Context Recall`,
-    description: `
-This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
-    isGuardrail: false,
-    requiredFields: ["contexts", "expected_output"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_relevancy": {
-    name: `Ragas Context Relevancy`,
-    description: `
-This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
-    isGuardrail: false,
-    requiredFields: ["output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_utilization": {
-    name: `Ragas Context Utilization`,
-    description: `
-This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
-    isGuardrail: false,
-    requiredFields: ["input", "output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/faithfulness": {
-    name: `Ragas Faithfulness`,
-    description: `
-This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
-    isGuardrail: false,
-    requiredFields: ["output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
   "aws/comprehend_pii_detection": {
     name: `Amazon Comprehend PII Detection`,
     description: `
@@ -1046,7 +660,192 @@ This evaluator checks for jailbreak-attempt in the input using Azure's Content S
       },
     },
   },
-  "custom/basic": {
+  "ragas/answer_relevancy": {
+    name: `Ragas Answer Relevancy`,
+    description: `
+This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
+    isGuardrail: false,
+    requiredFields: ["input", "output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_precision": {
+    name: `Ragas Context Precision`,
+    description: `
+This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
+    isGuardrail: false,
+    requiredFields: ["input", "contexts", "expected_output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_recall": {
+    name: `Ragas Context Recall`,
+    description: `
+This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
+    isGuardrail: false,
+    requiredFields: ["contexts", "expected_output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_relevancy": {
+    name: `Ragas Context Relevancy`,
+    description: `
+This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
+    isGuardrail: false,
+    requiredFields: ["output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_utilization": {
+    name: `Ragas Context Utilization`,
+    description: `
+This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
+    isGuardrail: false,
+    requiredFields: ["input", "output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/faithfulness": {
+    name: `Ragas Faithfulness`,
+    description: `
+This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
+    isGuardrail: false,
+    requiredFields: ["output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-3.5-turbo-1106",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "example/word_count": {
+    name: `Example Evaluator`,
+    description: `
+This evaluator serves as a boilerplate for creating new evaluators.
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: false,
+    requiredFields: ["output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "How many words are there in the output, split by space",
+      },
+    },
+  },
+  "langevals/basic": {
     name: `Custom Basic Evaluator`,
     description: `
 Allows you to check for simple text matches or regex evaluation.
@@ -1075,7 +874,70 @@ Allows you to check for simple text matches or regex evaluation.
       },
     },
   },
-  "custom/llm_boolean": {
+  "langevals/competitor_blocklist": {
+    name: `Competitor Blocklist`,
+    description: `
+This evaluator checks if any of the specified competitors was mentioned
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      competitors: {
+        description: "The competitors that must not be mentioned.",
+        default: ["OpenAI", "Google", "Microsoft"],
+      },
+    },
+    result: {
+      score: {
+        description: "Number of competitors mentioned in the input and output",
+      },
+      passed: {
+        description: "Is the message containing explicit mention of competitor",
+      },
+    },
+  },
+  "langevals/competitor_llm": {
+    name: `Competitor LLM check`,
+    description: `
+This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      name: {
+        description: "The name of your company",
+        default: "LangWatch",
+      },
+      description: {
+        description: "Description of what your company is specializing at",
+        default:
+          "We are providing an LLM observability and evaluation platform",
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence that the message is competitor free",
+      },
+      passed: {
+        description: "Is the message related to the competitors",
+      },
+    },
+  },
+  "langevals/llm_boolean": {
     name: `Custom LLM Boolean Evaluator`,
     description: `
 Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation of the message.
@@ -1111,7 +973,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
       },
     },
   },
-  "custom/llm_score": {
+  "langevals/llm_score": {
     name: `Custom LLM Score Evaluator`,
     description: `
 Use an LLM as a judge with custom prompt to do a numeric score evaluation of the message.
@@ -1144,7 +1006,50 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
       },
     },
   },
-  "custom/similarity": {
+  "langevals/off_topic": {
+    name: `Off Topic Evaluator`,
+    description: `
+This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
+`,
+    category: "policy",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    optionalFields: [],
+    settings: {
+      allowed_topics: {
+        description:
+          "The list of topics and their short descriptions that the chatbot is allowed to talk about",
+        default: [
+          {
+            topic: "simple_chat",
+            description: "Smalltalk with the user",
+          },
+          {
+            topic: "company",
+            description: "Questions about the company, what we do, etc",
+          },
+        ],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-3.5-turbo-0125",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {
+      score: {
+        description: "Confidence level of the intent prediction",
+      },
+      passed: {
+        description: "Is the message concerning allowed topic",
+      },
+    },
+  },
+  "langevals/similarity": {
     name: `Semantic Similarity Evaluator`,
     description: `
 Allows you to check for semantic similarity or dissimilarity between input and output and a
@@ -1186,6 +1091,101 @@ match on the exact text.
       passed: {
         description:
           "Passes if the cosine similarity crosses the threshold for the defined rule",
+      },
+    },
+  },
+  "openai/moderation": {
+    name: `OpenAI Moderation`,
+    description: `
+This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
+including harassment, hate speech, self-harm, sexual content, and violence.
+`,
+    category: "safety",
+    docsUrl: "https://platform.openai.com/docs/guides/moderation/overview",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      model: {
+        description:
+          "The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
+        default: "text-moderation-stable",
+      },
+      categories: {
+        description: "The categories of content to check for moderation.",
+        default: {
+          harassment: true,
+          harassment_threatening: true,
+          hate: true,
+          hate_threatening: true,
+          self_harm: true,
+          self_harm_instructions: true,
+          self_harm_intent: true,
+          sexual: true,
+          sexual_minors: true,
+          violence: true,
+          violence_graphic: true,
+        },
+      },
+    },
+    result: {
+      score: {
+        description:
+          "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
+      },
+    },
+  },
+  "huggingface/bert_f1": {
+    name: `BERT F1 Score`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, F1 is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_precision": {
+    name: `BERT Precision Score`,
+    description: `
+How well the words in the generated text match with anything in the expected text.
+If everything in the generated text matches well with things in the expected text, precision is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1.",
+      },
+    },
+  },
+  "huggingface/bert_recall": {
+    name: `BERT Recall Score`,
+    description: `
+How much of the expected text is covered or represented in the generated text.
+If the generated text includes most or all of the important parts of the expected text, recall is high.
+`,
+    category: "similarity",
+    docsUrl: "https://huggingface.co/spaces/evaluate-metric/bertscore",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "Score from 0 to 1 showing the recall of the model. ",
       },
     },
   },

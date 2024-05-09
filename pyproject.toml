@@ -51,12 +51,11 @@ openai = [ "langevals-openai",]
 example = [ "langevals-example",]
 ragas = [ "langevals-ragas",]
 google_cloud = [ "langevals-google_cloud",]
-custom = [ "langevals-custom",]
 lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
-all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-aws", "langevals-huggingface", "langevals-custom", "langevals-openai",]
+all = [ "langevals-azure", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-aws", "langevals-huggingface", "langevals-openai",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -87,11 +86,6 @@ path = "evaluators/google_cloud"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.langevals-custom]
-path = "evaluators/custom"
-develop = true
-optional = true
-
 [tool.poetry.dependencies.langevals-lingua]
 path = "evaluators/lingua"
 develop = true
@@ -110,7 +104,7 @@ optional = true
 [tool.poetry.dependencies.langevals-langevals]
 path = "evaluators/langevals"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.plugins.pytest11]
 pass_rate_plugin = "langevals.pytest_plugins.pass_rate_plugin"

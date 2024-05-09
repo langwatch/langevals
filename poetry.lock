@@ -1997,24 +1997,6 @@ type = "directory"
 url = "langevals_core"
 
 [[package]]
-name = "langevals-custom"
-version = "0.1.3"
-description = "Custom evaluators you can build using other LLMs to do the eval, semantic matching or simple regexes or string matching."
-optional = true
-python-versions = "^3.11"
-files = []
-develop = true
-
-[package.dependencies]
-langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.31.3"
-numpy = "^1.26.4"
-
-[package.source]
-type = "directory"
-url = "evaluators/custom"
-
-[[package]]
 name = "langevals-example"
 version = "0.1.4"
 description = "LangEvals boilerplate example evaluator for LLMs."
@@ -2072,8 +2054,8 @@ url = "evaluators/huggingface"
 [[package]]
 name = "langevals-langevals"
 version = "0.1.3"
-description = "LangEvals house-made classification."
-optional = true
+description = "LangEvals home-made evaluators."
+optional = false
 python-versions = "^3.11"
 files = []
 develop = true
@@ -2081,6 +2063,7 @@ develop = true
 [package.dependencies]
 langevals-core = {path = "../../langevals_core", develop = true}
 litellm = "^1.31.3"
+numpy = "^1.26.4"
 openai = "1.26.0"
 
 [package.source]
@@ -5063,10 +5046,9 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy", "pytest-ruff (>=0.2.1)"]
 
 [extras]
-all = ["langevals-aws", "langevals-azure", "langevals-custom", "langevals-example", "langevals-google_cloud", "langevals-huggingface", "langevals-langevals", "langevals-lingua", "langevals-openai", "langevals-ragas"]
+all = ["langevals-aws", "langevals-azure", "langevals-example", "langevals-google_cloud", "langevals-huggingface", "langevals-lingua", "langevals-openai", "langevals-ragas"]
 aws = ["langevals-aws"]
 azure = ["langevals-azure"]
-custom = ["langevals-custom"]
 example = ["langevals-example"]
 google-cloud = ["langevals-google_cloud"]
 huggingface = ["langevals-huggingface"]
@@ -5078,4 +5060,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6ce1541c4eeac33decf42175158fb040272f15faddc11eae11997d839e1d5c2f"
+content-hash = "8de7bca8b76af41e3855e473e8b842d02d15d28829937dc6b7ec646f16eda3dd"

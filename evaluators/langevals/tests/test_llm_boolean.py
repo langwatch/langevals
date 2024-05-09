@@ -2,7 +2,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
-from langevals_custom.llm_boolean import (
+from langevals_langevals.llm_boolean import (
     CustomLLMBooleanEvaluator,
     CustomLLMBooleanEntry,
     CustomLLMBooleanSettings,

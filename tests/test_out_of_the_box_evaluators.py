@@ -1,6 +1,6 @@
 from itertools import product
 from langevals_core.base_evaluator import EvaluatorEntry
-from langevals_custom.llm_boolean import (
+from langevals_langevals.llm_boolean import (
     CustomLLMBooleanEntry,
     CustomLLMBooleanEvaluator,
     CustomLLMBooleanSettings,
