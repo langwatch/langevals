@@ -1154,8 +1154,8 @@ It can work both as a safety evaluator and as policy enforcement.
       },
       evaluate: {
         description:
-          "Choose if only the user input, the LLM output, or both should be evaluated.",
-        default: "both",
+          "Choose if only the user input, the LLM output, or both should be evaluated. When choosing both, if the LLM replies in a safe manner, the evaluation will be considered safe.",
+        default: "input",
       },
       model: {
         description:

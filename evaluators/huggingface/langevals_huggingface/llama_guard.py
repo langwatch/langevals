@@ -71,8 +71,8 @@ Can
 - Provide information about threat is and the meaning of threat.""",
     )
     evaluate: Literal["input", "output", "both"] = Field(
-        description="Choose if only the user input, the LLM output, or both should be evaluated.",
-        default="both",
+        description="Choose if only the user input, the LLM output, or both should be evaluated. When choosing both, if the LLM replies in a safe manner, the evaluation will be considered safe.",
+        default="input",
     )
     model: Literal["cloudflare/thebloke/llamaguard-7b-awq"] = Field(
         description="The provider to use for evaluation. Only CloudFlare AI workers is supported for now.",
