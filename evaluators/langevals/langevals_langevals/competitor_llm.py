@@ -30,14 +30,21 @@ class CompetitorLLMSettings(BaseModel):
         description="Description of what your company is specializing at",
     )
     model: Literal[
-        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-3.5-turbo",
         "openai/gpt-3.5-turbo-0125",
-        "openai/gpt-4-1106-preview",
+        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-4-turbo",
         "openai/gpt-4-0125-preview",
+        "openai/gpt-4-1106-preview",
         "azure/gpt-35-turbo-1106",
+        "azure/gpt-4-turbo-2024-04-09",
         "azure/gpt-4-1106-preview",
+        "groq/llama3-70b-8192",
+        "claude-3-haiku-20240307",
+        "claude-3-sonnet-20240229",
+        "claude-3-opus-20240229",
     ] = Field(
-        default="openai/gpt-3.5-turbo-0125",
+        default="azure/gpt-35-turbo-1106",
         description="The model to use for evaluation",
     )
     max_tokens: int = Field(
