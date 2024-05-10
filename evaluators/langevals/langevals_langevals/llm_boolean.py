@@ -23,14 +23,21 @@ class CustomLLMBooleanEntry(EvaluatorEntry):
 
 class CustomLLMBooleanSettings(BaseModel):
     model: Literal[
-        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-3.5-turbo",
         "openai/gpt-3.5-turbo-0125",
-        "openai/gpt-4-1106-preview",
+        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-4-turbo",
         "openai/gpt-4-0125-preview",
+        "openai/gpt-4-1106-preview",
         "azure/gpt-35-turbo-1106",
+        "azure/gpt-4-turbo-2024-04-09",
         "azure/gpt-4-1106-preview",
+        "groq/llama3-70b-8192",
+        "claude-3-haiku-20240307",
+        "claude-3-sonnet-20240229",
+        "claude-3-opus-20240229",
     ] = Field(
-        default="openai/gpt-3.5-turbo-0125",
+        default="azure/gpt-35-turbo-1106",
         description="The model to use for evaluation",
     )
     prompt: str = Field(
@@ -61,17 +68,15 @@ class CustomLLMBooleanEvaluator(
 
     name = "Custom LLM Boolean Evaluator"
     category = "custom"
-    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+    env_vars = []
     default_settings = CustomLLMBooleanSettings()
     is_guardrail = True
 
     def evaluate(self, entry: CustomLLMBooleanEntry) -> SingleEvaluationResult:
-        vendor, model = self.settings.model.split("/")
-
-        if vendor == "azure":
-            os.environ["AZURE_API_KEY"] = self.get_env("AZURE_API_KEY")
-            os.environ["AZURE_API_BASE"] = self.get_env("AZURE_API_BASE")
-            os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+        os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+        if self.env:
+            for key, env in self.env.items():
+                os.environ[key] = env
 
         content = ""
         if entry.input:
@@ -86,11 +91,9 @@ class CustomLLMBooleanEvaluator(
 
         content += f"# Task\n{self.settings.prompt}"
 
-        litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
-
         total_tokens = len(
             litellm.encode(
-                model=litellm_model, text=f"{self.settings.prompt} {content}"
+                model=self.settings.model, text=f"{self.settings.prompt} {content}"
             )
         )
         max_tokens = min(self.settings.max_tokens, 32768)
@@ -99,12 +102,15 @@ class CustomLLMBooleanEvaluator(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
             )
 
+        cost = None
+
         response = litellm.completion(
-            model=litellm_model,
+            model=self.settings.model,
             messages=[
                 {
                     "role": "system",
-                    "content": self.settings.prompt,
+                    "content": self.settings.prompt
+                    + ". Always output a valid json for the function call",
                 },
                 {
                     "role": "user",
@@ -130,7 +136,7 @@ class CustomLLMBooleanEvaluator(
                             },
                             "required": ["scratchpad", "passed"],
                         },
-                        "description": "use this function to write your thoughts on the scratchpad, then decide if it passed or not",
+                        "description": "use this function to write your thoughts on the scratchpad, then decide if it passed or not with this json structure",
                     },
                 },
             ],

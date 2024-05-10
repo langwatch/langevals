@@ -98,7 +98,10 @@ def test_context_utilization():
         RagasContextUtilizationEntry(
             input="What is the capital of France?",
             output="Paris is the capital of France.",
-            contexts=["France is a country in Europe.", "Paris is a city in France whose capital is Paris."],
+            contexts=[
+                "France is a country in Europe.",
+                "Paris is a city in France whose capital is Paris.",
+            ],
         )
     )
 
@@ -141,3 +144,21 @@ def test_context_recall():
     assert result.status == "processed"
     assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
+
+
+def test_with_anthropic_models():
+    evaluator = RagasAnswerRelevancyEvaluator(
+        settings=RagasSettings(model="claude-3-haiku-20240307")
+    )
+
+    result = evaluator.evaluate(
+        RagasAnswerRelevancyEntry(
+            input="What is the capital of France?",
+            output="The capital of France is Paris.",
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score > 0.9
+    # TODO: capture costs on ragas with claude too
+    # assert result.cost and result.cost.amount > 0.0

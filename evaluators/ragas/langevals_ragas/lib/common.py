@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import math
+import os
 from typing import List, Literal, Optional
 import warnings
 from langevals_core.base_evaluator import (
@@ -11,12 +12,6 @@ from langevals_core.base_evaluator import (
 from pydantic import BaseModel, Field
 from ragas import evaluate
 from ragas.metrics.base import Metric
-from langchain_openai import (
-    AzureChatOpenAI,
-    ChatOpenAI,
-    OpenAIEmbeddings,
-    AzureOpenAIEmbeddings,
-)
 from ragas.llms import LangchainLLMWrapper
 from ragas.metrics import (
     answer_relevancy,
@@ -31,12 +26,17 @@ from datasets import Dataset
 import litellm
 from tqdm import tqdm
 
+from langevals_ragas.lib.model_to_langchain import (
+    embeddings_model_to_langchain,
+    model_to_langchain,
+)
+
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from tqdm.notebook import tqdm as tqdm_notebook
 from functools import partialmethod
 
-env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+env_vars = []
 
 
 class RagasSettings(BaseModel):
@@ -47,9 +47,11 @@ class RagasSettings(BaseModel):
         "openai/gpt-4-1106-preview",
         "openai/gpt-4-0125-preview",
         "azure/gpt-35-turbo-1106",
+        "azure/gpt-35-turbo-16k",
         "azure/gpt-4-1106-preview",
+        "claude-3-haiku-20240307",
     ] = Field(
-        default="openai/gpt-3.5-turbo-1106",
+        default="azure/gpt-35-turbo-16k",
         description="The model to use for evaluation.",
     )
     embeddings_model: Literal[
@@ -79,39 +81,15 @@ def evaluate_ragas(
     ground_truth: Optional[str] = None,
     settings: RagasSettings = RagasSettings(),
 ):
-    vendor, model = settings.model.split("/")
-    embeddings_vendor, embeddings_model = settings.embeddings_model.split("/")
+    os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+    if evaluator.env:
+        for key, env in evaluator.env.items():
+            os.environ[key] = env
 
-    if vendor == "openai":
-        gpt = ChatOpenAI(
-            model=model,
-            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
-        )
-        gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
-    elif vendor == "azure":
-        gpt = AzureChatOpenAI(
-            model=model.replace(".", ""),
-            api_version="2023-05-15",
-            azure_endpoint=evaluator.get_env("AZURE_API_BASE") or "",
-            api_key=evaluator.get_env("AZURE_API_KEY"),  # type: ignore
-        )
-        gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
-    else:
-        raise ValueError(f"Invalid model: {settings.model}")
+    gpt = model_to_langchain(settings.model)
+    gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
 
-    if embeddings_vendor == "openai":
-        embeddings = OpenAIEmbeddings(
-            model=embeddings_model,
-            api_key=evaluator.get_env("OPENAI_API_KEY"),  # type: ignore
-        )
-    elif embeddings_vendor == "azure":
-        embeddings = AzureOpenAIEmbeddings(
-            azure_deployment=embeddings_model,
-            model=embeddings_model,
-            api_version="2023-05-15",
-            azure_endpoint=evaluator.get_env("AZURE_API_BASE") or "",
-            api_key=evaluator.get_env("AZURE_API_KEY"),  # type: ignore
-        )
+    embeddings = embeddings_model_to_langchain(settings.embeddings_model)
 
     answer_relevancy.llm = gpt_wrapper
     answer_relevancy.embeddings = embeddings  # type: ignore
@@ -123,12 +101,11 @@ def evaluate_ragas(
     contexts = [x for x in contexts if x] if contexts else None
 
     total_tokens = 0
-    litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
-    total_tokens += len(litellm.encode(model=litellm_model, text=question or ""))
-    total_tokens += len(litellm.encode(model=litellm_model, text=answer or ""))
+    total_tokens += len(litellm.encode(model=settings.model, text=question or ""))
+    total_tokens += len(litellm.encode(model=settings.model, text=answer or ""))
     if contexts is not None:
         for context in contexts:
-            tokens = litellm.encode(model=litellm_model, text=context)
+            tokens = litellm.encode(model=settings.model, text=context)
             total_tokens += len(tokens)
     max_tokens = min(settings.max_tokens, 16384)
     if total_tokens > max_tokens:
