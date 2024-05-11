@@ -88,7 +88,6 @@ def evaluate_ragas(
 
     gpt = model_to_langchain(settings.model)
     gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
-
     embeddings = embeddings_model_to_langchain(settings.embeddings_model)
 
     answer_relevancy.llm = gpt_wrapper
