@@ -248,7 +248,9 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "openai/text-embedding-3-small"
@@ -265,7 +267,9 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "openai/text-embedding-3-small"
@@ -282,7 +286,9 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "openai/text-embedding-3-small"
@@ -299,7 +305,9 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "openai/text-embedding-3-small"
@@ -316,7 +324,9 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "openai/text-embedding-3-small"
@@ -333,7 +343,9 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "openai/text-embedding-3-small"
@@ -367,24 +379,38 @@ export type Evaluators = {
       name: string;
       description: string;
       model:
-        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo"
         | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
         | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "claude-3-haiku-20240307"
+        | "claude-3-sonnet-20240229"
+        | "claude-3-opus-20240229";
       max_tokens: number;
     };
   };
   "langevals/llm_boolean": {
     settings: {
       model:
-        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo"
         | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
         | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "claude-3-haiku-20240307"
+        | "claude-3-sonnet-20240229"
+        | "claude-3-opus-20240229";
       prompt: string;
       max_tokens: number;
     };
@@ -392,12 +418,20 @@ export type Evaluators = {
   "langevals/llm_score": {
     settings: {
       model:
-        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo"
         | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
         | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "groq/llama3-8b-8192"
+        | "claude-3-haiku-20240307"
+        | "claude-3-sonnet-20240229"
+        | "claude-3-opus-20240229";
       prompt: string;
       max_tokens: number;
     };
@@ -409,12 +443,19 @@ export type Evaluators = {
         description: string;
       }[];
       model:
-        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo"
         | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
         | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4-1106-preview";
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "claude-3-haiku-20240307"
+        | "claude-3-sonnet-20240229"
+        | "claude-3-opus-20240229";
       max_tokens: number;
     };
   };
@@ -672,7 +713,7 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "azure/gpt-35-turbo-16k",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -700,7 +741,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "azure/gpt-35-turbo-16k",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -728,7 +769,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "azure/gpt-35-turbo-16k",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -756,7 +797,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "azure/gpt-35-turbo-16k",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -784,7 +825,7 @@ This metric evaluates whether all of the output relevant items present in the co
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "azure/gpt-35-turbo-16k",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -812,7 +853,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-1106",
+        default: "azure/gpt-35-turbo-16k",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -919,7 +960,7 @@ This evaluator use an LLM-as-judge to check if the conversation is related to co
       },
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
+        default: "azure/gpt-35-turbo-1106",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
@@ -948,7 +989,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
+        default: "azure/gpt-35-turbo-1106",
       },
       prompt: {
         description:
@@ -984,7 +1025,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
+        default: "azure/gpt-35-turbo-1106",
       },
       prompt: {
         description:
@@ -1031,7 +1072,7 @@ This evaluator checks if the user message is concerning one of the allowed topic
       },
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-3.5-turbo-0125",
+        default: "azure/gpt-35-turbo-1106",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
