@@ -46,6 +46,7 @@ class RagasSettings(BaseModel):
         "openai/gpt-3.5-turbo-16k",
         "openai/gpt-4-1106-preview",
         "openai/gpt-4-0125-preview",
+        "openai/gpt-4o",
         "azure/gpt-35-turbo-1106",
         "azure/gpt-35-turbo-16k",
         "azure/gpt-4-1106-preview",

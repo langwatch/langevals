@@ -33,6 +33,7 @@ class CompetitorLLMSettings(BaseModel):
         "openai/gpt-3.5-turbo",
         "openai/gpt-3.5-turbo-0125",
         "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-4o",
         "openai/gpt-4-turbo",
         "openai/gpt-4-0125-preview",
         "openai/gpt-4-1106-preview",
@@ -90,12 +91,14 @@ class CompetitorLLMEvaluator(
         your_company_description = (
             f"Your company is {self.settings.name} - {self.settings.description}"
         )
-        litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
+        litellm_model = model if vendor == "openai" and model != "gpt-4o" else f"{vendor}/{model}"
         prompt = f"""You are a competitor detection system. Your task is to determine whether a question explicitly or implicitly refers to any competitors.
         This includes: comparisons between our brand and others, direct inquiries about competitors' products or services, and any mention of similar industries.
         Remember that {your_company_description}.
         If a question pertains to a related industry but not directly to our company, treat it as an implicit reference to competitors."""
-        max_tokens_retrieved = get_max_tokens(litellm_model)
+        max_tokens_retrieved = get_max_tokens(
+            "gpt-4-turbo" if litellm_model == "openai/gpt-4o" else litellm_model
+        )
         if max_tokens_retrieved is None:
             raise ValueError("Model not mapped yet, cannot retrieve max tokens.")
         llm_max_tokens: int = int(max_tokens_retrieved)
@@ -116,7 +119,15 @@ class CompetitorLLMEvaluator(
         ]
         messages = cast(
             List[dict[str, str]],
-            trim_messages(messages, litellm_model, max_tokens=max_tokens),
+            trim_messages(
+                messages,
+                (
+                    "openai/gpt-4-turbo"
+                    if litellm_model == "openai/gpt-4o"
+                    else litellm_model
+                ),
+                max_tokens=max_tokens,
+            ),
         )
         response = litellm.completion(
             model=litellm_model,
@@ -154,8 +165,11 @@ class CompetitorLLMEvaluator(
         arguments = json.loads(
             cast(Message, choice.message).tool_calls[0].function.arguments
         )
-        passed = not arguments["competitor_mentioned"]
-        confidence = arguments["confidence"]
+        passed = not arguments["competitor_mentioned"] if "competitor_mentioned" in arguments else True
+        confidence = arguments["confidence"] if "confidence" in arguments else 1
+        # Temporary fix for gpt-4o
+        if "gpt-4o" in (response.model or ""):
+            response.model = "openai/gpt-4-turbo"
         cost = completion_cost(completion_response=response, prompt=prompt)
         details = None
         if not passed:
