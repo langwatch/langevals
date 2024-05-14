@@ -45,6 +45,24 @@ def test_faithfulness():
     assert result.cost and result.cost.amount > 0.0
 
 
+def test_faithfulness_not_resulting_in_nan():
+    evaluator = RagasFaithfulnessEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasFaithfulnessEntry(
+            output="I couldn't find any information on completing your account. Can I help you with anything else today?",
+            contexts=[
+                "Info on the company",
+                "Info on customer support"
+            ],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score <= 0.5
+    assert result.cost and result.cost.amount > 0.0
+
+
 def test_answer_relevancy():
     evaluator = RagasAnswerRelevancyEvaluator(settings=RagasSettings())
 
