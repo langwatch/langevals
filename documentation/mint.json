@@ -1,0 +1,108 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "LangEvals",
+  "logo": {
+    "dark": "/logo/langwatch.svg",
+    "light": "/logo/langwatch.svg"
+  },
+  "favicon": "/logo/langwatch.svg",
+  "colors": {
+    "primary": "#ED8926",
+    "light": "#FFFFFF",
+    "dark": "#090F1D",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:hi@mintlify.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://dashboard.mintlify.com"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Documentation",
+      "icon": "book-open-cover",
+      "url": "https://mintlify.com/docs"
+    },
+    {
+      "name": "Community",
+      "icon": "slack",
+      "url": "https://mintlify.com/community"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://mintlify.com/blog"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Documentation",
+      "pages": [
+        "documentation/getting-started",
+        "documentation/modular-architecture",
+        "documentation/evaluators",
+        "documentation/batch-evaluation",
+        "documentation/unit-tests",
+        "documentation/api-example"
+      ]
+    },
+    {
+      "group": "Tutorials",
+      "pages": [
+        "tutorials/rag-evaluation",
+        "tutorials/pipeline-evaluation"
+      ]
+    },
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "development"
+      ]
+    },
+    {
+      "group": "Essentials",
+      "pages": [
+        "essentials/markdown",
+        "essentials/code",
+        "essentials/images",
+        "essentials/settings",
+        "essentials/navigation",
+        "essentials/reusable-snippets"
+      ]
+    },
+    {
+      "group": "API Documentation",
+      "pages": [
+        "api-reference/introduction"
+      ]
+    },
+    {
+      "group": "Endpoint Examples",
+      "pages": [
+        "api-reference/endpoint/get",
+        "api-reference/endpoint/create",
+        "api-reference/endpoint/delete"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/langwatch/langevals",
+    "linkedin": "https://www.linkedin.com/company/langwatch/?originalSubdomain=nl"
+  }
+}
