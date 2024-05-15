@@ -8,6 +8,7 @@ version = "0.1.3"
 description = "A platform to evaluate LLM outputs using various evaluators."
 authors = [ "Rogerio Chaves <rogerio@langwatch.ai>",]
 license = "MIT"
+package-mode = false
 [[tool.poetry.source]]
 name = "pytorch_cpu"
 url = "https://download.pytorch.org/whl/cpu"
@@ -73,11 +74,6 @@ optional = false
 
 [tool.poetry.dependencies.langevals-google_cloud]
 path = "../evaluators/google_cloud"
-develop = true
-optional = false
-
-[tool.poetry.dependencies.langevals-custom]
-path = "../evaluators/custom"
 develop = true
 optional = false
 
