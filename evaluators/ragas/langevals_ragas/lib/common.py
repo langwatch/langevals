@@ -160,93 +160,14 @@ def evaluate_ragas(
 
     if math.isnan(score):
         if metric == "faithfulness" and isinstance(ragas_metric, Faithfulness):
-            # Workaround for this issue: https://github.com/explodinggradients/ragas/issues/580
-            # until we have a better implementation from ragas
-            return retry_with_function_call(evaluator, ragas_metric, dataset)
+            return EvaluationResultSkipped(
+                details="No claims found in the output to measure faitfhulness against context, skipping entry."
+            )
         raise ValueError(f"Ragas produced nan score: {score}")
 
     return RagasResult(
         score=score,
         cost=Money(amount=cb.total_cost, currency="USD"),
-    )
-
-
-def retry_with_function_call(
-    evaluator: BaseEvaluator, ragas_metric: Faithfulness, dataset: Dataset
-):
-    litellm_cost = None
-
-    def patched_generate_text(
-        self,
-        prompt: PromptValue,
-        n: int = 1,
-        temperature: float = 1e-8,
-        stop: Optional[List[str]] = None,
-        callbacks: Callbacks = None,
-    ):
-        nonlocal litellm_cost
-        prompt_str = re.sub(
-            r"\n\nThe output should be a well-formatted JSON.*triple backticks \(```\)",
-            "",
-            prompt.prompt_str,
-            flags=re.DOTALL,
-        )
-
-        response = litellm.completion(
-            model=evaluator.settings.model,
-            messages=[{"role": "system", "content": prompt_str}],
-            temperature=temperature,
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "statements",
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                f"sentence{n}": {
-                                    "type": "string",
-                                    "description": f"Sentence {n}",
-                                }
-                                for n in range(1, 8)
-                            },
-                            "required": ["sentence1"],
-                        },
-                        "description": "return the statements present on the answer",
-                    },
-                },
-            ],
-            tool_choice={"type": "function", "function": {"name": "statements"}},  # type: ignore
-        )
-        litellm_cost = litellm.completion_cost(response)
-
-        choice = response.choices[0]  # type: ignore
-        arguments: dict[str, str] = json.loads(choice.message.tool_calls[0].function.arguments)  # type: ignore
-        sentences = list(arguments.values())
-        generation = Generation(text=f"```{json.dumps(sentences)}```")
-        llm_result = LLMResult(generations=[[generation]])
-
-        return llm_result
-
-    if ragas_metric.llm is not None:
-        ragas_metric.llm.generate_text = patched_generate_text.__get__(ragas_metric.llm)
-    else:
-        raise ValueError("Ragas metric LLM is None")
-
-    with get_openai_callback() as cb:
-        with disable_tqdm():
-            result = evaluate(dataset, metrics=[ragas_metric])
-
-        score = result["faithfulness"]
-
-    if math.isnan(score):
-        raise ValueError(f"Ragas produced nan score: {score} after retry")
-
-    return RagasResult(
-        score=score,
-        cost=Money(
-            amount=cb.total_cost + (litellm_cost if litellm_cost else 0), currency="USD"
-        ),
     )
 
 

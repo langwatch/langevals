@@ -45,7 +45,7 @@ def test_faithfulness():
     assert result.cost and result.cost.amount > 0.0
 
 
-def test_faithfulness_not_resulting_in_nan():
+def test_faithfulness_should_be_skipped_if_no_sentences():
     evaluator = RagasFaithfulnessEvaluator(settings=RagasSettings())
 
     result = evaluator.evaluate(
@@ -58,9 +58,8 @@ def test_faithfulness_not_resulting_in_nan():
         )
     )
 
-    assert result.status == "processed"
-    assert result.score <= 0.5
-    assert result.cost and result.cost.amount > 0.0
+    assert result.status == "skipped"
+    assert result.details == "No claims found in the output to measure faitfhulness against context, skipping entry."
 
 
 def test_answer_relevancy():
