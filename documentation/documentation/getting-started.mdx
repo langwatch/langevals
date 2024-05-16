@@ -1,37 +1,3 @@
-Welcome to LangEvals! Lets get started and integrate LLM evaluators in a few quick steps! 
-
-## Getting Started
-
-To use LangEvals locally, install it as a dependency, together with the evaluators you are interested on:
-
-<Steps>
-
-<Step title="Install LangEvals">
-Run installation in the terminal
-```bash 
-pip install "langevals[all]"
-# or select only the ones you are interested on, e.g.:
-pip install "langevals[azure,ragas,langevals]"
-```
-</Step>
-
-<Step title="Import the Library">
-Import the library and all evaluators with their settings
-```python
-import langevals
-from langevals_ragas.answer_relevancy import RagasAnswerRelevancyEvaluator
-from langevals_langevals.competitor_blocklist import (
-    CompetitorBlocklistEvaluator,
-    CompetitorBlocklistSettings,
-)
-from langevals_azure.content_safety import ( 
-    AzureContentSafetySettings, 
-    AzureContentSafetyEvaluator,
-)
-```
-</Step>
-
-</Steps>
 
 ### Running Batch Evaluations on Notebooks
 

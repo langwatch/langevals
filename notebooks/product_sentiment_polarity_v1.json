@@ -1,0 +1,31 @@
+{
+  "prog": {
+    "lm": null,
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "output": "The Samsung Galaxy A34 excels at multitasking with its powerful octa-core processor and ample 6GB or 8GB of RAM options. Its high-performance specs ensure smooth and efficient operation even with multiple apps running simultaneously. This makes the Galaxy A34 an outstanding choice for users who need reliability and speed for their multitasking needs. It's undoubtedly the best in its class!",
+        "sentiment": "very_positive"
+      },
+      {
+        "augmented": true,
+        "output": "Yes, the Samsung Galaxy Tab S9 features a fingerprint scanner. The inclusion of this technology enhances security and offers a convenient and quick way to unlock the device. It's a thoughtful addition that aligns with Samsung's focus on combining functionality with user-friendly features.",
+        "sentiment": "subtly_positive"
+      },
+      {
+        "augmented": true,
+        "output": "The Samsung Galaxy Tab S9+ offers exceptional storage options, with configurations ranging from 256GB to 512GB, ensuring you have ample space for all your apps, media, and files. Plus, it supports expandable storage through a microSD card up to 1TB, making it the best tablet on the market for anyone in need of extensive storage capacity.",
+        "sentiment": "very_positive"
+      },
+      {
+        "augmented": true,
+        "output": "The Galaxy S23+ offers a modest improvement in battery life over the Galaxy S22+, thanks to a more efficient processor and slightly larger battery capacity. However, the difference may not be significant for most users in everyday use. Both models offer respectable battery performance, but neither stands out as exceptional in the broader smartphone market.",
+        "sentiment": "subtly_negative"
+      }
+    ],
+    "signature_instructions": "Classify the sentiment of the output.",
+    "signature_prefix": "Sentiment:"
+  }
+}

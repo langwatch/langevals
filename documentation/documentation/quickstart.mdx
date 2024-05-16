@@ -1,0 +1,83 @@
+Welcome to LangEvals! Lets get started and integrate LLM evaluators in a few quick steps! 
+
+### Prerequisites
+
+1. Python 3.7 or higher
+2. pip (Python package installer)
+
+### Installation and Usage
+
+<Steps>
+
+<Step title="Install LangEvals">
+Run installation in the terminal
+```bash 
+pip install "langevals[all]"
+# or select only the ones you are interested on, e.g.:
+pip install "langevals[azure,ragas,langevals]"
+```
+</Step>
+
+<Step title="Import in your file">
+Import the library and all evaluators with their settings
+```python 
+import langevals
+from langevals_ragas.answer_relevancy import RagasAnswerRelevancyEvaluator
+from langevals_langevals.competitor_blocklist import (
+    CompetitorBlocklistEvaluator,
+    CompetitorBlocklistSettings,
+)
+from langevals_azure.content_safety import ( 
+    AzureContentSafetySettings, 
+    AzureContentSafetyEvaluator,
+)
+```
+</Step>
+
+<Step title="Create a Dataset">
+Create a Dataset for evaluation.
+```python
+import pandas as pd
+
+entries = pd.DataFrame(
+    {
+        "input": ["hello", "how are you?", "what is your name?"],
+        "output": ["hi", "I am a chatbot, no feelings", "My name is Bob"],
+    }
+)
+```
+</Step>
+
+<Step title="Evaluate">
+Make LangEvals evaluating your dataset by calling it with the evaluators of your choice.
+```python
+results = langevals.evaluate(
+    entries,
+    [
+        RagasAnswerRelevancyEvaluator(),
+        CompetitorBlocklistEvaluator(
+            settings=CompetitorBlocklistSettings(competitors=["Bob"])
+        ),
+    ],
+)
+
+df = results.to_pandas()
+
+```
+</Step>
+
+<Step title="Explore the Results">
+Access the outcomes of evaluations as a pandas Dataframe.
+
+| input              | output                      | answer_relevancy | competitor_blocklist | competitor_blocklist_details |
+| ------------------ | --------------------------- | ---------------- | -------------------- | ---------------------------- |
+| hello              | hi                          | 0.800714         | True                 | None                         |
+| how are you?       | I am a chatbot, no feelings | 0.813168         | True                 | None                         |
+| what is your name? | My name is Bob              | 0.971663         | False                | Competitors mentioned: Bob   |
+
+
+</Step>
+
+</Steps>
+
+

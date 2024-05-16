@@ -53,6 +53,7 @@
       "group": "Documentation",
       "pages": [
         "documentation/introduction",
+        "documentation/quickstart",
         "documentation/getting-started",
         "documentation/modular-architecture",
         "documentation/evaluators",

@@ -9,3 +9,5 @@ openapi.json
 .DS_Store
 notebooks/data/**/*
 !notebooks/data/.gitkeep
+!notebooks/data/samsung-questions.csv
+notebooks/local_cache
