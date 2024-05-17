@@ -2,80 +2,59 @@ Welcome to LangEvals! Lets get started and integrate LLM evaluators in a few qui
 
 ### Prerequisites
 
-1. Python 3.7 or higher
+1. Python 3.11 or higher
 2. pip (Python package installer)
 
 ### Installation and Usage
 
 <Steps>
 
-<Step title="Install LangEvals">
-Run installation in the terminal
+<Step title="Install">
+Run installation in the terminal.
 ```bash 
 pip install "langevals[all]"
-# or select only the ones you are interested on, e.g.:
+# or select only the one you are interested on, e.g.:
 pip install "langevals[azure,ragas,langevals]"
 ```
 </Step>
 
-<Step title="Import in your file">
-Import the library and all evaluators with their settings
+<Step title="Import">
+Import the evaluator that will be used.
 ```python 
-import langevals
-from langevals_ragas.answer_relevancy import RagasAnswerRelevancyEvaluator
-from langevals_langevals.competitor_blocklist import (
-    CompetitorBlocklistEvaluator,
-    CompetitorBlocklistSettings,
-)
-from langevals_azure.content_safety import ( 
-    AzureContentSafetySettings, 
-    AzureContentSafetyEvaluator,
-)
-```
-</Step>
-
-<Step title="Create a Dataset">
-Create a Dataset for evaluation.
-```python
-import pandas as pd
-
-entries = pd.DataFrame(
-    {
-        "input": ["hello", "how are you?", "what is your name?"],
-        "output": ["hi", "I am a chatbot, no feelings", "My name is Bob"],
-    }
+from langevals_langevals.competitor_llm import (
+    CompetitorLLMEntry,
+    CompetitorLLMEvaluator,
+    CompetitorLLMSettings,
 )
 ```
 </Step>
 
 <Step title="Evaluate">
-Make LangEvals evaluating your dataset by calling it with the evaluators of your choice.
+Initiate and run the evaluator. 
 ```python
-results = langevals.evaluate(
-    entries,
-    [
-        RagasAnswerRelevancyEvaluator(),
-        CompetitorBlocklistEvaluator(
-            settings=CompetitorBlocklistSettings(competitors=["Bob"])
-        ),
-    ],
-)
-
-df = results.to_pandas()
-
+evaluator = CompetitorLLMEvaluator(settings=CompetitorLLMSettings(
+    name="LangWatch",
+    description="LLM monitoring and evaluation platform.",
+))   
+result = evaluator.evaluate(entry=CompetitorLLMEntry(
+    input="Hey, where can I monitor and evaluate LLMs except LangWatch?"
+))
 ```
 </Step>
 
 <Step title="Explore the Results">
-Access the outcomes of evaluations as a pandas Dataframe.
 
-| input              | output                      | answer_relevancy | competitor_blocklist | competitor_blocklist_details |
-| ------------------ | --------------------------- | ---------------- | -------------------- | ---------------------------- |
-| hello              | hi                          | 0.800714         | True                 | None                         |
-| how are you?       | I am a chatbot, no feelings | 0.813168         | True                 | None                         |
-| what is your name? | My name is Bob              | 0.971663         | False                | Competitors mentioned: Bob   |
-
-
+```python
+print("Result passed LLM competitor check: ", result.passed)
+print(result.details)
+print("Cost of evaluation: ", result.cost)
+```
+Explore the results of evaluation:
+```text
+Result passed LLM competitor check:  False
+0.9 - confidence score. Reasoning: The question explicitly mentions LangWatch as a monitoring and evaluation platform. The user is asking about alternatives to LangWatch, which implies a comparison with competitors.
+Cost of evaluation:  currency='USD' amount=0.0004315
+```
 </Step>
 
 </Steps>

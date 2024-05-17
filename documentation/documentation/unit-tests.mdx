@@ -1,71 +1,26 @@
-LangEvals is built by developers who believe that software should be tested, and LLM-powered applications are not an exception.
-Our evaluations can be easily combined with PyTest and extensively cover the edge cases, providing a bigger picture to the reviewer.
+LangEvals is a tool for developers by developers.
+And we, as developers, strongly believe that software needs to be tested, including the LLMs.
 
+You can easily integrate LangEvals with [PyTest](https://pytest.org/) and leverage the power of evaluators combined with reproducible testing. 
+This integration provides extensive coverage of edge cases and ensures an increased level of certainty in your chatbot's behavior.
 
-## Evaluate different models
-Sometimes it is hard to make the decision which model is better in your particular case. 
-You can easily save your time by combining LangEvals with [Instructor](https://github.com/jxnl/instructor) and [LiteLLM](https://github.com/BerriAI/litellm).
-```python 
-from itertools import product
-import pytest
-import pandas as pd
+### Simple Assertions
 
-import instructor
+For straightforward cases where the expected output is clear, such as extracting entity from text, LangEvals can help you assert the correctness of the output.  
+This method is perfect for tests where outputs are unambiguous and easily comparable to expected results.
 
-from litellm import completion
-from pydantic import BaseModel
+### Unit Test Helpers 
 
+You can easily combine LangEvals with such decorators as `parametrize`, `flaky` and `pass_rate` to grow your single 
+test case in an extensive comparison accross models with specific pass rates.
 
-class Address(BaseModel):
-    number: int
-    street_name: str
-    city: str
-    country: str
+### Setting Up CI/CD
 
+Integrating LangEvals and PyTest into your CI/CD pipeline ensures continuous validation of your models. 
+By running tests automatically on each commit, you can detect issues early and maintain model performance and reliability. 
+This setup streamlines the development process and helps deliver robust, well-tested LLM applications.
 
-entries = pd.DataFrame(
-    {
-        "input": [
-            "Please send the package to 123 Main St, Springfield.",
-            "J'ai déménagé récemment à 56 Rue de l'Université, Paris.",
-            "A reunião será na Avenida Paulista, 900, São Paulo.",
-        ],
-        "expected_output": [
-            Address(
-                number=123, street_name="Main St", city="Springfield", country="USA"
-            ).model_dump_json(),
-            Address(
-                number=56,
-                street_name="Rue de l'Université",
-                city="Paris",
-                country="France",
-            ).model_dump_json(),
-            Address(
-                number=900,
-                street_name="Avenida Paulista",
-                city="São Paulo",
-                country="Brazil",
-            ).model_dump_json(),
-        ],
-    }
-)
+## Examples and Tutorials
 
-models = ["gpt-3.5-turbo", "gpt-4-turbo", "groq/llama3-70b-8192"]
-
-client = instructor.from_litellm(completion)
-
-
-@pytest.mark.parametrize("entry, model", product(entries.itertuples(), models))
-def test_extracts_the_right_address(entry, model):
-    address = client.chat.completions.create(
-        model=model,
-        response_model=Address,
-        messages=[
-            {"role": "user", "content": entry.input},
-        ],
-        temperature=0.0,
-    )
-
-    assert address.model_dump_json() == entry.expected_output
-
-```
+For more detailed examples and tutorials on writing unit tests and using LangEvals in your projects, please refer to our [Tutorials](href="/tutorials/extensive-unit-testing"). 
+There, you will find practical examples demonstrating how to use LangEvals with PyTest for various testing scenarios, from simple assertions to advanced evaluations using custom and out-of-the-box evaluators.

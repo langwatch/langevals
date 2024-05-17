@@ -55,11 +55,19 @@
         "documentation/introduction",
         "documentation/quickstart",
         "documentation/getting-started",
-        "documentation/modular-architecture",
         "documentation/evaluators",
         "documentation/batch-evaluation",
         "documentation/unit-tests",
-        "documentation/api-example"
+        "documentation/API-example",
+        {
+          "group": "Modular Architecture",
+          "pages": [
+            "documentation/modular-architecture/base-evaluator",
+            "documenation/modular-architecture/evaluation",
+            "documentation/modular-architecture/expectation",
+            "documentation/modular-architecture/contributing"
+          ]
+        }
       ]
     },
     {
@@ -67,25 +75,6 @@
       "pages": [
         "tutorials/rag-evaluation",
         "tutorials/pipeline-evaluation"
-      ]
-    },
-    {
-      "group": "Get Started",
-      "pages": [
-        "introduction",
-        "quickstart",
-        "development"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
       ]
     },
     {
@@ -97,14 +86,31 @@
     {
       "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/endpoint/language-detection",
+        "api-reference/endpoint/openai-moderation",
+        "api-reference/endpoint/pii-detection",
+        "api-reference/endpoint/content-safety",
+        "api-reference/endpoint/jailbreak-detection",
+        "api-reference/endpoint/competitor-detection-llm",
+        "api-reference/endpoint/competitor-blocklist",
+        "api-reference/endpoint/off-topic-detection",
+        "api-reference/endpoint/answer-relevancy",
+        "api-reference/endpoint/context-precision",
+        "api-reference/endpoint/context-recall",
+        "api-reference/endpoint/context-relevancy",
+        "api-reference/endpoint/context-utilization",
+        "api-reference/endpoint/faithfulness",
+        "api-reference/endpoint/llm-boolean-evaluator",
+        "api-reference/endpoint/llm-score-evaluator",
+        "api-reference/endpoint/llm-basic-evaluator",
+        "api-reference/endpoint/llm-similarity-evaluator",
+        "api-reference/endpoint/llama-guard"
       ]
+
     }
   ],
   "footerSocials": {
     "github": "https://github.com/langwatch/langevals",
-    "linkedin": "https://www.linkedin.com/company/langwatch/?originalSubdomain=nl"
+    "linkedin": "https://www.linkedin.com/company/langwatch/"
   }
 }
