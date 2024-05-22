@@ -15,6 +15,7 @@ evaluator_paths = [
 folders = [
     {"path": "."},
     {"path": "langevals_core"},
+    {"path": "notebooks"},
 ]
 folders.extend([{"path": os.path.relpath(path, root_dir)} for path in evaluator_paths])
 

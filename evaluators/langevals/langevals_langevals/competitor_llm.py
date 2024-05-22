@@ -141,6 +141,10 @@ class CompetitorLLMEvaluator(
                         "parameters": {
                             "type": "object",
                             "properties": {
+                                "reasoning": {
+                                    "type": "string",
+                                    "description": "Use this field to ponder and write the reasoning behind the decision written before a result is actually given",
+                                },
                                 "competitor_mentioned": {
                                     "type": "boolean",
                                     "description": "True - If the competitor is mentioned, False - if not",
@@ -153,6 +157,7 @@ class CompetitorLLMEvaluator(
                             "required": [
                                 "competitor_mentioned",
                                 "confidence",
+                                "reasoning"
                             ],
                         },
                     },
@@ -167,13 +172,14 @@ class CompetitorLLMEvaluator(
         )
         passed = not arguments["competitor_mentioned"] if "competitor_mentioned" in arguments else True
         confidence = arguments["confidence"] if "confidence" in arguments else 1
+        reasoning = arguments["reasoning"] if "reasoning" in arguments else "No reasoning."
         # Temporary fix for gpt-4o
         if "gpt-4o" in (response.model or ""):
             response.model = "openai/gpt-4-turbo"
         cost = completion_cost(completion_response=response, prompt=prompt)
         details = None
         if not passed:
-            details = f"{confidence} - confidence in the prediction"
+            details = f"{confidence} - confidence score. Reasoning: {reasoning}"
         return CompetitorLLMResult(
             score=float(confidence),
             passed=passed,

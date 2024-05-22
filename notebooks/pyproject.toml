@@ -3,11 +3,12 @@ requires = [ "poetry-core>=1.0.0",]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "langevals"
-version = "0.1.5"
+name = "langevals-notebook"
+version = "0.1.3"
 description = "A platform to evaluate LLM outputs using various evaluators."
 authors = [ "Rogerio Chaves <rogerio@langwatch.ai>",]
 license = "MIT"
+package-mode = false
 [[tool.poetry.source]]
 name = "pytorch_cpu"
 url = "https://download.pytorch.org/whl/cpu"
@@ -22,16 +23,19 @@ pydantic = "^2.6.4"
 python-dotenv = "1.0.1"
 mangum = "^0.17.0"
 pandas = "^2.2.2"
-markdown = "^3.6"
+matplotlib = "^3.8.4"
+numpy = "^1.26.4"
+ipywidgets = "^8.1.2"
+dspy-ai = "^2.4.9"
 [[tool.poetry.dependencies.torch]]
 version = "^2.2.2+cpu"
-optional = true
+optional = false
 source = "pytorch_cpu"
 markers = "sys_platform == 'linux'"
 
 [[tool.poetry.dependencies.torch]]
 version = "^2.2.2"
-optional = true
+optional = false
 source = "pypi"
 markers = "sys_platform != 'linux'"
 
@@ -46,64 +50,57 @@ instructor = "^1.2.2"
 pytest-xdist = "^3.5.0"
 flaky = "^3.8.1"
 
-[tool.poetry.extras]
-azure = [ "langevals-azure",]
-openai = [ "langevals-openai",]
-example = [ "langevals-example",]
-ragas = [ "langevals-ragas",]
-google_cloud = [ "langevals-google_cloud",]
-lingua = [ "langevals-lingua",]
-aws = [ "langevals-aws",]
-huggingface = [ "langevals-huggingface",]
-langevals = [ "langevals-langevals",]
-all = [ "langevals-azure", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-aws", "langevals-huggingface", "langevals-openai",]
-
 [tool.poetry.dependencies.langevals-core]
-path = "langevals_core"
+path = "../langevals_core"
 develop = true
 
 [tool.poetry.dependencies.langevals-azure]
-path = "evaluators/azure"
+path = "../evaluators/azure"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-openai]
-path = "evaluators/openai"
+path = "../evaluators/openai"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-example]
-path = "evaluators/example"
+path = "../evaluators/example"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-ragas]
-path = "evaluators/ragas"
+path = "../evaluators/ragas"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-google_cloud]
-path = "evaluators/google_cloud"
+path = "../evaluators/google_cloud"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-lingua]
-path = "evaluators/lingua"
+path = "../evaluators/lingua"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-aws]
-path = "evaluators/aws"
+path = "../evaluators/aws"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-huggingface]
-path = "evaluators/huggingface"
+path = "../evaluators/huggingface"
 develop = true
-optional = true
+optional = false
 
 [tool.poetry.dependencies.langevals-langevals]
-path = "evaluators/langevals"
+path = "../evaluators/langevals"
+develop = true
+optional = false
+
+[tool.poetry.dependencies.langevals]
+path = "../"
 develop = true
 optional = false
 
@@ -112,3 +109,4 @@ pass_rate_plugin = "langevals.pytest_plugins.pass_rate_plugin"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"
+

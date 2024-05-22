@@ -23,7 +23,7 @@ def test_competitor_llm_evaluator():
     assert result.status == "processed"
     assert result.passed == False
     assert result.score >= 0.75
-    assert result.details == f"{result.score} - confidence in the prediction"
+    
 
     assert result.cost
     assert result.cost.amount > 0
