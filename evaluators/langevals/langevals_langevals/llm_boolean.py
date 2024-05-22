@@ -34,9 +34,9 @@ class CustomLLMBooleanSettings(BaseModel):
         "azure/gpt-4-turbo-2024-04-09",
         "azure/gpt-4-1106-preview",
         "groq/llama3-70b-8192",
-        "claude-3-haiku-20240307",
-        "claude-3-sonnet-20240229",
-        "claude-3-opus-20240229",
+        "anthropic/claude-3-haiku-20240307",
+        "anthropic/claude-3-sonnet-20240229",
+        "anthropic/claude-3-opus-20240229",
     ] = Field(
         default="azure/gpt-35-turbo-1106",
         description="The model to use for evaluation",

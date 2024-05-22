@@ -64,7 +64,7 @@ class RagasSettings(BaseModel):
         "azure/gpt-35-turbo-1106",
         "azure/gpt-35-turbo-16k",
         "azure/gpt-4-1106-preview",
-        "claude-3-haiku-20240307",
+        "anthropic/claude-3-haiku-20240307",
     ] = Field(
         default="azure/gpt-35-turbo-16k",
         description="The model to use for evaluation.",

@@ -165,7 +165,7 @@ def test_context_recall():
 
 def test_with_anthropic_models():
     evaluator = RagasAnswerRelevancyEvaluator(
-        settings=RagasSettings(model="claude-3-haiku-20240307")
+        settings=RagasSettings(model="anthropic/claude-3-haiku-20240307")
     )
 
     result = evaluator.evaluate(
