@@ -28,6 +28,8 @@ numpy = "^1.26.4"
 ipywidgets = "^8.1.2"
 dspy-ai = "^2.4.9"
 seaborn = "^0.13.2"
+sentence-transformers = "^3.0.0"
+faiss-cpu = "1.8.0"
 [[tool.poetry.dependencies.torch]]
 version = "^2.2.2+cpu"
 optional = false
