@@ -81,7 +81,6 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
     name = "Off Topic Evaluator"
     category = "policy"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
-    docs_url = "https://path/to/official/docs"  # The URL to the official documentation of the evaluator
     is_guardrail = True  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
 
     def evaluate(self, entry: OffTopicEntry) -> SingleEvaluationResult:

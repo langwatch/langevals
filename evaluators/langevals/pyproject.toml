@@ -11,6 +11,7 @@ litellm = "^1.37.0"
 langevals-core = { path = "../../langevals_core", develop = true }
 openai = "1.26.0"
 numpy = "^1.26.4"
+dspy-ai = "^2.4.9"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

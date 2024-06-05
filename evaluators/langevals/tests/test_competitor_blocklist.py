@@ -5,7 +5,7 @@ from langevals_langevals.competitor_blocklist import (
 )
 
 
-def test_blacklist_evaluator_fail():
+def test_blocklist_evaluator_fail():
     entry = CompetitorBlocklistEntry(
         output="Is Man City better than Arsenal?", input="liverpool"
     )
@@ -19,7 +19,7 @@ def test_blacklist_evaluator_fail():
     assert result.details == "Competitors mentioned: liverpool, Man City"
 
 
-def test_blacklist_evaluator_pass():
+def test_blocklist_evaluator_pass():
     entry = CompetitorBlocklistEntry(
         output="Highly likely yes!", input="Is Arsenal winning the EPL this season?"
     )
@@ -32,7 +32,7 @@ def test_blacklist_evaluator_pass():
     assert result.passed == True
 
 
-def test_blacklist_evaluator_lowercase():
+def test_blocklist_evaluator_lowercase():
     entry = CompetitorBlocklistEntry(
         output="Is Arsenal winning the EPL this season?",
         input="man ciTy is going to win the Champions League",
