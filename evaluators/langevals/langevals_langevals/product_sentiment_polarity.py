@@ -1,9 +1,15 @@
+import os
+from tempfile import mkdtemp
+
+# Necessary for running DSPy on AWS lambdas
+os.environ["DSP_CACHEDIR"] = mkdtemp()
+
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
     SingleEvaluationResult,
-    EvaluationResultSkipped
+    EvaluationResultSkipped,
 )
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -59,10 +65,10 @@ class ProductSentimentPolarityEvaluator(
             return EvaluationResultSkipped(details="Output is empty")
 
         sentiment_map = {
-            'very_negative': 0,
-            'subtly_negative': 1,
-            'subtly_positive': 2,
-            'very_positive': 3
+            "very_negative": 0,
+            "subtly_negative": 1,
+            "subtly_positive": 2,
+            "very_positive": 3,
         }
 
         if result.sentiment not in sentiment_map:
@@ -74,7 +80,7 @@ class ProductSentimentPolarityEvaluator(
             score=score,
             passed=score >= 2,
             details=f"{result.reasoning}. Sentiment: {result.sentiment}",
-            raw_response=result.sentiment
+            raw_response=result.sentiment,
         )
 
 

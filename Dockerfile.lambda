@@ -11,12 +11,15 @@ COPY langevals_core/ langevals_core/
 COPY evaluators/langevals evaluators/langevals
 RUN poetry install --only main
 
-COPY evaluators evaluators
+ARG EVALUATOR
 
-RUN poetry install --only main --all-extras
+COPY evaluators/$EVALUATOR evaluators/$EVALUATOR
+
+RUN poetry install --only main --extras=$EVALUATOR
 COPY langevals/ langevals/
 RUN PYTHONPATH="." poetry run python langevals/server.py --preload
 
 COPY . .
 
-CMD PYTHONPATH="." poetry run python langevals/server.py
+ENTRYPOINT [ "/usr/local/bin/poetry", "run", "python", "-m", "awslambdaric" ]
+CMD [ "langevals.server.handler" ]
