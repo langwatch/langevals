@@ -956,7 +956,7 @@ This evaluator checks if any of the specified competitors was mentioned
 This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
 `,
     category: "policy",
-    docsUrl: "https://path/to/official/docs",
+    docsUrl: "",
     isGuardrail: true,
     requiredFields: [],
     optionalFields: ["output", "input"],
@@ -1103,13 +1103,13 @@ This evaluator checks if the user message is concerning one of the allowed topic
   "langevals/product_sentiment_polarity": {
     name: `Product Sentiment Polarity`,
     description: `
-This evaluator checks if any of the specified competitors was mentioned
+For messages about products, this evaluator checks for the nuanced sentiment direction of the LLM output, either very positive, subtly positive, subtly negative, or very negative.
 `,
     category: "policy",
     docsUrl: "",
     isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["output"],
+    requiredFields: ["output"],
+    optionalFields: [],
     settings: {},
     result: {
       score: {

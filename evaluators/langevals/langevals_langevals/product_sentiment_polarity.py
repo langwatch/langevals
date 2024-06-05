@@ -25,7 +25,7 @@ import os
 
 
 class ProductSentimentPolarityEntry(EvaluatorEntry):
-    output: Optional[str] = None
+    output: str
 
 
 class ProductSentimentPolaritySettings(BaseModel):
@@ -48,7 +48,7 @@ class ProductSentimentPolarityEvaluator(
     ]
 ):
     """
-    This evaluator checks if any of the specified competitors was mentioned
+    For messages about products, this evaluator checks for the nuanced sentiment direction of the LLM output, either very positive, subtly positive, subtly negative, or very negative.
     """
 
     name = "Product Sentiment Polarity"
@@ -79,7 +79,7 @@ class ProductSentimentPolarityEvaluator(
         return ProductSentimentPolarityResult(
             score=score,
             passed=score >= 2,
-            details=f"{result.reasoning}. Sentiment: {result.sentiment}",
+            details=f"{result.reasoning} Sentiment: {result.sentiment}",
             raw_response=result.sentiment,
         )
 
