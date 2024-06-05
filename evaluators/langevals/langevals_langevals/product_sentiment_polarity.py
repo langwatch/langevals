@@ -79,7 +79,7 @@ class ProductSentimentPolarityEvaluator(
         return ProductSentimentPolarityResult(
             score=score,
             passed=score >= 2,
-            details=f"{result.reasoning} Sentiment: {result.sentiment}",
+            details=f"{result.sentiment} - {result.reasoning}",
             raw_response=result.sentiment,
         )
 
