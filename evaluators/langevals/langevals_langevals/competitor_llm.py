@@ -73,7 +73,6 @@ class CompetitorLLMEvaluator(
     env_vars = []
     default_settings = CompetitorLLMSettings()
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
-    docs_url = "https://path/to/official/docs"
     is_guardrail = True
 
     def evaluate(self, entry: CompetitorLLMEntry) -> SingleEvaluationResult:

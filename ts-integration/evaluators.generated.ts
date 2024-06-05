@@ -468,6 +468,9 @@ export type Evaluators = {
       max_tokens: number;
     };
   };
+  "langevals/product_sentiment_polarity": {
+    settings: Record<string, never>;
+  };
   "langevals/similarity": {
     settings: {
       field: "input" | "output";
@@ -1060,7 +1063,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
 This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
 `,
     category: "policy",
-    docsUrl: "https://path/to/official/docs",
+    docsUrl: "",
     isGuardrail: true,
     requiredFields: ["input"],
     optionalFields: [],
@@ -1094,6 +1097,27 @@ This evaluator checks if the user message is concerning one of the allowed topic
       },
       passed: {
         description: "Is the message concerning allowed topic",
+      },
+    },
+  },
+  "langevals/product_sentiment_polarity": {
+    name: `Product Sentiment Polarity`,
+    description: `
+This evaluator checks if any of the specified competitors was mentioned
+`,
+    category: "policy",
+    docsUrl: "",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output"],
+    settings: {},
+    result: {
+      score: {
+        description:
+          "0 - very negative, 1 - subtly negative, 2 - subtly positive, 3 - very positive",
+      },
+      passed: {
+        description: "Fails if subtly or very negative",
       },
     },
   },
