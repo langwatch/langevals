@@ -71,10 +71,9 @@ class RagasSettings(BaseModel):
     )
     embeddings_model: Literal[
         "openai/text-embedding-ada-002",
-        "openai/text-embedding-3-small",
         "azure/text-embedding-ada-002",
     ] = Field(
-        default="openai/text-embedding-ada-002",
+        default="azure/text-embedding-ada-002",
         description="The model to use for embeddings.",
     )
     max_tokens: int = Field(
