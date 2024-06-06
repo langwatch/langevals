@@ -254,7 +254,6 @@ export type Evaluators = {
         | "anthropic/claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
@@ -274,7 +273,6 @@ export type Evaluators = {
         | "anthropic/claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
@@ -294,7 +292,6 @@ export type Evaluators = {
         | "anthropic/claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
@@ -314,7 +311,6 @@ export type Evaluators = {
         | "anthropic/claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
@@ -334,7 +330,6 @@ export type Evaluators = {
         | "anthropic/claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
@@ -354,7 +349,6 @@ export type Evaluators = {
         | "anthropic/claude-3-haiku-20240307";
       embeddings_model:
         | "openai/text-embedding-ada-002"
-        | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
@@ -505,6 +499,15 @@ export type Evaluators = {
       policy: string;
       evaluate: "input" | "output" | "both";
       model: "cloudflare/thebloke/llamaguard-7b-awq";
+    };
+  };
+  "haystack/faithfulness": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106";
     };
   };
   "google_cloud/dlp_pii_detection": {
@@ -729,7 +732,7 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+        default: "azure/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -757,7 +760,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+        default: "azure/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -785,7 +788,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+        default: "azure/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -813,7 +816,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+        default: "azure/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -841,7 +844,7 @@ This metric evaluates whether all of the output relevant items present in the co
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+        default: "azure/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -854,7 +857,7 @@ This metric evaluates whether all of the output relevant items present in the co
   "ragas/faithfulness": {
     name: `Ragas Faithfulness`,
     description: `
-This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context.
+This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
 `,
     category: "rag",
     docsUrl:
@@ -869,7 +872,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+        default: "azure/text-embedding-ada-002",
       },
       max_tokens: {
         description:
@@ -1246,6 +1249,24 @@ It can work both as a safety evaluator and as policy enforcement.
           "If true then the content is safe according to policy, if false then it is unsafe.",
       },
     },
+  },
+  "haystack/faithfulness": {
+    name: `Haystack Faithfulness`,
+    description: `
+This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
+`,
+    category: "rag",
+    docsUrl: "https://docs.haystack.deepset.ai/docs/faithfulnessevaluator",
+    isGuardrail: false,
+    requiredFields: ["input", "output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-1106",
+      },
+    },
+    result: {},
   },
   "google_cloud/dlp_pii_detection": {
     name: `Google Cloud DLP PII Detection`,

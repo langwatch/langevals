@@ -15,7 +15,7 @@ class RagasFaithfulnessEvaluator(
     BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasResult]
 ):
     """
-    This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context.
+    This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
     """
 
     name = "Ragas Faithfulness"

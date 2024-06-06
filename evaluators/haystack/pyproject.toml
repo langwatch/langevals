@@ -1,19 +1,15 @@
 [tool.poetry]
-name = "langevals-ragas"
-version = "0.1.4"
-description = "LangEvals Ragas evaluator"
+name = "langevals-haystack"
+version = "0.1.0"
+description = "LangEvals Haystack evaluator"
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
-ragas = "^0.1.7"
-langchain-openai = "^0.1.6"
-langchain_community = "^0.0.27"
-datasets = "2.14.6"
 litellm = "^1.31.3"
-langchain-anthropic = "^0.1.11"
+haystack-ai = "^2.2.1"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

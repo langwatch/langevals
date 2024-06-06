@@ -56,7 +56,8 @@ lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
-all = [ "langevals-azure", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-aws", "langevals-huggingface", "langevals-openai",]
+all = [ "langevals-azure", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-haystack", "langevals-aws", "langevals-huggingface", "langevals-openai",]
+haystack = [ "langevals-haystack",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -106,6 +107,11 @@ optional = true
 path = "evaluators/langevals"
 develop = true
 optional = false
+
+[tool.poetry.dependencies.langevals-haystack]
+path = "evaluators/haystack"
+develop = true
+optional = true
 
 [tool.poetry.plugins.pytest11]
 pass_rate_plugin = "langevals.pytest_plugins.pass_rate_plugin"

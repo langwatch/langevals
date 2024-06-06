@@ -132,6 +132,16 @@ class EnvMissingException(Exception):
     message: str
 
 
+models_providers_env_vars = {
+    "openai": ["OPENAI_API_KEY"],
+    "azure": ["AZURE_API_KEY", "AZURE_API_BASE"],
+    "groq": ["GROQ_API_KEY"],
+    "anthropic": ["ANTHROPIC_API_KEY"],
+}
+
+models_env_vars = [env for envs in models_providers_env_vars.values() for env in envs]
+
+
 class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     default_settings: ClassVar[TSettings]  # type: ignore
     settings: TSettings = Field(default=None)
@@ -162,7 +172,11 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         cls.__preloaded = True
 
     def get_env(self, var: str):
-        if var not in self.env_vars and (self.env is None or var not in self.env):
+        if (
+            var not in self.env_vars
+            and var not in models_env_vars
+            and (self.env is None or var not in self.env)
+        ):
             raise ValueError(
                 f"Variable {var} not defined in evaluator env_vars, cannot access it."
             )
