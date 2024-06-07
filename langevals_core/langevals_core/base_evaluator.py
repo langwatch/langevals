@@ -106,6 +106,7 @@ class EvaluationResultSkipped(BaseModel):
 
     status: Literal["skipped"] = "skipped"
     details: Optional[str] = None
+    cost: Optional[Money] = None 
 
 
 class EvaluationResultError(BaseModel):

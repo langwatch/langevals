@@ -5,6 +5,7 @@ dotenv.load_dotenv()
 from langevals_langevals.product_sentiment_polarity import (
     ProductSentimentPolarityEvaluator,
     ProductSentimentPolarityEntry,
+    ProductSentimentPolaritySettings,
 )
 
 
@@ -12,7 +13,9 @@ def test_product_sentiment_polarity_evaluator_pass():
     entry = ProductSentimentPolarityEntry(
         output="The iPhone 15 Pro stands out with its A17 Bionic chip, superior camera system with additional features, and ProMotion display offering a 120Hz refresh rate. It also boasts a more premium build with titanium edges. On the other hand, the iPhone 15, while impressive, does not match the Pro’s advanced hardware and features, making the Pro an unbeatable choice for tech enthusiasts."
     )
-    evaluator = ProductSentimentPolarityEvaluator()
+    evaluator = ProductSentimentPolarityEvaluator(
+        settings=ProductSentimentPolaritySettings(model="openai/gpt-3.5-turbo-0125")
+    )
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
@@ -20,6 +23,7 @@ def test_product_sentiment_polarity_evaluator_pass():
     assert result.passed == True
     assert result.details
     assert result.raw_response == "very_positive"
+    assert not result.cost
 
 
 def test_product_sentiment_polarity_evaluator_fail():
@@ -39,4 +43,20 @@ def test_product_sentiment_polarity_evaluator_skipped_for_non_product_related_ou
     evaluator = ProductSentimentPolarityEvaluator()
     result = evaluator.evaluate(entry)
 
-    assert result.status == "skipped"
+    assert result.status == "processed" # come back 
+    assert result.cost
+
+def test_azure_product_sentiment_polarity_evaluator_pass():
+    entry = ProductSentimentPolarityEntry(
+        output="The iPhone 15 Pro stands out with its A17 Bionic chip, superior camera system with additional features, and ProMotion display offering a 120Hz refresh rate. It also boasts a more premium build with titanium edges. On the other hand, the iPhone 15, while impressive, does not match the Pro’s advanced hardware and features, making the Pro an unbeatable choice for tech enthusiasts."
+    )
+    settings = ProductSentimentPolaritySettings(model="azure/gpt-35-turbo-1106")
+    evaluator = ProductSentimentPolarityEvaluator(settings=settings)
+    result = evaluator.evaluate(entry)
+
+    assert result.status == "processed"
+    assert result.score == 3
+    assert result.passed == True
+    assert result.details
+    assert result.raw_response == "very_positive"
+    assert result.cost

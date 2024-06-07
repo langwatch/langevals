@@ -10,18 +10,18 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     SingleEvaluationResult,
     EvaluationResultSkipped,
+    Money,
 )
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Literal, Any
 import re
 import dspy
 import json
-from typing import Any
-import re
 import dsp.modules.gpt3 as gpt3
-from typing import Literal
-from pydantic import BaseModel, Field
 import os
+from litellm.utils import completion_cost
+from litellm import model_cost
+from decimal import Decimal, getcontext
 
 
 class ProductSentimentPolarityEntry(EvaluatorEntry):
@@ -29,7 +29,13 @@ class ProductSentimentPolarityEntry(EvaluatorEntry):
 
 
 class ProductSentimentPolaritySettings(BaseModel):
-    pass
+    model: Literal[
+        "openai/gpt-3.5-turbo-0125",
+        "azure/gpt-35-turbo-1106",
+    ] = Field(
+        default="azure/gpt-35-turbo-1106",
+        description="The model to use for evaluation",
+    )
 
 
 class ProductSentimentPolarityResult(EvaluationResult):
@@ -58,9 +64,25 @@ class ProductSentimentPolarityEvaluator(
     is_guardrail = True
 
     def evaluate(self, entry: ProductSentimentPolarityEntry) -> SingleEvaluationResult:
-        product_sentiment_polarity = load_product_sentiment_polarity()
+        vendor, model = self.settings.model.split("/")
+        if vendor == "azure":
+            os.environ["AZURE_API_KEY"] = self.get_env("AZURE_API_KEY")
+            os.environ["AZURE_API_BASE"] = self.get_env("AZURE_API_BASE")
+            os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+        product_sentiment_polarity = (
+            load_product_sentiment_polarity(vendor=vendor, model=model)
+        )
         result = product_sentiment_polarity(output=entry.output)
-
+        model_costs = model_cost.get(f"{vendor}/{model}" if vendor == "azure" else model)
+        print(model_costs)
+        print(Decimal(model_costs.get("input_cost_per_token")) * product_sentiment_polarity.tokens["prompt_tokens"])
+        print(Decimal(model_costs.get("output_cost_per_token")) * product_sentiment_polarity.tokens["completion_tokens"])
+        print("prompt tokens again", product_sentiment_polarity.tokens["prompt_tokens"])
+        getcontext().prec = 10
+        costs = (
+            Decimal(model_costs.get("input_cost_per_token")) * product_sentiment_polarity.tokens["prompt_tokens"]
+            + Decimal(model_costs.get("output_cost_per_token")) * product_sentiment_polarity.tokens["completion_tokens"]
+        )
         if entry.output.strip() == "":
             return EvaluationResultSkipped(details="Output is empty")
 
@@ -70,9 +92,8 @@ class ProductSentimentPolarityEvaluator(
             "subtly_positive": 2,
             "very_positive": 3,
         }
-
         if result.sentiment not in sentiment_map:
-            return EvaluationResultSkipped(details=result.reasoning)
+            return EvaluationResultSkipped(details=result.reasoning, cost=costs)
 
         score = sentiment_map[result.sentiment]
 
@@ -81,6 +102,7 @@ class ProductSentimentPolarityEvaluator(
             passed=score >= 2,
             details=f"{result.sentiment} - {result.reasoning}",
             raw_response=result.sentiment,
+            cost=Money(amount=costs, currency="USD") if costs else None,
         )
 
 
@@ -88,6 +110,9 @@ class ProductSentimentPolarity(dspy.Module):
     def __init__(self):
         super().__init__()
         self.predict = dspy.Predict("output -> reasoning, sentiment")
+        self.prompt_tokens = 0
+        self.completion_tokens = 0
+
 
     def forward(self, output):
         global last_program
@@ -95,9 +120,10 @@ class ProductSentimentPolarity(dspy.Module):
         return self.predict(output=output)
 
 
-def load_product_sentiment_polarity():
-    model = "gpt-3.5-turbo"
-
+def load_product_sentiment_polarity(
+    vendor: Literal["azure", "openai"],
+    model: Literal["gpt-3.5-1106", "gpt-3.5-turbo-0125"],
+) -> ProductSentimentPolarity:
     tools_args = {
         "tools": [
             {
@@ -133,15 +159,28 @@ def load_product_sentiment_polarity():
         "temperature": 0,
         "tool_choice": {"type": "function", "function": {"name": "sentiment"}},
     }
-
-    llm = dspy.OpenAI(
-        model=model,
-        max_tokens=2048,
-        **tools_args,
-    )
+    if vendor == "openai":
+        llm = dspy.OpenAI(
+            model=model,
+            max_tokens=2048,
+            **tools_args,
+        )
+    elif vendor == "azure":
+        llm = dspy.AzureOpenAI(
+            model=model,
+            max_tokens=2048,
+            api_base=os.getenv("AZURE_API_BASE"),
+            api_version=os.getenv("AZURE_API_VERSION"),
+            api_key=os.getenv("AZURE_API_KEY"),
+            **tools_args,
+        )
 
     last_program = None
     program_for_prompt = {}
+    tokens = {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+    }
 
     def _get_choice_text(self, choice: dict[str, Any]) -> str:
         prompt: str = self.history[-1]["prompt"]
@@ -167,34 +206,36 @@ def load_product_sentiment_polarity():
         gpt3._original_chat_request = gpt3.chat_request
 
     def _chat_request(**kwargs):
+        nonlocal tokens
         llm_request = json.loads(kwargs["stringify_request"])
         model = llm_request["model"]
         prompt = llm_request["messages"][-1]["content"]
 
-        if last_program:
-            program_for_prompt[prompt] = last_program
+        program_for_prompt[prompt] = last_program
 
-            reasoning_prefix = last_program.predict.signature.fields[
-                "reasoning"
-            ].json_schema_extra["prefix"]
-            sentiment_prefix = last_program.predict.signature.fields[
-                "sentiment"
-            ].json_schema_extra["prefix"]
+        reasoning_prefix = last_program.predict.signature.fields[
+            "reasoning"
+        ].json_schema_extra["prefix"]
+        sentiment_prefix = last_program.predict.signature.fields[
+            "sentiment"
+        ].json_schema_extra["prefix"]
 
-            if prompt.endswith(reasoning_prefix) or prompt.endswith(sentiment_prefix):
-                base_prompt = re.match(
-                    r"[\s\S]*" + re.escape(reasoning_prefix), prompt
-                )[0]
-                base_prompt = model + base_prompt
-                if base_prompt not in cached_request_map:
-                    cached_request_map[base_prompt] = gpt3._original_chat_request(
-                        **kwargs
-                    )
-                return cached_request_map[base_prompt]
-            else:
-                return gpt3._original_chat_request(**kwargs)
+        def do_actual_request():
+            response = gpt3._original_chat_request(**kwargs)
+            print("=======response", response["usage"])
+            print(response)
+            tokens["prompt_tokens"] += response["usage"]["prompt_tokens"]
+            tokens["completion_tokens"] += response["usage"]["completion_tokens"]
+            return response
+
+        if prompt.endswith(reasoning_prefix) or prompt.endswith(sentiment_prefix):
+            base_prompt = re.match(r"[\s\S]*" + re.escape(reasoning_prefix), prompt)[0]
+            base_prompt = model + base_prompt
+            if base_prompt not in cached_request_map:
+                cached_request_map[base_prompt] = do_actual_request()
+            return cached_request_map[base_prompt]
         else:
-            return gpt3._original_chat_request(**kwargs)
+            return do_actual_request()
 
     llm._get_choice_text = _get_choice_text.__get__(llm)
     gpt3.chat_request = _chat_request
@@ -202,6 +243,7 @@ def load_product_sentiment_polarity():
     dspy.settings.configure(lm=llm)
 
     product_sentiment_polarity = ProductSentimentPolarity()
+    product_sentiment_polarity.tokens = tokens
     product_sentiment_polarity.load(
         f"{os.path.dirname(os.path.abspath(__file__))}/models/product_sentiment_polarity_openai_experiment_gpt-3.5-turbo_cunning-private-pronghorn_train_82.67_dev_84.0_manually_adjusted.json"
     )
