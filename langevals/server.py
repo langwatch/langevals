@@ -1,3 +1,4 @@
+import os
 import sys
 import dotenv
 
@@ -21,6 +22,7 @@ from mangum import Mangum
 
 app = FastAPI()
 
+original_env = os.environ.copy()
 
 def create_evaluator_routes(evaluator_cls):
     definitions = get_evaluator_definitions(evaluator_cls)
@@ -59,8 +61,10 @@ def create_evaluator_routes(evaluator_cls):
     async def evaluate(
         req: Request,
     ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
+        os.environ = original_env # always try to set env vars from the original env back again to avoid side effects
         evaluator = evaluator_cls(settings=(req.settings or {}), env=req.env)  # type: ignore
-        return evaluator.evaluate_batch(req.data)
+        result = evaluator.evaluate_batch(req.data)
+        return result
 
 
 evaluators = load_evaluator_packages()

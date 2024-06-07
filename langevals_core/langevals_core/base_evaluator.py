@@ -139,7 +139,6 @@ models_providers_env_vars = {
     "anthropic": ["ANTHROPIC_API_KEY"],
 }
 
-# TODO: set env var of those variables on evaluator call if available
 models_env_vars = [env for envs in models_providers_env_vars.values() for env in envs]
 
 
@@ -167,6 +166,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         super().__init__(**kwargs)
         if not self.__preloaded:
             self.__class__.preload()
+        self.set_model_envs()
 
     @classmethod
     def preload(cls):
@@ -191,6 +191,12 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
 
         except KeyError:
             raise EnvMissingException(f"Variable {var} not defined in environment.")
+
+    def set_model_envs(self):
+        # Those variables may be used non-explicitly, so we need to set them globally here for the arguments given
+        for env_var in models_env_vars:
+            if env_var in self.env:
+                os.environ[env_var] = self.env[env_var]
 
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
