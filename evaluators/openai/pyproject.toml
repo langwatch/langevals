@@ -8,7 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
-openai = "1.26.0"
+openai = ">=1.27.0"
 tqdm = "^4.66.4"
 
 [tool.poetry.group.test.dependencies]

@@ -139,6 +139,7 @@ models_providers_env_vars = {
     "anthropic": ["ANTHROPIC_API_KEY"],
 }
 
+# TODO: set env var of those variables on evaluator call if available
 models_env_vars = [env for envs in models_providers_env_vars.values() for env in envs]
 
 

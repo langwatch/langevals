@@ -3,12 +3,17 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    EvaluationResultSkipped,
     SingleEvaluationResult,
+    Money,
 )
 from pydantic import BaseModel, Field
 from haystack.components.evaluators import FaithfulnessEvaluator
-from haystack.components.generators import OpenAIGenerator, AzureOpenAIGenerator
-from haystack.utils import Secret
+
+from langevals_haystack.lib.common import (
+    set_evaluator_model_and_capture_cost,
+)
+from langevals_core.utils import calculate_total_tokens
 
 
 class HaystackFaithfulnessEntry(EvaluatorEntry):
@@ -23,9 +28,14 @@ class HaystackFaithfulnessSettings(BaseModel):
         "openai/gpt-3.5-turbo-1106",
         "openai/gpt-4o",
         "azure/gpt-35-turbo-1106",
+        "anthropic/claude-3-haiku-20240307",
     ] = Field(
         default="azure/gpt-35-turbo-1106",
         description="The model to use for evaluation.",
+    )
+    max_tokens: int = Field(
+        default=2048,
+        description="The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
     )
 
 
@@ -52,30 +62,19 @@ class HaystackFaithfulnessEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: HaystackFaithfulnessEntry) -> SingleEvaluationResult:
-        provider, model = self.settings.model.split("/")
-
         questions = [entry.input]
         contexts = [entry.contexts]
         predicted_answers = [entry.output]
         evaluator = FaithfulnessEvaluator()
-        if provider == "openai":
-            evaluator.generator = OpenAIGenerator(
-                model=model,
-                generation_kwargs={
-                    "response_format": {"type": "json_object"},
-                    "seed": 42,
-                },
+
+        total_tokens = calculate_total_tokens(self.settings.model, entry)
+        max_tokens = min(self.settings.max_tokens, 16384)
+        if total_tokens > max_tokens:
+            return EvaluationResultSkipped(
+                details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
             )
-        elif provider == "azure":
-            evaluator.generator = AzureOpenAIGenerator(
-                azure_deployment=model,
-                azure_endpoint=self.get_env("AZURE_API_BASE"),
-                api_key=Secret.from_token(self.get_env("AZURE_API_KEY")),
-                generation_kwargs={
-                    "response_format": {"type": "json_object"},
-                    "seed": 42,
-                },
-            )
+
+        cost = set_evaluator_model_and_capture_cost(evaluator, self.settings.model)
         result = evaluator.run(
             questions=questions, contexts=contexts, predicted_answers=predicted_answers
         )
@@ -95,4 +94,6 @@ class HaystackFaithfulnessEvaluator(
             else "Low Faithfulness Statements:\n" + "\n".join(low_scores)
         )
 
-        return HaystackFaithfulnessResult(score=result["score"], details=details)
+        return HaystackFaithfulnessResult(
+            score=result["score"], details=details, cost=cost
+        )

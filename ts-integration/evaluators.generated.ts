@@ -507,7 +507,9 @@ export type Evaluators = {
         | "openai/gpt-3.5-turbo-0125"
         | "openai/gpt-3.5-turbo-1106"
         | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106";
+        | "azure/gpt-35-turbo-1106"
+        | "anthropic/claude-3-haiku-20240307";
+      max_tokens: number;
     };
   };
   "google_cloud/dlp_pii_detection": {
@@ -1264,6 +1266,11 @@ This evaluator assesses the extent to which the generated answer is consistent w
       model: {
         description: "The model to use for evaluation.",
         default: "azure/gpt-35-turbo-1106",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
       },
     },
     result: {},

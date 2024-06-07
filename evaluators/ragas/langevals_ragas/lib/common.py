@@ -8,6 +8,7 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     Money,
     EvaluationResultSkipped,
+    EvaluatorEntry,
 )
 from pydantic import BaseModel, Field
 from ragas import evaluate
@@ -49,6 +50,7 @@ from pydantic import BaseModel, Field
 import litellm
 from langchain.schema.output import LLMResult
 from langchain_core.outputs.generation import Generation
+from langevals_core.utils import calculate_total_tokens
 
 env_vars = []
 
@@ -86,6 +88,12 @@ class RagasResult(EvaluationResult):
     score: float
 
 
+class _GenericEvaluatorEntry(EvaluatorEntry):
+    input: Optional[str]
+    output: Optional[str]
+    contexts: Optional[List[str]]
+
+
 def evaluate_ragas(
     evaluator: BaseEvaluator,
     metric: str,
@@ -113,13 +121,10 @@ def evaluate_ragas(
 
     contexts = [x for x in contexts if x] if contexts else None
 
-    total_tokens = 0
-    total_tokens += len(litellm.encode(model=settings.model, text=question or ""))
-    total_tokens += len(litellm.encode(model=settings.model, text=answer or ""))
-    if contexts is not None:
-        for context in contexts:
-            tokens = litellm.encode(model=settings.model, text=context)
-            total_tokens += len(tokens)
+    total_tokens = calculate_total_tokens(
+        settings.model,
+        _GenericEvaluatorEntry(input=question, output=answer, contexts=contexts),
+    )
     max_tokens = min(settings.max_tokens, 16384)
     if total_tokens > max_tokens:
         return EvaluationResultSkipped(
