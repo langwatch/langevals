@@ -10,6 +10,7 @@ from typing import (
     Optional,
     Type,
     TypeVar,
+    Union,
     get_args,
     get_type_hints,
 )
@@ -120,9 +121,9 @@ class EvaluationResultError(BaseModel):
 
 TResult = TypeVar("TResult", bound=EvaluationResult)
 
-SingleEvaluationResult = (
-    EvaluationResult | EvaluationResultSkipped | EvaluationResultError
-)
+SingleEvaluationResult = Union[
+    EvaluationResult, EvaluationResultSkipped, EvaluationResultError
+]
 
 BatchEvaluationResult = List[SingleEvaluationResult]
 
@@ -195,7 +196,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     def set_model_envs(self):
         # Those variables may be used non-explicitly, so we need to set them globally here for the arguments given
         for env_var in models_env_vars:
-            if env_var in self.env:
+            if self.env and env_var in self.env:
                 os.environ[env_var] = self.env[env_var]
 
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
