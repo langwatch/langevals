@@ -1,3 +1,8 @@
+import os
+
+# Haystack telemetry breaks for AWS lambdas because it tries to write to home folder which is read-only
+os.environ["HAYSTACK_TELEMETRY_ENABLED"] = "false"
+
 from typing import Literal
 from langevals_core.base_evaluator import (
     BaseEvaluator,
