@@ -134,8 +134,14 @@ class EnvMissingException(Exception):
 
 
 models_providers_env_vars = {
-    "openai": ["OPENAI_API_KEY"],
-    "azure": ["AZURE_API_KEY", "AZURE_API_BASE"],
+    "openai": ["OPENAI_API_KEY", "OPENAI_BASE_URL"],
+    "azure": [
+        "AZURE_OPENAI_API_KEY",
+        "AZURE_OPENAI_ENDPOINT",
+        # litellm
+        "AZURE_API_KEY",
+        "AZURE_API_BASE",
+    ],
     "groq": ["GROQ_API_KEY"],
     "anthropic": ["ANTHROPIC_API_KEY"],
 }
@@ -198,6 +204,17 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         for env_var in models_env_vars:
             if self.env and env_var in self.env:
                 os.environ[env_var] = self.env[env_var]
+
+        # azure alias for litellm
+        if os.environ.get("AZURE_OPENAI_API_KEY") is not None:
+            os.environ["AZURE_API_KEY"] = os.environ["AZURE_OPENAI_API_KEY"]
+        if os.environ.get("AZURE_OPENAI_ENDPOINT") is not None:
+            os.environ["AZURE_API_BASE"] = os.environ["AZURE_OPENAI_ENDPOINT"]
+        # reverse azure alias for litellm
+        if os.environ.get("AZURE_API_KEY") is not None:
+            os.environ["AZURE_OPENAI_API_KEY"] = os.environ["AZURE_API_KEY"]
+        if os.environ.get("AZURE_API_BASE") is not None:
+            os.environ["AZURE_OPENAI_ENDPOINT"] = os.environ["AZURE_API_BASE"]
 
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
