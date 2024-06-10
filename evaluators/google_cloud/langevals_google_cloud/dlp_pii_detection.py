@@ -64,7 +64,7 @@ class GoogleCloudDLPPIIDetectionEvaluator(
 
     name = "Google Cloud DLP PII Detection"
     category = "safety"
-    env_vars = ["GOOGLE_CREDENTIALS_JSON"]
+    env_vars = ["GOOGLE_APPLICATION_CREDENTIALS"]
     default_settings = GoogleCloudDLPPIIDetectionSettings()
     docs_url = "https://cloud.google.com/sensitive-data-protection/docs/apis"
     is_guardrail = True
@@ -72,7 +72,7 @@ class GoogleCloudDLPPIIDetectionEvaluator(
     def evaluate(
         self, entry: GoogleCloudDLPPIIDetectionEntry
     ) -> SingleEvaluationResult:
-        credentials_json = json.loads(self.get_env("GOOGLE_CREDENTIALS_JSON"))
+        credentials_json = json.loads(self.get_env("GOOGLE_APPLICATION_CREDENTIALS"))
         credentials = service_account.Credentials.from_service_account_info(
             credentials_json
         )
