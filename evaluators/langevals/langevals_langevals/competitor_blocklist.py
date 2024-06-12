@@ -26,7 +26,7 @@ class CompetitorBlocklistResult(EvaluationResult):
         description="Number of competitors mentioned in the input and output"
     )
     passed: Optional[bool] = Field(
-        description="Is the message containing explicit mention of competitor"
+        description="Is the message containing explicit mention of competitor", default=False
     )
 
 

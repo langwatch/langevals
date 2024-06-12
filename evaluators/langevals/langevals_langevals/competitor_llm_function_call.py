@@ -18,16 +18,20 @@ from langevals_core.base_evaluator import (
 )
 
 
-class CompetitorLLMEntry(EvaluatorEntry):
+class CompetitorLLMFunctionCallEntry(EvaluatorEntry):
     output: Optional[str] = None
     input: Optional[str] = None
 
 
-class CompetitorLLMSettings(BaseModel):
+class CompetitorLLMFunctionCallSettings(BaseModel):
     name: str = Field(default="LangWatch", description="The name of your company")
     description: str = Field(
-        default="We are providing an LLM observability and evaluation platform",
+        default="We are providing an LLMFunctionCall observability and evaluation platform",
         description="Description of what your company is specializing at",
+    )
+    competitors: List[str] = Field(
+        default=["OpenAI", "Google", "Microsoft"],
+        description="The competitors that must not be mentioned.",
     )
     model: Literal[
         "openai/gpt-3.5-turbo",
@@ -54,28 +58,28 @@ class CompetitorLLMSettings(BaseModel):
     )
 
 
-class CompetitorLLMResult(EvaluationResult):
-    score: float = Field(description="Confidence that the message is competitor free")
+class CompetitorLLMFunctionCallResult(EvaluationResult):
+    score: float = Field(description="Number of unique competitors mentioned")
     passed: Optional[bool] = Field(
         description="Is the message related to the competitors", default=True
     )
 
 
-class CompetitorLLMEvaluator(
-    BaseEvaluator[CompetitorLLMEntry, CompetitorLLMSettings, CompetitorLLMResult]
+class CompetitorLLMFunctionCallEvaluator(
+    BaseEvaluator[CompetitorLLMFunctionCallEntry, CompetitorLLMFunctionCallSettings, CompetitorLLMFunctionCallResult]
 ):
     """
-    This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
+    This evaluator implements LLM-as-a-judge with a function call approach to check if the message contains a mention of a competitor.
     """
 
-    name = "Competitor LLM check"
+    name = "Competitor LLMFunctionCall check"
     category = "policy"
     env_vars = []
-    default_settings = CompetitorLLMSettings()
+    default_settings = CompetitorLLMFunctionCallSettings()
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
     is_guardrail = True
 
-    def evaluate(self, entry: CompetitorLLMEntry) -> SingleEvaluationResult:
+    def evaluate(self, entry: CompetitorLLMFunctionCallEntry) -> SingleEvaluationResult:
         passed = True
         vendor, model = self.settings.model.split("/")
         if vendor == "azure":
@@ -88,13 +92,20 @@ class CompetitorLLMEvaluator(
         if not content:
             return EvaluationResultSkipped(details="Input and Output are empty")
         your_company_description = (
-            f"Your company is {self.settings.name} - {self.settings.description}"
+            f"{self.settings.name} - {self.settings.description}"
         )
+        competitors = ""
+        for competitor in self.settings.competitors:
+            competitors += competitor + "\n"
         litellm_model = model if vendor == "openai" and model != "gpt-4o" else f"{vendor}/{model}"
-        prompt = f"""You are a competitor detection system. Your task is to determine whether a question explicitly or implicitly refers to any competitors.
-        This includes: comparisons between our brand and others, direct inquiries about competitors' products or services, and any mention of similar industries.
-        Remember that {your_company_description}.
-        If a question pertains to a related industry but not directly to our company, treat it as an implicit reference to competitors."""
+        prompt = f"""Remember that you are an advanced competitor detection system, developed by {your_company_description}. 
+                    Your task is to identify mentions of competitors in any given message. 
+                    The competitors specialize in the same field as your company and are listed below:
+                    
+                    Competitors:
+                    {competitors}
+
+                    Identify if the competitor was mentioned in the following message: {content}"""
         max_tokens_retrieved = get_max_tokens(
             "gpt-4-turbo" if litellm_model == "openai/gpt-4o" else litellm_model
         )
@@ -108,12 +119,8 @@ class CompetitorLLMEvaluator(
         )
         messages = [
             {
-                "role": "system",
-                "content": prompt,
-            },
-            {
                 "role": "user",
-                "content": content,
+                "content": prompt,
             },
         ]
         messages = cast(
@@ -136,33 +143,32 @@ class CompetitorLLMEvaluator(
                     "type": "function",
                     "function": {
                         "name": "competitor_check",
-                        "description": "Check if there is implicit mention of competitor",
+                        "description": "Check if any competitor was mentioned",
                         "parameters": {
                             "type": "object",
                             "properties": {
                                 "reasoning": {
                                     "type": "string",
-                                    "description": "Use this field to ponder and write the reasoning behind the decision written before a result is actually given",
-                                },
-                                "competitor_mentioned": {
-                                    "type": "boolean",
-                                    "description": "True - If the competitor is mentioned, False - if not",
+                                    "description": "Explain why you think the competitor was or was not mentioned.",
                                 },
                                 "confidence": {
                                     "type": "number",
-                                    "description": "Confidence in your reasoning from 0 to 1",
+                                    "description": "Confidence that the competitor was mentioned on the scale from 0 to 1.",
+                                },
+                                "competitor_mentioned": {
+                                    "type": "boolean",
+                                    "description": "True - If the competitor is mentioned, False - if not.",
                                 },
                             },
                             "required": [
-                                "competitor_mentioned",
                                 "confidence",
-                                "reasoning"
+                                "reasoning",
+                                "competitor_mentioned"
                             ],
                         },
                     },
                 },
             ],
-            tool_choice={"type": "function", "function": {"name": "competitor_check"}},  # type: ignore
         )
         response = cast(ModelResponse, response)
         choice = cast(Choices, response.choices[0])
@@ -172,6 +178,7 @@ class CompetitorLLMEvaluator(
         passed = not arguments["competitor_mentioned"] if "competitor_mentioned" in arguments else True
         confidence = arguments["confidence"] if "confidence" in arguments else 1
         reasoning = arguments["reasoning"] if "reasoning" in arguments else "No reasoning."
+        print(reasoning)
         # Temporary fix for gpt-4o
         if "gpt-4o" in (response.model or ""):
             response.model = "openai/gpt-4-turbo"
@@ -179,9 +186,12 @@ class CompetitorLLMEvaluator(
         details = None
         if not passed:
             details = f"{confidence} - confidence score. Reasoning: {reasoning}"
-        return CompetitorLLMResult(
+        print(details)
+        return CompetitorLLMFunctionCallResult(
             score=float(confidence),
             passed=passed,
             details=details,
             cost=Money(amount=cost, currency="USD") if cost else None,
         )
+
+
