@@ -24,6 +24,7 @@ app = FastAPI()
 
 original_env = os.environ.copy()
 
+
 def create_evaluator_routes(evaluator_cls):
     definitions = get_evaluator_definitions(evaluator_cls)
     module_name = definitions.module_name
@@ -61,7 +62,7 @@ def create_evaluator_routes(evaluator_cls):
     async def evaluate(
         req: Request,
     ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
-        os.environ = original_env # always try to set env vars from the original env back again to avoid side effects
+        os.environ = original_env  # always try to set env vars from the original env back again to avoid side effects
         evaluator = evaluator_cls(settings=(req.settings or {}), env=req.env)  # type: ignore
         result = evaluator.evaluate_batch(req.data)
         return result
@@ -103,7 +104,13 @@ def main():
     from hypercorn.config import Config
     from hypercorn.asyncio import serve
 
-    asyncio.run(serve(app, Config()))  # type: ignore
+    host = "0.0.0.0"
+    port = int(os.getenv("PORT", 8000))
+
+    config = Config()
+    config.bind = [f"{host}:{port}"]
+
+    asyncio.run(serve(app, config))  # type: ignore
 
 
 if __name__ == "__main__":
