@@ -72,7 +72,7 @@ class CompetitorLLMFunctionCallEvaluator(
     This evaluator implements LLM-as-a-judge with a function call approach to check if the message contains a mention of a competitor.
     """
 
-    name = "Competitor LLMFunctionCall check"
+    name = "Competitor LLM Check"
     category = "policy"
     env_vars = []
     default_settings = CompetitorLLMFunctionCallSettings()

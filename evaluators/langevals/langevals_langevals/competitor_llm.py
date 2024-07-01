@@ -68,7 +68,7 @@ class CompetitorLLMEvaluator(
     This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
     """
 
-    name = "Competitor LLM check"
+    name = "Competitor Allowlist check"
     category = "policy"
     env_vars = []
     default_settings = CompetitorLLMSettings()
