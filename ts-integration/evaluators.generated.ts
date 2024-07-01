@@ -979,7 +979,7 @@ This evaluator checks if any of the specified competitors was mentioned
     },
   },
   "langevals/competitor_llm": {
-    name: `Competitor Allowlist check`,
+    name: `Competitor Allowlist Check`,
     description: `
 This evaluator use an LLM-as-judge to check if the conversation is related to competitors, without having to name them explicitly
 `,
