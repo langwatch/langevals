@@ -396,6 +396,29 @@ export type Evaluators = {
       max_tokens: number;
     };
   };
+  "langevals/competitor_llm_function_call": {
+    settings: {
+      name: string;
+      description: string;
+      competitors: string[];
+      model:
+        | "openai/gpt-3.5-turbo"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4o"
+        | "openai/gpt-4-turbo"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4-1106-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "anthropic/claude-3-haiku-20240307"
+        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-opus-20240229";
+      max_tokens: number;
+    };
+  };
   "langevals/llm_boolean": {
     settings: {
       model:
@@ -987,6 +1010,48 @@ This evaluator use an LLM-as-judge to check if the conversation is related to co
     result: {
       score: {
         description: "Confidence that the message is competitor free",
+      },
+      passed: {
+        description: "Is the message related to the competitors",
+      },
+    },
+  },
+  "langevals/competitor_llm_function_call": {
+    name: `Competitor LLMFunctionCall check`,
+    description: `
+This evaluator implements LLM-as-a-judge with a function call approach to check if the message contains a mention of a competitor.
+`,
+    category: "policy",
+    docsUrl: "",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["output", "input"],
+    settings: {
+      name: {
+        description: "The name of your company",
+        default: "LangWatch",
+      },
+      description: {
+        description: "Description of what your company is specializing at",
+        default:
+          "We are providing an LLMFunctionCall observability and evaluation platform",
+      },
+      competitors: {
+        description: "The competitors that must not be mentioned.",
+        default: ["OpenAI", "Google", "Microsoft"],
+      },
+      model: {
+        description: "The model to use for evaluation",
+        default: "azure/gpt-35-turbo-1106",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {
+      score: {
+        description: "Number of unique competitors mentioned",
       },
       passed: {
         description: "Is the message related to the competitors",
