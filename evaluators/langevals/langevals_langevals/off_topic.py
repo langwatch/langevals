@@ -88,7 +88,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         if vendor == "azure":
             os.environ["AZURE_API_KEY"] = self.get_env("AZURE_API_KEY")
             os.environ["AZURE_API_BASE"] = self.get_env("AZURE_API_BASE")
-            os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+            os.environ["AZURE_API_VERSION"] = "2023-12-01-preview"
 
         content = entry.input or ""
         if not content:

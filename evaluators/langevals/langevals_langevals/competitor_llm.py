@@ -81,7 +81,7 @@ class CompetitorLLMEvaluator(
         if vendor == "azure":
             os.environ["AZURE_API_KEY"] = self.get_env("AZURE_API_KEY")
             os.environ["AZURE_API_BASE"] = self.get_env("AZURE_API_BASE")
-            os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+            os.environ["AZURE_API_VERSION"] = "2023-12-01-preview"
         content = ""
         content += entry.input if entry.input else ""
         content += "\n" + entry.output if entry.output else ""

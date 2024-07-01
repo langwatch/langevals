@@ -74,7 +74,7 @@ class CustomLLMBooleanEvaluator(
     is_guardrail = True
 
     def evaluate(self, entry: CustomLLMBooleanEntry) -> SingleEvaluationResult:
-        os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
+        os.environ["AZURE_API_VERSION"] = "2023-12-01-preview"
         if self.env:
             for key, env in self.env.items():
                 os.environ[key] = env
