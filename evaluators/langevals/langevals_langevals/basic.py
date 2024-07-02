@@ -33,7 +33,7 @@ class CustomBasicSettings(BaseModel):
 
 class CustomBasicResult(EvaluationResult):
     score: float = Field(description="Returns 1 if all rules pass, 0 if any rule fails")
-    passed: Optional[bool]
+    passed: Optional[bool] = Field(default=True)
 
 
 class CustomBasicEvaluator(

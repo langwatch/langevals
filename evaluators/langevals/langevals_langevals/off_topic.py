@@ -65,7 +65,7 @@ class OffTopicSettings(BaseModel):
 class OffTopicResult(EvaluationResult):
     score: float = Field(description="Confidence level of the intent prediction")
     passed: Optional[bool] = Field(
-        description="Is the message concerning allowed topic"
+        description="Is the message concerning allowed topic", default=True
     )
     details: Optional[str] = Field(
         default="1.0 confidence that the actual intent is other",
