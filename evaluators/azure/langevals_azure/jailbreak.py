@@ -20,6 +20,7 @@ class AzureJailbreakSettings(BaseModel):
 
 class AzureJailbreakResult(EvaluationResult):
     passed: Optional[bool] = Field(
+        default=None,
         description="If true then no jailbreak was detected, if false then a jailbreak was detected"
     )
 

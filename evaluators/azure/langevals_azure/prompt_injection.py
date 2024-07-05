@@ -13,7 +13,7 @@ import math
 
 class AzurePromptShieldEntry(EvaluatorEntry):
     input: str
-    contexts: Optional[List[str]]
+    contexts: Optional[List[str]] = None
 
 
 class AzurePromptShieldSettings(BaseModel):
@@ -22,6 +22,7 @@ class AzurePromptShieldSettings(BaseModel):
 
 class AzurePromptShieldResult(EvaluationResult):
     passed: Optional[bool] = Field(
+        default=None,
         description="If true then no prompt injection was detected, if false then a prompt injection was detected",
     )
 
