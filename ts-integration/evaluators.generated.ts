@@ -224,21 +224,6 @@ export type Evaluators = {
       threshold: number;
     };
   };
-  "azure/content_safety": {
-    settings: {
-      severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-      categories: {
-        Hate: boolean;
-        SelfHarm: boolean;
-        Sexual: boolean;
-        Violence: boolean;
-      };
-      output_type: "FourSeverityLevels" | "EightSeverityLevels";
-    };
-  };
-  "azure/jailbreak": {
-    settings: Record<string, never>;
-  };
   "ragas/answer_relevancy": {
     settings: {
       model:
@@ -352,6 +337,24 @@ export type Evaluators = {
         | "azure/text-embedding-ada-002";
       max_tokens: number;
     };
+  };
+  "azure/content_safety": {
+    settings: {
+      severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+      categories: {
+        Hate: boolean;
+        SelfHarm: boolean;
+        Sexual: boolean;
+        Violence: boolean;
+      };
+      output_type: "FourSeverityLevels" | "EightSeverityLevels";
+    };
+  };
+  "azure/jailbreak": {
+    settings: Record<string, never>;
+  };
+  "azure/prompt_injection": {
+    settings: Record<string, never>;
   };
   "example/word_count": {
     settings: Record<string, never>;
@@ -680,65 +683,6 @@ or if it's in a specific expected language.
       },
     },
   },
-  "azure/content_safety": {
-    name: `Azure Content Safety`,
-    description: `
-This evaluator detects potentially unsafe content in text, including hate speech,
-self-harm, sexual content, and violence. It allows customization of the severity
-threshold and the specific categories to check.
-`,
-    category: "safety",
-    docsUrl:
-      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["input", "output"],
-    settings: {
-      severity_threshold: {
-        description:
-          "The minimum severity level to consider content as unsafe, from 1 to 7.",
-        default: 1,
-      },
-      categories: {
-        description: "The categories of moderation to check for.",
-        default: {
-          Hate: true,
-          SelfHarm: true,
-          Sexual: true,
-          Violence: true,
-        },
-      },
-      output_type: {
-        description:
-          "The type of severity levels to return on the full 0-7 severity scale, it can be either the trimmed version with four values (0, 2, 4, 6 scores) or the whole range.",
-        default: "FourSeverityLevels",
-      },
-    },
-    result: {
-      score: {
-        description:
-          "The severity level of the detected content from 0 to 7. A higher score indicates higher severity.",
-      },
-    },
-  },
-  "azure/jailbreak": {
-    name: `Azure Jailbreak Detection`,
-    description: `
-This evaluator checks for jailbreak-attempt in the input using Azure's Content Safety API.
-`,
-    category: "safety",
-    docsUrl: "",
-    isGuardrail: true,
-    requiredFields: ["input"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      passed: {
-        description:
-          "If true then no jailbreak was detected, if false then a jailbreak was detected",
-      },
-    },
-  },
   "ragas/answer_relevancy": {
     name: `Ragas Answer Relevancy`,
     description: `
@@ -906,6 +850,84 @@ This evaluator assesses the extent to which the generated answer is consistent w
       },
     },
     result: {},
+  },
+  "azure/content_safety": {
+    name: `Azure Content Safety`,
+    description: `
+This evaluator detects potentially unsafe content in text, including hate speech,
+self-harm, sexual content, and violence. It allows customization of the severity
+threshold and the specific categories to check.
+`,
+    category: "safety",
+    docsUrl:
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      severity_threshold: {
+        description:
+          "The minimum severity level to consider content as unsafe, from 1 to 7.",
+        default: 1,
+      },
+      categories: {
+        description: "The categories of moderation to check for.",
+        default: {
+          Hate: true,
+          SelfHarm: true,
+          Sexual: true,
+          Violence: true,
+        },
+      },
+      output_type: {
+        description:
+          "The type of severity levels to return on the full 0-7 severity scale, it can be either the trimmed version with four values (0, 2, 4, 6 scores) or the whole range.",
+        default: "FourSeverityLevels",
+      },
+    },
+    result: {
+      score: {
+        description:
+          "The severity level of the detected content from 0 to 7. A higher score indicates higher severity.",
+      },
+    },
+  },
+  "azure/jailbreak": {
+    name: `Azure Jailbreak Detection`,
+    description: `
+This evaluator checks for jailbreak-attempt in the input using Azure's Content Safety API.
+`,
+    category: "safety",
+    docsUrl: "",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      passed: {
+        description:
+          "If true then no jailbreak was detected, if false then a jailbreak was detected",
+      },
+    },
+  },
+  "azure/prompt_injection": {
+    name: `Azure Prompt Shield`,
+    description: `
+This evaluator checks for prompt injection attempt in the input and the contexts using Azure's Content Safety API.
+`,
+    category: "safety",
+    docsUrl:
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection",
+    isGuardrail: true,
+    requiredFields: ["input"],
+    optionalFields: ["contexts"],
+    settings: {},
+    result: {
+      passed: {
+        description:
+          "If true then no prompt injection was detected, if false then a prompt injection was detected",
+      },
+    },
   },
   "example/word_count": {
     name: `Example Evaluator`,

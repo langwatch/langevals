@@ -1817,7 +1817,7 @@ url = "evaluators/aws"
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
