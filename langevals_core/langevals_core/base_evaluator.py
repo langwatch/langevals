@@ -19,6 +19,9 @@ from pydantic import BaseModel, ConfigDict, Field
 import pandas as pd
 from tqdm.auto import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from langevals_core.azure_patch import patch_litellm
+
+patch_litellm()
 
 EvalCategories = Literal[
     "quality", "rag", "safety", "policy", "other", "custom", "similarity"
@@ -138,6 +141,8 @@ models_providers_env_vars = {
     "azure": [
         "AZURE_OPENAI_API_KEY",
         "AZURE_OPENAI_ENDPOINT",
+        "AZURE_DEPLOYMENT_NAME",
+        "AZURE_EMBEDDINGS_DEPLOYMENT_NAME",
         # litellm
         "AZURE_API_KEY",
         "AZURE_API_BASE",

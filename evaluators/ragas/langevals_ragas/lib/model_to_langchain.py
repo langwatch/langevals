@@ -24,6 +24,7 @@ def model_to_langchain(model: str) -> BaseChatModel:
             api_version="2023-05-15",
             azure_endpoint=os.environ["AZURE_API_BASE"],
             api_key=os.environ["AZURE_API_KEY"],  # type: ignore
+            azure_deployment=os.environ.get("AZURE_DEPLOYMENT_NAME", None),
         )
     elif vendor == "anthropic":
         return ChatAnthropic(
@@ -43,6 +44,9 @@ def embeddings_model_to_langchain(embeddings_model: str):
             api_key=os.environ["OPENAI_API_KEY"],  # type: ignore
         )
     elif embeddings_vendor == "azure":
+        embeddings_model = os.environ.get(
+            "AZURE_EMBEDDINGS_DEPLOYMENT_NAME", embeddings_model
+        )
         return AzureOpenAIEmbeddings(
             azure_deployment=embeddings_model,
             model=embeddings_model,

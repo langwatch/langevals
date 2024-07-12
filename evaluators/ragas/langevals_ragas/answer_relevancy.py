@@ -18,7 +18,7 @@ class RagasAnswerRelevancyEvaluator(
     This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
     """
 
-    name = "Answer Relevancy"
+    name = "Ragas Answer Relevancy"
     category = "rag"
     env_vars = env_vars
     default_settings = RagasSettings()
