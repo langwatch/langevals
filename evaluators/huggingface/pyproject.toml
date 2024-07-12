@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-huggingface"
-version = "0.1.3"
+version = "0.1.4"
 description = "Evaluators based on models available on huggingface."
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",

@@ -1800,7 +1800,7 @@ extended-testing = ["beautifulsoup4 (>=4.12.3,<5.0.0)", "lxml (>=4.9.3,<6.0)"]
 
 [[package]]
 name = "langevals-aws"
-version = "0.1.3"
+version = "0.1.4"
 description = "LangEvals integration for AWS APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -1817,7 +1817,7 @@ url = "evaluators/aws"
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -1835,7 +1835,7 @@ url = "evaluators/azure"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.4"
+version = "0.1.5"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -1854,7 +1854,7 @@ url = "langevals_core"
 
 [[package]]
 name = "langevals-example"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
@@ -1870,7 +1870,7 @@ url = "evaluators/example"
 
 [[package]]
 name = "langevals-google-cloud"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals integration for Google Cloud APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -1887,7 +1887,7 @@ url = "evaluators/google_cloud"
 
 [[package]]
 name = "langevals-haystack"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangEvals Haystack evaluator"
 optional = true
 python-versions = "^3.11"
@@ -1905,7 +1905,7 @@ url = "evaluators/haystack"
 
 [[package]]
 name = "langevals-huggingface"
-version = "0.1.3"
+version = "0.1.4"
 description = "Evaluators based on models available on huggingface."
 optional = true
 python-versions = "^3.11"
@@ -1923,7 +1923,7 @@ url = "evaluators/huggingface"
 
 [[package]]
 name = "langevals-langevals"
-version = "0.1.3"
+version = "0.1.4"
 description = "LangEvals home-made evaluators."
 optional = false
 python-versions = "^3.11"
@@ -1943,7 +1943,7 @@ url = "evaluators/langevals"
 
 [[package]]
 name = "langevals-lingua"
-version = "0.1.3"
+version = "0.1.4"
 description = "LangEvals lingua evaluator for language detection."
 optional = true
 python-versions = "^3.11"
@@ -1960,7 +1960,7 @@ url = "evaluators/lingua"
 
 [[package]]
 name = "langevals-openai"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -1978,7 +1978,7 @@ url = "evaluators/openai"
 
 [[package]]
 name = "langevals-ragas"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals Ragas evaluator"
 optional = true
 python-versions = "^3.11"
