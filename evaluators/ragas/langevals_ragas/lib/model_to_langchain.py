@@ -12,7 +12,9 @@ from langchain_core.language_models.chat_models import (
 
 
 def model_to_langchain(model: str) -> BaseChatModel:
-    vendor, model = model.replace("claude-", "anthropic/claude-").split("/")
+    if model.startswith("claude-"):
+        model = model.replace("claude-", "anthropic/claude-")
+    vendor, model = model.split("/")
 
     if vendor == "openai":
         return ChatOpenAI(
