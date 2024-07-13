@@ -53,6 +53,7 @@ class RagasFaithfulnessEvaluator(
                 details="No claims found in the output to measure faitfhulness against context, skipping entry."
             )
         else:
-            result.details = f"Claims Found: {ragas_statements}"
+            claims = ", ".join([f'"{claim}"' for claim in ragas_statements])
+            result.details = f"Claims Found: {claims}"
 
         return result

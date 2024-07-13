@@ -24,7 +24,7 @@ class CustomSimilaritySettings(BaseModel):
     ] = "is_not_similar_to"
     value: str = "example"
     threshold: float = 0.3
-    embedding_model: Literal[
+    embeddings_model: Literal[
         "openai/text-embedding-3-small", "azure/text-embedding-ada-002"
     ] = "openai/text-embedding-3-small"
 
@@ -90,7 +90,7 @@ class CustomSimilarityEvaluator(
             )
 
     def get_embeddings(self, text: str):
-        vendor, model = self.settings.embedding_model.split("/")
+        vendor, model = self.settings.embeddings_model.split("/")
 
         total_tokens = len(litellm.encode(model=model, text=text))
         if total_tokens > 8192:
@@ -113,4 +113,4 @@ class CustomSimilarityEvaluator(
             )
             return response.data[0]["embedding"]  # type: ignore
         else:
-            raise ValueError(f"Invalid embedding model {self.settings.embedding_model}")
+            raise ValueError(f"Invalid embeddings model {self.settings.embeddings_model}")
