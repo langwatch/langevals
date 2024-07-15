@@ -323,7 +323,7 @@ export type Evaluators = {
       rule: "is_not_similar_to" | "is_similar_to";
       value: string;
       threshold: number;
-      embedding_model:
+      embeddings_model:
         | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
     };
@@ -1067,7 +1067,7 @@ match on the exact text.
         description: undefined,
         default: 0.3,
       },
-      embedding_model: {
+      embeddings_model: {
         description: undefined,
         default: "openai/text-embedding-3-small",
       },
