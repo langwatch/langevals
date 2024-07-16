@@ -1261,9 +1261,9 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
 `,
     category: "rag",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
+      "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html",
     isGuardrail: false,
-    requiredFields: ["input", "output"],
+    requiredFields: ["input", "output", "expected_output"],
     optionalFields: [],
     settings: {
       model: {
