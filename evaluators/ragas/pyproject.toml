@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "langevals-ragas"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals Ragas evaluator"
-authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
+authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]

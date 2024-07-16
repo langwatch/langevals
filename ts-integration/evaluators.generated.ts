@@ -71,120 +71,6 @@ export type Evaluators = {
       model: "cloudflare/thebloke/llamaguard-7b-awq";
     };
   };
-  "ragas/answer_relevancy": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4-1106-preview"
-        | "anthropic/claude-3-haiku-20240307";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_precision": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4-1106-preview"
-        | "anthropic/claude-3-haiku-20240307";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_recall": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4-1106-preview"
-        | "anthropic/claude-3-haiku-20240307";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_relevancy": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4-1106-preview"
-        | "anthropic/claude-3-haiku-20240307";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/context_utilization": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4-1106-preview"
-        | "anthropic/claude-3-haiku-20240307";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
-  "ragas/faithfulness": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4-1106-preview"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4-1106-preview"
-        | "anthropic/claude-3-haiku-20240307";
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
-      max_tokens: number;
-    };
-  };
   "langevals/basic": {
     settings: {
       rules: {
@@ -558,6 +444,139 @@ export type Evaluators = {
   "azure/prompt_injection": {
     settings: Record<string, never>;
   };
+  "ragas/answer_correctness": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/answer_relevancy": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_precision": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_recall": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_relevancy": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/context_utilization": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
+  "ragas/faithfulness": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4-1106-preview"
+        | "anthropic/claude-3-haiku-20240307";
+      embeddings_model:
+        | "openai/text-embedding-ada-002"
+        | "azure/text-embedding-ada-002";
+      max_tokens: number;
+    };
+  };
 };
 
 export const AVAILABLE_EVALUATORS: {
@@ -602,174 +621,6 @@ It can work both as a safety evaluator and as policy enforcement.
           "If true then the content is safe according to policy, if false then it is unsafe.",
       },
     },
-  },
-  "ragas/answer_relevancy": {
-    name: `Ragas Answer Relevancy`,
-    description: `
-This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
-    isGuardrail: false,
-    requiredFields: ["input", "output"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_precision": {
-    name: `Ragas Context Precision`,
-    description: `
-This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
-    isGuardrail: false,
-    requiredFields: ["input", "contexts", "expected_output"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_recall": {
-    name: `Ragas Context Recall`,
-    description: `
-This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
-    isGuardrail: false,
-    requiredFields: ["contexts", "expected_output"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_relevancy": {
-    name: `Ragas Context Relevancy`,
-    description: `
-This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
-    isGuardrail: false,
-    requiredFields: ["output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/context_utilization": {
-    name: `Ragas Context Utilization`,
-    description: `
-This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
-    isGuardrail: false,
-    requiredFields: ["input", "output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
-  },
-  "ragas/faithfulness": {
-    name: `Ragas Faithfulness`,
-    description: `
-This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
-    isGuardrail: false,
-    requiredFields: ["output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
   },
   "langevals/basic": {
     name: `Custom Basic Evaluator`,
@@ -1402,5 +1253,201 @@ This evaluator checks for prompt injection attempt in the input and the contexts
           "If true then no prompt injection was detected, if false then a prompt injection was detected",
       },
     },
+  },
+  "ragas/answer_correctness": {
+    name: `Ragas Answer Correctness`,
+    description: `
+This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better Correctness.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
+    isGuardrail: false,
+    requiredFields: ["input", "output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/answer_relevancy": {
+    name: `Ragas Answer Relevancy`,
+    description: `
+This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
+    isGuardrail: false,
+    requiredFields: ["input", "output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_precision": {
+    name: `Ragas Context Precision`,
+    description: `
+This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
+    isGuardrail: false,
+    requiredFields: ["input", "contexts", "expected_output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_recall": {
+    name: `Ragas Context Recall`,
+    description: `
+This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
+    isGuardrail: false,
+    requiredFields: ["contexts", "expected_output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_relevancy": {
+    name: `Ragas Context Relevancy`,
+    description: `
+This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
+    isGuardrail: false,
+    requiredFields: ["output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/context_utilization": {
+    name: `Ragas Context Utilization`,
+    description: `
+This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
+    isGuardrail: false,
+    requiredFields: ["input", "output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
+  },
+  "ragas/faithfulness": {
+    name: `Ragas Faithfulness`,
+    description: `
+This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
+    isGuardrail: false,
+    requiredFields: ["output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "azure/text-embedding-ada-002",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
   },
 };

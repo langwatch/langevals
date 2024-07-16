@@ -21,6 +21,7 @@ from ragas.metrics import (
     context_recall,
     context_relevancy,
     context_utilization,
+    answer_correctness,
 )
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
@@ -118,6 +119,7 @@ def evaluate_ragas(
     context_precision.llm = gpt_wrapper
     context_recall.llm = gpt_wrapper
     context_relevancy.llm = gpt_wrapper
+    answer_correctness.llm = gpt_wrapper
 
     contexts = [x for x in contexts if x] if contexts else None
 
@@ -144,6 +146,8 @@ def evaluate_ragas(
         ragas_metric = context_recall
     elif metric == "context_relevancy":
         ragas_metric = context_relevancy
+    elif metric == "answer_correctness":
+        ragas_metric = answer_correctness
     else:
         raise ValueError(f"Invalid metric: {metric}")
 

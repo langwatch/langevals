@@ -20,6 +20,10 @@ from langevals_ragas.faithfulness import (
     RagasFaithfulnessEntry,
     RagasFaithfulnessEvaluator,
 )
+from langevals_ragas.answer_correctness import (
+    RagasAnswerCorrectnessEntry,
+    RagasAnswerCorrectnessEvaluator,
+)
 
 dotenv.load_dotenv()
 
@@ -75,6 +79,51 @@ def test_answer_relevancy():
     assert result.status == "processed"
     assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
+
+def test_answer_correctness():
+    evaluator = RagasAnswerCorrectnessEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasAnswerCorrectnessEntry(
+            input="What is the capital of France?",
+            output="The capital of France is Paris.",
+            expected_output="Paris is the capital of France."
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score > 0.9
+    assert result.cost and result.cost.amount > 0.0
+
+
+def test_answer_correctness_fail():
+    evaluator = RagasAnswerCorrectnessEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasAnswerCorrectnessEntry(
+            input="What is the capital of France?",
+            output="The capital of France is Grenoble.",
+            expected_output="Paris is the capital of France."
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score < 0.5
+    assert result.cost and result.cost.amount > 0.0
+
+
+def test_answer_correctness_skip():
+    evaluator = RagasAnswerCorrectnessEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasAnswerCorrectnessEntry(
+            input="",
+            output="The capital of France is Grenoble.",
+            expected_output="Paris is the capital of France."
+        )
+    )
+
+    assert result.status == "skipped"
 
 
 def test_context_relevancy():
