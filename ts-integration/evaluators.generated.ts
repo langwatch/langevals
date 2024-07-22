@@ -71,6 +71,38 @@ export type Evaluators = {
       model: "cloudflare/thebloke/llamaguard-7b-awq";
     };
   };
+  "example/word_count": {
+    settings: Record<string, never>;
+  };
+  "openai/moderation": {
+    settings: {
+      model: "text-moderation-stable" | "text-moderation-latest";
+      categories: {
+        harassment: boolean;
+        harassment_threatening: boolean;
+        hate: boolean;
+        hate_threatening: boolean;
+        self_harm: boolean;
+        self_harm_instructions: boolean;
+        self_harm_intent: boolean;
+        sexual: boolean;
+        sexual_minors: boolean;
+        violence: boolean;
+        violence_graphic: boolean;
+      };
+    };
+  };
+  "haystack/faithfulness": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4o"
+        | "azure/gpt-35-turbo-1106"
+        | "anthropic/claude-3-haiku-20240307";
+      max_tokens: number;
+    };
+  };
   "langevals/basic": {
     settings: {
       rules: {
@@ -203,6 +235,25 @@ export type Evaluators = {
   "langevals/product_sentiment_polarity": {
     settings: Record<string, never>;
   };
+  "langevals/query_resolution_evaluator": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4-1106-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "anthropic/claude-3-haiku-20240307"
+        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-opus-20240229";
+      max_tokens: number;
+    };
+  };
   "langevals/similarity": {
     settings: {
       field: "input" | "output";
@@ -212,38 +263,6 @@ export type Evaluators = {
       embeddings_model:
         | "openai/text-embedding-3-small"
         | "azure/text-embedding-ada-002";
-    };
-  };
-  "example/word_count": {
-    settings: Record<string, never>;
-  };
-  "openai/moderation": {
-    settings: {
-      model: "text-moderation-stable" | "text-moderation-latest";
-      categories: {
-        harassment: boolean;
-        harassment_threatening: boolean;
-        hate: boolean;
-        hate_threatening: boolean;
-        self_harm: boolean;
-        self_harm_instructions: boolean;
-        self_harm_intent: boolean;
-        sexual: boolean;
-        sexual_minors: boolean;
-        violence: boolean;
-        violence_graphic: boolean;
-      };
-    };
-  };
-  "haystack/faithfulness": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4o"
-        | "azure/gpt-35-turbo-1106"
-        | "anthropic/claude-3-haiku-20240307";
-      max_tokens: number;
     };
   };
   "lingua/language_detection": {
@@ -453,6 +472,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -472,6 +492,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -491,6 +512,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -510,6 +532,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -529,6 +552,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -548,6 +572,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -567,6 +592,7 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4-1106-preview"
@@ -621,6 +647,87 @@ It can work both as a safety evaluator and as policy enforcement.
           "If true then the content is safe according to policy, if false then it is unsafe.",
       },
     },
+  },
+  "example/word_count": {
+    name: `Example Evaluator`,
+    description: `
+This evaluator serves as a boilerplate for creating new evaluators.
+`,
+    category: "other",
+    docsUrl: "https://path/to/official/docs",
+    isGuardrail: false,
+    requiredFields: ["output"],
+    optionalFields: [],
+    settings: {},
+    result: {
+      score: {
+        description: "How many words are there in the output, split by space",
+      },
+    },
+  },
+  "openai/moderation": {
+    name: `OpenAI Moderation`,
+    description: `
+This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
+including harassment, hate speech, self-harm, sexual content, and violence.
+`,
+    category: "safety",
+    docsUrl: "https://platform.openai.com/docs/guides/moderation/overview",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      model: {
+        description:
+          "The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
+        default: "text-moderation-stable",
+      },
+      categories: {
+        description: "The categories of content to check for moderation.",
+        default: {
+          harassment: true,
+          harassment_threatening: true,
+          hate: true,
+          hate_threatening: true,
+          self_harm: true,
+          self_harm_instructions: true,
+          self_harm_intent: true,
+          sexual: true,
+          sexual_minors: true,
+          violence: true,
+          violence_graphic: true,
+        },
+      },
+    },
+    result: {
+      score: {
+        description:
+          "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
+      },
+    },
+  },
+  "haystack/faithfulness": {
+    name: `Haystack Faithfulness`,
+    description: `
+This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
+`,
+    category: "rag",
+    docsUrl: "https://docs.haystack.deepset.ai/docs/faithfulnessevaluator",
+    isGuardrail: false,
+    requiredFields: ["input", "output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "azure/gpt-35-turbo-1106",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    result: {},
   },
   "langevals/basic": {
     name: `Custom Basic Evaluator`,
@@ -889,6 +996,28 @@ For messages about products, this evaluator checks for the nuanced sentiment dir
       },
     },
   },
+  "langevals/query_resolution_evaluator": {
+    name: `Query Resolution Conversation Evaluator`,
+    description: `
+This evaluator checks if all the querries of the user were resolved by the LLM.
+`,
+    category: "policy",
+    docsUrl: "",
+    isGuardrail: false,
+    requiredFields: ["conversation"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation",
+        default: "azure/gpt-35-turbo-1106",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 4096,
+      },
+    },
+    result: {},
+  },
   "langevals/similarity": {
     name: `Semantic Similarity Evaluator`,
     description: `
@@ -933,87 +1062,6 @@ match on the exact text.
           "Passes if the cosine similarity crosses the threshold for the defined rule",
       },
     },
-  },
-  "example/word_count": {
-    name: `Example Evaluator`,
-    description: `
-This evaluator serves as a boilerplate for creating new evaluators.
-`,
-    category: "other",
-    docsUrl: "https://path/to/official/docs",
-    isGuardrail: false,
-    requiredFields: ["output"],
-    optionalFields: [],
-    settings: {},
-    result: {
-      score: {
-        description: "How many words are there in the output, split by space",
-      },
-    },
-  },
-  "openai/moderation": {
-    name: `OpenAI Moderation`,
-    description: `
-This evaluator uses OpenAI's moderation API to detect potentially harmful content in text,
-including harassment, hate speech, self-harm, sexual content, and violence.
-`,
-    category: "safety",
-    docsUrl: "https://platform.openai.com/docs/guides/moderation/overview",
-    isGuardrail: true,
-    requiredFields: [],
-    optionalFields: ["input", "output"],
-    settings: {
-      model: {
-        description:
-          "The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
-        default: "text-moderation-stable",
-      },
-      categories: {
-        description: "The categories of content to check for moderation.",
-        default: {
-          harassment: true,
-          harassment_threatening: true,
-          hate: true,
-          hate_threatening: true,
-          self_harm: true,
-          self_harm_instructions: true,
-          self_harm_intent: true,
-          sexual: true,
-          sexual_minors: true,
-          violence: true,
-          violence_graphic: true,
-        },
-      },
-    },
-    result: {
-      score: {
-        description:
-          "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
-      },
-    },
-  },
-  "haystack/faithfulness": {
-    name: `Haystack Faithfulness`,
-    description: `
-This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
-`,
-    category: "rag",
-    docsUrl: "https://docs.haystack.deepset.ai/docs/faithfulnessevaluator",
-    isGuardrail: false,
-    requiredFields: ["input", "output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-1106",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    result: {},
   },
   "lingua/language_detection": {
     name: `Lingua Language Detection`,

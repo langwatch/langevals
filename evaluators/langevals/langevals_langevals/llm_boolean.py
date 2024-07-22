@@ -11,8 +11,7 @@ from langevals_core.base_evaluator import (
 )
 from pydantic import BaseModel, Field
 import litellm
-from litellm import ModelResponse, Choices, Message
-from litellm.utils import completion_cost
+from litellm import ModelResponse, Choices, Message, completion_cost
 
 
 class CustomLLMBooleanEntry(EvaluatorEntry):

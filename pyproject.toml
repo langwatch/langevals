@@ -41,7 +41,7 @@ langevals-server = "langevals.server:main"
 [tool.poetry.dev-dependencies]
 toml = "^0.10.2"
 grevillea = "^0.0.1"
-litellm = "^1.35.29"
+litellm = "^1.41.25"
 instructor = "^1.2.2"
 pytest-xdist = "^3.5.0"
 flaky = "^3.8.1"

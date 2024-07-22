@@ -48,6 +48,7 @@ class EvaluatorEntry(BaseModel):
         super().__init_subclass__(**kwargs)  # Always call super()!
 
         required_fields_types = {
+            "conversation": [EvaluatorEntry, Optional[EvaluatorEntry]],
             "input": [str, Optional[str]],
             "output": [str, Optional[str]],
             "contexts": [
@@ -71,6 +72,7 @@ class EvaluatorEntry(BaseModel):
             if (
                 field in subclass_fields_types
                 and subclass_fields_types[field] not in expected_types
+                and field != "conversation"
             ):
                 raise TypeError(
                     f"Field '{field}' in {cls.__name__} must be of type {expected_types}, got {subclass_fields_types[field].__name__}"

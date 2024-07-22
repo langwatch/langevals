@@ -25,7 +25,7 @@ from ragas.metrics import (
 )
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
-import litellm
+from litellm import completion_cost
 from tqdm import tqdm
 
 from langevals_ragas.lib.model_to_langchain import (
@@ -63,7 +63,10 @@ class RagasSettings(BaseModel):
         "openai/gpt-3.5-turbo-16k",
         "openai/gpt-4-1106-preview",
         "openai/gpt-4-0125-preview",
+        "openai/gpt-4-1106-preview",
+        "openai/gpt-4-1106-preview",
         "openai/gpt-4o",
+        "openai/gpt-4o-mini",
         "azure/gpt-35-turbo-1106",
         "azure/gpt-35-turbo-16k",
         "azure/gpt-4-1106-preview",

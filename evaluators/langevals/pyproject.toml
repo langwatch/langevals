@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "langevals-langevals"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals home-made evaluators."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-litellm = "^1.37.0"
+litellm = "^1.41.25"
 langevals-core = { path = "../../langevals_core", develop = true }
 openai = ">=1.27.0"
 numpy = "^1.26.4"

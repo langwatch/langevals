@@ -2,11 +2,10 @@ import litellm
 from litellm import get_max_tokens, completion_cost
 from litellm import ModelResponse, Choices, Message
 from litellm.utils import trim_messages
-
 from pydantic import BaseModel, Field
-from typing import Optional, List, Literal, cast
-import json
+from typing import List, Optional, Literal, cast
 import os
+import json
 
 from langevals_core.base_evaluator import (
     BaseEvaluator,
@@ -17,27 +16,16 @@ from langevals_core.base_evaluator import (
     Money,
 )
 
-
-class OffTopicEntry(EvaluatorEntry):
+class QueryResolutionConversationMessageEntry(EvaluatorEntry):
     input: str
+    output: str
 
 
-class AllowedTopic(BaseModel):
-    topic: str
-    description: str
+class QueryResolutionConversationEntry(EvaluatorEntry):
+    conversation: List[QueryResolutionConversationMessageEntry]
 
 
-class OffTopicSettings(BaseModel):
-    allowed_topics: List[AllowedTopic] = Field(
-        default=[
-            AllowedTopic(topic="simple_chat", description="Smalltalk with the user"),
-            AllowedTopic(
-                topic="company",
-                description="Questions about the company, what we do, etc",
-            ),
-        ],
-        description="The list of topics and their short descriptions that the chatbot is allowed to talk about",
-    )
+class QueryResolutionConversationSettings(BaseModel):
     model: Literal[
         "openai/gpt-3.5-turbo",
         "openai/gpt-3.5-turbo-0125",
@@ -62,45 +50,52 @@ class OffTopicSettings(BaseModel):
     )
 
 
-class OffTopicResult(EvaluationResult):
-    score: float = Field(description="Confidence level of the intent prediction")
-    passed: Optional[bool] = Field(
-        description="Is the message concerning allowed topic", default=True
-    )
+class QueryResolutionConversationResult(EvaluationResult):
+    score: float
+    passed: bool = Field(default=True)
     details: Optional[str] = Field(
-        default="1.0 confidence that the actual intent is other",
-        description="Predicted intent of the message and the confidence",
+        default="2 querries were resolved in this conversation"
     )
 
 
-class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicResult]):
+
+class QueryResolutionConversationEvaluator(
+    BaseEvaluator[
+        QueryResolutionConversationEntry,
+        QueryResolutionConversationSettings,
+        QueryResolutionConversationResult,
+    ]
+):
     """
-    This evaluator checks if the user message is concerning one of the allowed topics of the chatbot
+    This evaluator checks if all the querries of the user were resolved by the LLM.
     """
 
-    name = "Off Topic Evaluator"
+    name = "Query Resolution Conversation Evaluator"
     category = "policy"
     env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
-    is_guardrail = True  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
+    is_guardrail = False  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
 
-    def evaluate(self, entry: OffTopicEntry) -> SingleEvaluationResult:
+    def evaluate(
+        self, entry: QueryResolutionConversationEntry
+    ) -> SingleEvaluationResult:
         vendor, model = self.settings.model.split("/")
         if vendor == "azure":
             os.environ["AZURE_API_KEY"] = self.get_env("AZURE_API_KEY")
             os.environ["AZURE_API_BASE"] = self.get_env("AZURE_API_BASE")
             os.environ["AZURE_API_VERSION"] = "2023-12-01-preview"
 
-        content = entry.input or ""
-        if not content:
-            return EvaluationResultSkipped(details="Input is empty")
-        topics_descriptions = "\n #".join(
-            [
-                f"Intent: {allowed_topic.topic} - Description: {allowed_topic.description}"
-                for allowed_topic in self.settings.allowed_topics
-            ]
-        )
+        content = entry.conversation or []
+        conversation = ""
+        counter = 0
+        for message in content:
+            if message.input == "":
+                counter += 1
+            conversation_turn = f"USER: {message.input}\n ASSISTANT: {message.output}\n"
+            conversation += conversation_turn
+        if counter == len(content):
+            return EvaluationResultSkipped(details="The conversation is empty")
         litellm_model = model if vendor == "openai" else f"{vendor}/{model}"
-        prompt = f"You are an intent classification system. Your goal is to identify the intent of the message. Consider these intents and their following descriptions: {topics_descriptions}"
+        prompt = f"You are an accurate Query Resolution Evaluator. Your goal is to find out if all of the user querries were resolved in the conversation with the chatbot."
 
         max_tokens_retrieved = get_max_tokens(litellm_model)
         if max_tokens_retrieved is None:
@@ -118,13 +113,14 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
             },
             {
                 "role": "user",
-                "content": content,
+                "content": conversation,
             },
         ]
         messages = cast(
             List[dict[str, str]],
             trim_messages(messages, litellm_model, max_tokens=max_tokens),
         )
+        print(messages)
 
         response = litellm.completion(
             model=litellm_model,
@@ -133,48 +129,56 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
                 {
                     "type": "function",
                     "function": {
-                        "name": "identify_intent",
-                        "description": "Identify the intent of the message",
+                        "name": "query_resolution_evaluator",
+                        "description": "Evaluate if all of the querries were resolved",
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "intent": {
-                                    "type": "string",
-                                    "description": "The intent of the user message, what is the message about",
-                                    "enum": list(
-                                        set(
-                                            allowed_topic.topic
-                                            for allowed_topic in self.settings.allowed_topics
-                                        )
-                                    )
-                                    + ["other"],
-                                },
-                                "confidence": {
+                                "querries_total": {
                                     "type": "number",
-                                    "description": "Confidence in the identified intent on the scale from 0.0 to 1.0",
+                                    "description": "Number of total user querries in the dialogue",
+                                },
+                                "querries_resolved": {
+                                    "type": "number",
+                                    "description": "Number of resolved user querries in the dialogue",
+                                },
+                                "were_resolved": {
+                                    "type": "boolean",
+                                    "description": "True if all querries were resolved, false if not",
                                 },
                             },
-                            "required": ["intent", "confidence"],
+                            "required": [
+                                "were_resolved",
+                                "querries_total",
+                                "querries_resolved",
+                            ],
                         },
                     },
                 },
             ],
-            tool_choice={"type": "function", "function": {"name": "identify_intent"}},  # type: ignore
+            tool_choice={"type": "function", "function": {"name": "query_resolution_evaluator"}},  # type: ignore
         )
         response = cast(ModelResponse, response)
         choice = cast(Choices, response.choices[0])
         arguments = json.loads(
             cast(Message, choice.message).tool_calls[0].function.arguments
         )
-        intent = arguments["intent"]
-        confidence = arguments["confidence"]
+        print(choice)
+
         cost = completion_cost(completion_response=response, prompt=prompt)
 
-        passed: bool = intent not in ["other"]
+        passed: bool = cast(bool, arguments["were_resolved"])
+        total_querries: int = arguments["querries_total"]
+        resolved_querries: int = arguments["querries_resolved"]
+        resolution_ratio: float = resolved_querries / total_querries
         cost = completion_cost(completion_response=response)
-        return OffTopicResult(
-            score=float(confidence),
-            details=f"Detected intent: {intent}",
+        details: str = (
+            f"There were {total_querries} querries in total and {resolved_querries} of them were resolved in the conversation."
+        )
+
+        return QueryResolutionConversationResult(
             passed=passed,
+            score=resolution_ratio,
+            details=details,
             cost=Money(amount=cost, currency="USD") if cost else None,
         )

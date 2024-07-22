@@ -1,7 +1,7 @@
 import litellm
-from litellm import get_max_tokens
+from litellm import get_max_tokens, completion_cost
 from litellm import ModelResponse, Choices, Message
-from litellm.utils import completion_cost, trim_messages
+from litellm.utils import trim_messages
 
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal, cast
