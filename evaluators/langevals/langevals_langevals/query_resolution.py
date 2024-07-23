@@ -17,16 +17,16 @@ from langevals_core.base_evaluator import (
 )
 
 
-class QueryResolutionConversationMessageEntry(EvaluatorEntry):
+class QueryResolutionConversationEntry(EvaluatorEntry):
     input: str
     output: str
 
 
-class QueryResolutionConversationEntry(EvaluatorEntry):
-    conversation: List[QueryResolutionConversationMessageEntry]
+class QueryResolutionEntry(EvaluatorEntry):
+    conversation: List[QueryResolutionConversationEntry]
 
 
-class QueryResolutionConversationSettings(BaseModel):
+class QueryResolutionSettings(BaseModel):
     model: Literal[
         "openai/gpt-3.5-turbo",
         "openai/gpt-3.5-turbo-0125",
@@ -54,30 +54,30 @@ class QueryResolutionConversationSettings(BaseModel):
     )
 
 
-class QueryResolutionConversationResult(EvaluationResult):
+class QueryResolutionResult(EvaluationResult):
     score: float
     passed: bool = Field(default=True)
     details: Optional[str]
 
 
-class QueryResolutionConversationEvaluator(
+class QueryResolutionEvaluator(
     BaseEvaluator[
-        QueryResolutionConversationEntry,
-        QueryResolutionConversationSettings,
-        QueryResolutionConversationResult,
+        QueryResolutionEntry,
+        QueryResolutionSettings,
+        QueryResolutionResult,
     ]
 ):
     """
     This evaluator checks if all the user queries in the conversation were resolved. Useful to detect when the bot doesn't know how to answer or can't help the user.
     """
 
-    name = "Query Resolution Conversation Evaluator"
-    category = "policy"
-    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
-    is_guardrail = False  # If the evaluator is a guardrail or not, a guardrail evaluator must return a boolean result on the `passed` result field in addition to the score
+    name = "Query Resolution"
+    category = "quality"
+    env_vars = []
+    is_guardrail = False
 
     def evaluate(
-        self, entry: QueryResolutionConversationEntry
+        self, entry: QueryResolutionEntry
     ) -> SingleEvaluationResult:
         vendor, model = self.settings.model.split("/")
         if vendor == "azure":
@@ -183,7 +183,7 @@ class QueryResolutionConversationEvaluator(
             f"There were {total_queries} queries in total and {resolved_queries} of them were resolved in the conversation. Reasoning: {reasoning}"
         )
 
-        return QueryResolutionConversationResult(
+        return QueryResolutionResult(
             passed=passed,
             score=resolution_ratio,
             details=details,

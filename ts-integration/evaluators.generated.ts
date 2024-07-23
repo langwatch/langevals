@@ -247,7 +247,7 @@ export type Evaluators = {
   "langevals/product_sentiment_polarity": {
     settings: Record<string, never>;
   };
-  "langevals/query_resolution_evaluator": {
+  "langevals/query_resolution": {
     settings: {
       model:
         | "openai/gpt-3.5-turbo"
@@ -1011,12 +1011,12 @@ For messages about products, this evaluator checks for the nuanced sentiment dir
       },
     },
   },
-  "langevals/query_resolution_evaluator": {
-    name: `Query Resolution Conversation Evaluator`,
+  "langevals/query_resolution": {
+    name: `Query Resolution`,
     description: `
 This evaluator checks if all the user queries in the conversation were resolved. Useful to detect when the bot doesn't know how to answer or can't help the user.
 `,
-    category: "policy",
+    category: "quality",
     docsUrl: "",
     isGuardrail: false,
     requiredFields: ["conversation"],
