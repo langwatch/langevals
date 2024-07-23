@@ -256,9 +256,12 @@ export type Evaluators = {
         | "openai/gpt-4-turbo"
         | "openai/gpt-4-0125-preview"
         | "openai/gpt-4-1106-preview"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
+        | "azure/gpt-4o"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
         | "anthropic/claude-3-sonnet-20240229"
@@ -1011,7 +1014,7 @@ For messages about products, this evaluator checks for the nuanced sentiment dir
   "langevals/query_resolution_evaluator": {
     name: `Query Resolution Conversation Evaluator`,
     description: `
-This evaluator checks if all the querries of the user were resolved by the LLM.
+This evaluator checks if all the user queries in the conversation were resolved. Useful to detect when the bot doesn't know how to answer or can't help the user.
 `,
     category: "policy",
     docsUrl: "",
@@ -1021,7 +1024,7 @@ This evaluator checks if all the querries of the user were resolved by the LLM.
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "azure/gpt-35-turbo-1106",
+        default: "openai/gpt-4o-mini",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
