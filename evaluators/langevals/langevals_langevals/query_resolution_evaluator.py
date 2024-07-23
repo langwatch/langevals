@@ -16,6 +16,7 @@ from langevals_core.base_evaluator import (
     Money,
 )
 
+
 class QueryResolutionConversationMessageEntry(EvaluatorEntry):
     input: str
     output: str
@@ -33,15 +34,18 @@ class QueryResolutionConversationSettings(BaseModel):
         "openai/gpt-4-turbo",
         "openai/gpt-4-0125-preview",
         "openai/gpt-4-1106-preview",
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini",
         "azure/gpt-35-turbo-1106",
         "azure/gpt-4-turbo-2024-04-09",
         "azure/gpt-4-1106-preview",
+        "azure/gpt-4o",
         "groq/llama3-70b-8192",
         "anthropic/claude-3-haiku-20240307",
         "anthropic/claude-3-sonnet-20240229",
         "anthropic/claude-3-opus-20240229",
     ] = Field(
-        default="azure/gpt-35-turbo-1106",
+        default="openai/gpt-4o-mini",
         description="The model to use for evaluation",
     )
     max_tokens: int = Field(
@@ -53,10 +57,7 @@ class QueryResolutionConversationSettings(BaseModel):
 class QueryResolutionConversationResult(EvaluationResult):
     score: float
     passed: bool = Field(default=True)
-    details: Optional[str] = Field(
-        default="2 querries were resolved in this conversation"
-    )
-
+    details: Optional[str]
 
 
 class QueryResolutionConversationEvaluator(
@@ -67,7 +68,7 @@ class QueryResolutionConversationEvaluator(
     ]
 ):
     """
-    This evaluator checks if all the querries of the user were resolved by the LLM.
+    This evaluator checks if all the user queries in the conversation were resolved. Useful to detect when the bot doesn't know how to answer or can't help the user.
     """
 
     name = "Query Resolution Conversation Evaluator"
@@ -120,7 +121,6 @@ class QueryResolutionConversationEvaluator(
             List[dict[str, str]],
             trim_messages(messages, litellm_model, max_tokens=max_tokens),
         )
-        print(messages)
 
         response = litellm.completion(
             model=litellm_model,
@@ -130,50 +130,57 @@ class QueryResolutionConversationEvaluator(
                     "type": "function",
                     "function": {
                         "name": "query_resolution_evaluator",
-                        "description": "Evaluate if all of the querries were resolved",
+                        "description": "Evaluate if all of the queries were answered",
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "querries_total": {
-                                    "type": "number",
-                                    "description": "Number of total user querries in the dialogue",
+                                "reasoning": {
+                                    "type": "string",
+                                    "description": "Reasoning for the answer",
                                 },
-                                "querries_resolved": {
+                                "queries_total": {
                                     "type": "number",
-                                    "description": "Number of resolved user querries in the dialogue",
+                                    "description": "Number of total user queries in the dialogue, greetings and non-requests do not count",
                                 },
-                                "were_resolved": {
-                                    "type": "boolean",
-                                    "description": "True if all querries were resolved, false if not",
+                                "queries_answered": {
+                                    "type": "number",
+                                    "description": "Number of resolved user queries in the dialogue",
                                 },
                             },
                             "required": [
-                                "were_resolved",
-                                "querries_total",
-                                "querries_resolved",
+                                "reasoning",
+                                "queries_total",
+                                "queries_answered",
                             ],
                         },
                     },
                 },
             ],
-            tool_choice={"type": "function", "function": {"name": "query_resolution_evaluator"}},  # type: ignore
+            tool_choice={
+                "type": "function",
+                "function": {"name": "query_resolution_evaluator"},
+            },
         )
         response = cast(ModelResponse, response)
         choice = cast(Choices, response.choices[0])
         arguments = json.loads(
             cast(Message, choice.message).tool_calls[0].function.arguments
         )
-        print(choice)
 
         cost = completion_cost(completion_response=response, prompt=prompt)
 
-        passed: bool = cast(bool, arguments["were_resolved"])
-        total_querries: int = arguments["querries_total"]
-        resolved_querries: int = arguments["querries_resolved"]
-        resolution_ratio: float = resolved_querries / total_querries
+        reasoning: str = arguments["reasoning"]
+        passed: bool = arguments["queries_answered"] == arguments["queries_total"]
+        total_queries: int = arguments["queries_total"]
+        resolved_queries: int = arguments["queries_answered"]
+        resolution_ratio: float = (
+            1
+            if resolved_queries == 0 and total_queries == 0
+            else resolved_queries / max(total_queries, 1)
+        )
         cost = completion_cost(completion_response=response)
         details: str = (
-            f"There were {total_querries} querries in total and {resolved_querries} of them were resolved in the conversation."
+            f"There were {total_queries} queries in total and {resolved_queries} of them were resolved in the conversation. Reasoning: {reasoning}"
         )
 
         return QueryResolutionConversationResult(
