@@ -149,8 +149,8 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"    category: {categories_union};\n"
         f"    docsUrl?: string;\n"
         f"    isGuardrail: boolean;\n"
-        f'    requiredFields: ("input" | "output" | "contexts" | "expected_output")[];\n'
-        f'    optionalFields: ("input" | "output" | "contexts" | "expected_output")[];\n'
+        f'    requiredFields: ("input" | "output" | "contexts" | "expected_output" | "conversation")[];\n'
+        f'    optionalFields: ("input" | "output" | "contexts" | "expected_output" | "conversation")[];\n'
         f"    settings: {{\n"
         f'        [K in keyof Evaluators[T]["settings"]]: {{\n'
         f"        description?: string;\n"

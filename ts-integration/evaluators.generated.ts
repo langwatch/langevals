@@ -11,8 +11,20 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
     | "similarity";
   docsUrl?: string;
   isGuardrail: boolean;
-  requiredFields: ("input" | "output" | "contexts" | "expected_output")[];
-  optionalFields: ("input" | "output" | "contexts" | "expected_output")[];
+  requiredFields: (
+    | "input"
+    | "output"
+    | "contexts"
+    | "expected_output"
+    | "conversation"
+  )[];
+  optionalFields: (
+    | "input"
+    | "output"
+    | "contexts"
+    | "expected_output"
+    | "conversation"
+  )[];
   settings: {
     [K in keyof Evaluators[T]["settings"]]: {
       description?: string;
