@@ -14,6 +14,7 @@ from typing import (
     get_args,
     get_type_hints,
 )
+from litellm.utils import get_max_tokens
 
 from pydantic import BaseModel, ConfigDict, Field
 import pandas as pd
@@ -27,7 +28,35 @@ EvalCategories = Literal[
     "quality", "rag", "safety", "policy", "other", "custom", "similarity"
 ]
 
-TSettings = TypeVar("TSettings", bound=BaseModel)
+class EvaluatorSettings(BaseModel):
+     model: Literal[
+         "openai/gpt-3.5-turbo",
+         "openai/gpt-3.5-turbo-0125",
+         "openai/gpt-3.5-turbo-1106",
+         "openai/gpt-4-turbo",
+         "openai/gpt-4-0125-preview",
+         "openai/gpt-4o",
+         "openai/gpt-4o-mini",
+         "openai/gpt-4-1106-preview",
+         "azure/gpt-35-turbo-1106",
+         "azure/gpt-4o",
+         "azure/gpt-4-turbo-2024-04-09",
+         "azure/gpt-4-1106-preview",
+         "groq/llama3-70b-8192",
+         "anthropic/claude-3-haiku-20240307",
+         "anthropic/claude-3-sonnet-20240229",
+         "anthropic/claude-3-opus-20240229",
+     ] = Field(
+         default="openai/gpt-4o-mini",
+         description="The model to use for evaluation",
+     )
+     max_tokens: int = Field(
+         default=get_max_tokens("gpt-4o-mini"),
+         description="Max tokens allowed for evaluation",
+     )
+
+TSettings = TypeVar("TSettings", bound=EvaluatorSettings)
+
 
 
 class EvaluatorEntry(BaseModel):

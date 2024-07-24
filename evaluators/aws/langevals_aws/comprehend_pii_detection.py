@@ -4,6 +4,7 @@ from typing_extensions import TypedDict
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResult,
     EvaluationResultSkipped,
@@ -56,7 +57,7 @@ class AWSComprehendEntityTypes(BaseModel):
     IN_VOTER_NUMBER: bool = True
 
 
-class AWSComprehendPIIDetectionSettings(BaseModel):
+class AWSComprehendPIIDetectionSettings(EvaluatorSettings):
     entity_types: AWSComprehendEntityTypes = Field(
         default=AWSComprehendEntityTypes(),
         description="The types of PII to check for in the input.",
@@ -148,7 +149,7 @@ class AWSPIIEntityResults(TypedDict):
 class AWSComprehendPIIDetectionResult(EvaluationResult):
     score: float = Field(description="Amount of PII detected, 0 means no PII detected")
     passed: Optional[bool] = Field(
-        description="If true then no PII was detected, if false then at least one PII was detected"
+        description="If true then no PII was detected, if false then at least one PII was detected", default=None
     )
     raw_response: AWSPIIEntityResults
 
