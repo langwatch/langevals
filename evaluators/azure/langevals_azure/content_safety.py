@@ -6,6 +6,7 @@ from azure.ai.contentsafety.models import AnalyzeTextOptions
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
+    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluatorEntry,
     EvaluationResultSkipped,
@@ -25,7 +26,7 @@ class AzureContentSafetyCategories(BaseModel):
     Violence: bool = True
 
 
-class AzureContentSafetySettings(BaseModel):
+class AzureContentSafetySettings(EvaluatorSettings):
     severity_threshold: Literal[1, 2, 3, 4, 5, 6, 7] = Field(
         default=1,
         description="The minimum severity level to consider content as unsafe, from 1 to 7.",

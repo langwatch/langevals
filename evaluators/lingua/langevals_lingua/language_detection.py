@@ -4,6 +4,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluationResultSkipped,
+    EvaluatorSettings,
     SingleEvaluationResult,
 )
 from pydantic import BaseModel, Field
@@ -94,7 +95,7 @@ AvailableLanguages = Literal[
 ]
 
 
-class LinguaLanguageDetectionSettings(BaseModel):
+class LinguaLanguageDetectionSettings(EvaluatorSettings):
     check_for: Literal["input_matches_output", "output_matches_language"] = Field(
         default="input_matches_output", description="What should be checked"
     )
@@ -120,7 +121,7 @@ class LinguaLanguageDetectionRawResponse(BaseModel):
 class LinguaLanguageDetectionResult(EvaluationResult):
     score: float = Field(description="How many languages were detected")
     passed: Optional[bool] = Field(
-        description="Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language"
+        description="Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language", default=None
     )
     raw_response: LinguaLanguageDetectionRawResponse
 

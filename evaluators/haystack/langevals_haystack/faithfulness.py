@@ -9,6 +9,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluationResultSkipped,
+    EvaluatorSettings,
     SingleEvaluationResult,
     Money,
 )
@@ -27,14 +28,8 @@ class HaystackFaithfulnessEntry(EvaluatorEntry):
     contexts: list[str]
 
 
-class HaystackFaithfulnessSettings(BaseModel):
-    model: Literal[
-        "openai/gpt-3.5-turbo-0125",
-        "openai/gpt-3.5-turbo-1106",
-        "openai/gpt-4o",
-        "azure/gpt-35-turbo-1106",
-        "anthropic/claude-3-haiku-20240307",
-    ] = Field(
+class HaystackFaithfulnessSettings(EvaluatorSettings):
+    model: str = Field(
         default="azure/gpt-35-turbo-1106",
         description="The model to use for evaluation.",
     )

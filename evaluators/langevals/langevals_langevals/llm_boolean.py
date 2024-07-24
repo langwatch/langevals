@@ -5,6 +5,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -20,34 +21,12 @@ class CustomLLMBooleanEntry(EvaluatorEntry):
     contexts: Optional[list[str]] = None
 
 
-class CustomLLMBooleanSettings(BaseModel):
-    model: Literal[
-        "openai/gpt-3.5-turbo",
-        "openai/gpt-3.5-turbo-0125",
-        "openai/gpt-3.5-turbo-1106",
-        "openai/gpt-4o",
-        "openai/gpt-4-turbo",
-        "openai/gpt-4-0125-preview",
-        "openai/gpt-4-1106-preview",
-        "azure/gpt-35-turbo-1106",
-        "azure/gpt-4-turbo-2024-04-09",
-        "azure/gpt-4-1106-preview",
-        "groq/llama3-70b-8192",
-        "anthropic/claude-3-haiku-20240307",
-        "anthropic/claude-3-sonnet-20240229",
-        "anthropic/claude-3-opus-20240229",
-    ] = Field(
-        default="azure/gpt-35-turbo-1106",
-        description="The model to use for evaluation",
-    )
+class CustomLLMBooleanSettings(EvaluatorSettings):
     prompt: str = Field(
         default="You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
         description="The system prompt to use for the LLM to run the evaluation",
     )
-    max_tokens: int = Field(
-        default=8192,
-        description="The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-    )
+    max_tokens: int = 8192
 
 
 class CustomLLMBooleanResult(EvaluationResult):

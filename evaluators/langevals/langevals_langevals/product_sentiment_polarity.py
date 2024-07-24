@@ -8,19 +8,18 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
 )
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import Field
+from typing import Optional
 import re
 import dspy
 import json
 from typing import Any
 import re
 import dsp.modules.gpt3 as gpt3
-from typing import Literal
-from pydantic import BaseModel, Field
 import os
 
 
@@ -28,7 +27,7 @@ class ProductSentimentPolarityEntry(EvaluatorEntry):
     output: str
 
 
-class ProductSentimentPolaritySettings(BaseModel):
+class ProductSentimentPolaritySettings(EvaluatorSettings):
     pass
 
 
@@ -36,7 +35,7 @@ class ProductSentimentPolarityResult(EvaluationResult):
     score: float = Field(
         description="0 - very negative, 1 - subtly negative, 2 - subtly positive, 3 - very positive"
     )
-    passed: Optional[bool] = Field(description="Fails if subtly or very negative")
+    passed: Optional[bool] = Field(description="Fails if subtly or very negative", default=None)
     raw_response: str = Field("The detected sentiment polarity")
 
 

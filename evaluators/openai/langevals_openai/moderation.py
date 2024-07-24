@@ -5,6 +5,7 @@ from openai import OpenAI
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
+    EvaluatorSettings,
     SingleEvaluationResult,
     BatchEvaluationResult,
     EvaluatorEntry,
@@ -32,7 +33,7 @@ class OpenAIModerationCategories(BaseModel):
     violence_graphic: bool = True
 
 
-class OpenAIModerationSettings(BaseModel):
+class OpenAIModerationSettings(EvaluatorSettings):
     model: Literal["text-moderation-stable", "text-moderation-latest"] = Field(
         default="text-moderation-stable",
         description="The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",

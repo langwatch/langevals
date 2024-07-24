@@ -2,6 +2,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    EvaluatorSettings,
     SingleEvaluationResult,
 )
 from pydantic import BaseModel, Field
@@ -14,7 +15,7 @@ class CompetitorBlocklistEntry(EvaluatorEntry):
     input: Optional[str] = None
 
 
-class CompetitorBlocklistSettings(BaseModel):
+class CompetitorBlocklistSettings(EvaluatorSettings):
     competitors: List[str] = Field(
         default=["OpenAI", "Google", "Microsoft"],
         description="The competitors that must not be mentioned.",

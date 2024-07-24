@@ -3,6 +3,7 @@ from typing import Any, Literal, Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResult,
     EvaluationResultSkipped,
@@ -29,7 +30,7 @@ class GoogleCloudDLPInfoTypes(BaseModel):
     medical_record_number: bool = True
 
 
-class GoogleCloudDLPPIIDetectionSettings(BaseModel):
+class GoogleCloudDLPPIIDetectionSettings(EvaluatorSettings):
     info_types: GoogleCloudDLPInfoTypes = Field(
         default=GoogleCloudDLPInfoTypes(),
         description="The types of PII to check for in the input.",
@@ -45,7 +46,7 @@ class GoogleCloudDLPPIIDetectionSettings(BaseModel):
 class GoogleCloudDLPPIIDetectionResult(EvaluationResult):
     score: float = Field(description="Amount of PII detected, 0 means no PII detected")
     passed: Optional[bool] = Field(
-        description="If true then no PII was detected, if false then at least one PII was detected"
+        description="If true then no PII was detected, if false then at least one PII was detected", default=None
     )
     raw_response: dict[str, Any]
 

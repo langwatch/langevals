@@ -1,10 +1,12 @@
 import litellm
-from litellm import get_max_tokens, completion_cost
-from litellm import ModelResponse, Choices, Message
+from litellm.utils import get_max_tokens
+from litellm.cost_calculator import completion_cost
+from litellm import Choices, Message
+from litellm.files.main import ModelResponse
 from litellm.utils import trim_messages
 
-from pydantic import BaseModel, Field
-from typing import List, Optional, Literal, cast
+from pydantic import Field
+from typing import List, Optional, cast
 import os
 import json
 
@@ -12,6 +14,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -23,34 +26,11 @@ class CompetitorLLMEntry(EvaluatorEntry):
     input: Optional[str] = None
 
 
-class CompetitorLLMSettings(BaseModel):
+class CompetitorLLMSettings(EvaluatorSettings):
     name: str = Field(default="LangWatch", description="The name of your company")
     description: str = Field(
         default="We are providing an LLM observability and evaluation platform",
         description="Description of what your company is specializing at",
-    )
-    model: Literal[
-        "openai/gpt-3.5-turbo",
-        "openai/gpt-3.5-turbo-0125",
-        "openai/gpt-3.5-turbo-1106",
-        "openai/gpt-4o",
-        "openai/gpt-4-turbo",
-        "openai/gpt-4-0125-preview",
-        "openai/gpt-4-1106-preview",
-        "azure/gpt-35-turbo-1106",
-        "azure/gpt-4-turbo-2024-04-09",
-        "azure/gpt-4-1106-preview",
-        "groq/llama3-70b-8192",
-        "anthropic/claude-3-haiku-20240307",
-        "anthropic/claude-3-sonnet-20240229",
-        "anthropic/claude-3-opus-20240229",
-    ] = Field(
-        default="azure/gpt-35-turbo-1106",
-        description="The model to use for evaluation",
-    )
-    max_tokens: int = Field(
-        default=get_max_tokens("gpt-3.5-turbo-0125"),
-        description="Max tokens allowed for evaluation",
     )
 
 
