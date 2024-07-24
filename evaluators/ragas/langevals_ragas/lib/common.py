@@ -9,7 +9,6 @@ from langevals_core.base_evaluator import (
     Money,
     EvaluationResultSkipped,
     EvaluatorEntry,
-    EvaluatorSettings
 )
 from pydantic import BaseModel, Field
 from ragas import evaluate
@@ -26,6 +25,7 @@ from ragas.metrics import (
 )
 from langchain_community.callbacks import get_openai_callback
 from datasets import Dataset
+from litellm import completion_cost
 from tqdm import tqdm
 
 from langevals_ragas.lib.model_to_langchain import (
@@ -56,8 +56,22 @@ from langevals_core.utils import calculate_total_tokens
 env_vars = []
 
 
-class RagasSettings(EvaluatorSettings):
-    model: str = Field(
+class RagasSettings(BaseModel):
+    model: Literal[
+        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-3.5-turbo-0125",
+        "openai/gpt-3.5-turbo-16k",
+        "openai/gpt-4-1106-preview",
+        "openai/gpt-4-0125-preview",
+        "openai/gpt-4-1106-preview",
+        "openai/gpt-4-1106-preview",
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini",
+        "azure/gpt-35-turbo-1106",
+        "azure/gpt-35-turbo-16k",
+        "azure/gpt-4-1106-preview",
+        "anthropic/claude-3-haiku-20240307",
+    ] = Field(
         default="azure/gpt-35-turbo-16k",
         description="The model to use for evaluation.",
     )

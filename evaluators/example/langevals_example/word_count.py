@@ -2,10 +2,9 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
-    EvaluatorSettings,
     SingleEvaluationResult,
 )
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 
 # Type definition of what keys are necessary for each entry to have for the evaluator to process it, in this example
@@ -15,7 +14,7 @@ class ExampleWordCountEntry(EvaluatorEntry):
 
 
 # Generic settings for the evaluator, in this example we don't need any settings, but any fields can be added here
-class ExampleWordCountSettings(EvaluatorSettings):
+class ExampleWordCountSettings(BaseModel):
     pass
 
 

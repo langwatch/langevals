@@ -1,10 +1,8 @@
 import litellm
-from litellm.cost_calculator import completion_cost
-from litellm.utils import get_max_tokens
-from litellm import Choices, Message
-from litellm.files.main import ModelResponse
+from litellm import get_max_tokens, completion_cost
+from litellm import ModelResponse, Choices, Message
 from litellm.utils import trim_messages
-from pydantic import Field
+from pydantic import BaseModel, Field
 from typing import List, Optional, Literal, cast
 import os
 import json
@@ -13,7 +11,6 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
-    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -29,14 +26,38 @@ class QueryResolutionEntry(EvaluatorEntry):
     conversation: List[QueryResolutionConversationEntry]
 
 
-class QueryResolutionSettings(EvaluatorSettings):
-    pass # maybe specify after how many turns we should run this evaluator?
+class QueryResolutionSettings(BaseModel):
+    model: Literal[
+        "openai/gpt-3.5-turbo",
+        "openai/gpt-3.5-turbo-0125",
+        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-4-turbo",
+        "openai/gpt-4-0125-preview",
+        "openai/gpt-4-1106-preview",
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini",
+        "azure/gpt-35-turbo-1106",
+        "azure/gpt-4-turbo-2024-04-09",
+        "azure/gpt-4-1106-preview",
+        "azure/gpt-4o",
+        "groq/llama3-70b-8192",
+        "anthropic/claude-3-haiku-20240307",
+        "anthropic/claude-3-sonnet-20240229",
+        "anthropic/claude-3-opus-20240229",
+    ] = Field(
+        default="openai/gpt-4o-mini",
+        description="The model to use for evaluation",
+    )
+    max_tokens: int = Field(
+        default=get_max_tokens("gpt-3.5-turbo-0125"),
+        description="Max tokens allowed for evaluation",
+    )
 
 
 class QueryResolutionResult(EvaluationResult):
     score: float
     passed: bool = Field(default=True)
-    details: Optional[str] = Field(default=None)
+    details: Optional[str]
 
 
 class QueryResolutionEvaluator(

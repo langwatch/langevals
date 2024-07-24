@@ -3,19 +3,18 @@ from httpx import Client, Response
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
-    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluatorEntry,
     EvaluationResultSkipped,
 )
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 
 class AzureJailbreakEntry(EvaluatorEntry):
     input: str
 
 
-class AzureJailbreakSettings(EvaluatorSettings):
+class AzureJailbreakSettings(BaseModel):
     pass
 
 

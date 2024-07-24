@@ -15,7 +15,6 @@ from langevals_core.base_evaluator import (
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
-    EvaluatorSettings
 )
 
 
@@ -28,7 +27,7 @@ class AllowedTopic(BaseModel):
     description: str
 
 
-class OffTopicSettings(EvaluatorSettings):
+class OffTopicSettings(BaseModel):
     allowed_topics: List[AllowedTopic] = Field(
         default=[
             AllowedTopic(topic="simple_chat", description="Smalltalk with the user"),
@@ -38,6 +37,28 @@ class OffTopicSettings(EvaluatorSettings):
             ),
         ],
         description="The list of topics and their short descriptions that the chatbot is allowed to talk about",
+    )
+    model: Literal[
+        "openai/gpt-3.5-turbo",
+        "openai/gpt-3.5-turbo-0125",
+        "openai/gpt-3.5-turbo-1106",
+        "openai/gpt-4-turbo",
+        "openai/gpt-4-0125-preview",
+        "openai/gpt-4-1106-preview",
+        "azure/gpt-35-turbo-1106",
+        "azure/gpt-4-turbo-2024-04-09",
+        "azure/gpt-4-1106-preview",
+        "groq/llama3-70b-8192",
+        "anthropic/claude-3-haiku-20240307",
+        "anthropic/claude-3-sonnet-20240229",
+        "anthropic/claude-3-opus-20240229",
+    ] = Field(
+        default="azure/gpt-35-turbo-1106",
+        description="The model to use for evaluation",
+    )
+    max_tokens: int = Field(
+        default=get_max_tokens("gpt-3.5-turbo-0125"),
+        description="Max tokens allowed for evaluation",
     )
 
 

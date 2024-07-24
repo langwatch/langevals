@@ -17,8 +17,7 @@ def test_off_topic_evaluator():
             AllowedTopic(topic="email_query", description="Questions about emails"),
             AllowedTopic(topic="email_delete", description="Delete an email"),
             AllowedTopic(topic="email_write", description="Write an email"),
-        ],
-        model="anthropic/claude-3-opus-20240229"
+        ]
     )
     evaluator = OffTopicEvaluator(settings=settings)
     result = evaluator.evaluate(entry)

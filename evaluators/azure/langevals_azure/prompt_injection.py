@@ -3,12 +3,11 @@ from httpx import Client, Response
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
-    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluatorEntry,
     EvaluationResultSkipped,
 )
-from pydantic import Field
+from pydantic import BaseModel, Field
 import math
 
 
@@ -17,7 +16,7 @@ class AzurePromptShieldEntry(EvaluatorEntry):
     contexts: Optional[List[str]] = None
 
 
-class AzurePromptShieldSettings(EvaluatorSettings):
+class AzurePromptShieldSettings(BaseModel):
     pass
 
 

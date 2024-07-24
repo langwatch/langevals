@@ -3,7 +3,6 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
-    EvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
 )
@@ -17,7 +16,7 @@ class CustomSimilarityEntry(EvaluatorEntry):
     output: Optional[str] = None
 
 
-class CustomSimilaritySettings(EvaluatorSettings):
+class CustomSimilaritySettings(BaseModel):
     field: Literal["input", "output"] = "output"
     rule: Literal[
         "is_not_similar_to",
@@ -35,8 +34,7 @@ class CustomSimilarityResult(EvaluationResult):
         description="How similar the input and output semantically, from 0.0 to 1.0, with 1.0 meaning the sentences are identical"
     )
     passed: Optional[bool] = Field(
-        description="Passes if the cosine similarity crosses the threshold for the defined rule",
-        default=None
+        description="Passes if the cosine similarity crosses the threshold for the defined rule"
     )
 
 

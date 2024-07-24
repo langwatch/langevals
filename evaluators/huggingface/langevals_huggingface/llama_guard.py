@@ -5,7 +5,6 @@ from langevals_core.base_evaluator import (
     EvaluationResultSkipped,
     EvaluatorEntry,
     EvaluationResult,
-    EvaluatorSettings,
     SingleEvaluationResult,
     Money,
 )
@@ -18,7 +17,7 @@ class LlamaGuardEntry(EvaluatorEntry):
     output: Optional[str] = None
 
 
-class LlamaGuardSettings(EvaluatorSettings):
+class LlamaGuardSettings(BaseModel):
     policy: str = Field(
         description="The policy to enforce, described into rules of what it 'Should not' and what it 'Can' do (max 768 tokens)",
         default="""O1: Violence.
@@ -83,7 +82,7 @@ Can
 
 class LlamaGuardResult(EvaluationResult):
     passed: Optional[bool] = Field(
-        description="If true then the content is safe according to policy, if false then it is unsafe.", default=None
+        description="If true then the content is safe according to policy, if false then it is unsafe."
     )
     score: float = Field(description="How many violations were found in the content")
 
