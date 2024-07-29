@@ -78,38 +78,17 @@ export type Money = {
 export type Evaluators = {
   "huggingface/llama_guard": {
     settings: {
-      model: "cloudflare/thebloke/llamaguard-7b-awq";
-      max_tokens: number;
       policy: string;
       evaluate: "input" | "output" | "both";
+      model: "cloudflare/thebloke/llamaguard-7b-awq";
     };
   };
   "example/word_count": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
-    };
+    settings: Record<string, never>;
   };
   "openai/moderation": {
     settings: {
       model: "text-moderation-stable" | "text-moderation-latest";
-      max_tokens: number;
       categories: {
         harassment: boolean;
         harassment_threatening: boolean;
@@ -164,24 +143,6 @@ export type Evaluators = {
   };
   "langevals/competitor_blocklist": {
     settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
       competitors: string[];
     };
   };
@@ -307,26 +268,7 @@ export type Evaluators = {
     };
   };
   "langevals/product_sentiment_polarity": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
-    };
+    settings: Record<string, never>;
   };
   "langevals/query_resolution": {
     settings: {
@@ -352,24 +294,6 @@ export type Evaluators = {
   };
   "langevals/similarity": {
     settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
       field: "input" | "output";
       rule: "is_not_similar_to" | "is_similar_to";
       value: string;
@@ -381,24 +305,6 @@ export type Evaluators = {
   };
   "lingua/language_detection": {
     settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
       check_for: "input_matches_output" | "output_matches_language";
       expected_language?:
         | "AF"
@@ -482,24 +388,6 @@ export type Evaluators = {
   };
   "aws/comprehend_pii_detection": {
     settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
       entity_types: {
         BANK_ACCOUNT_NUMBER: boolean;
         BANK_ROUTING: boolean;
@@ -577,24 +465,6 @@ export type Evaluators = {
   };
   "google_cloud/dlp_pii_detection": {
     settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
       info_types: {
         phone_number: boolean;
         email_address: boolean;
@@ -615,24 +485,6 @@ export type Evaluators = {
   };
   "azure/content_safety": {
     settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
       severity_threshold: 1 | 2 | 3 | 4 | 5 | 6 | 7;
       categories: {
         Hate: boolean;
@@ -644,48 +496,10 @@ export type Evaluators = {
     };
   };
   "azure/jailbreak": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
-    };
+    settings: Record<string, never>;
   };
   "azure/prompt_injection": {
-    settings: {
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
-        | "anthropic/claude-3-opus-20240229";
-      max_tokens: number;
-    };
+    settings: Record<string, never>;
   };
   "ragas/answer_correctness": {
     settings: {
@@ -768,15 +582,6 @@ It can work both as a safety evaluator and as policy enforcement.
     requiredFields: [],
     optionalFields: ["input", "output"],
     settings: {
-      model: {
-        description:
-          "The provider to use for evaluation. Only CloudFlare AI workers is supported for now.",
-        default: "cloudflare/thebloke/llamaguard-7b-awq",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       policy: {
         description:
           "The policy to enforce, described into rules of what it 'Should not' and what it 'Can' do (max 768 tokens)",
@@ -787,6 +592,11 @@ It can work both as a safety evaluator and as policy enforcement.
         description:
           "Choose if only the user input, the LLM output, or both should be evaluated. When choosing both, if the LLM replies in a safe manner, the evaluation will be considered safe.",
         default: "input",
+      },
+      model: {
+        description:
+          "The provider to use for evaluation. Only CloudFlare AI workers is supported for now.",
+        default: "cloudflare/thebloke/llamaguard-7b-awq",
       },
     },
     result: {
@@ -809,16 +619,7 @@ This evaluator serves as a boilerplate for creating new evaluators.
     isGuardrail: false,
     requiredFields: ["output"],
     optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
+    settings: {},
     result: {
       score: {
         description: "How many words are there in the output, split by space",
@@ -841,10 +642,6 @@ including harassment, hate speech, self-harm, sexual content, and violence.
         description:
           "The model version to use, `text-moderation-latest` will be automatically upgraded over time, while `text-moderation-stable` will only be updated with advanced notice by OpenAI.",
         default: "text-moderation-stable",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
       },
       categories: {
         description: "The categories of content to check for moderation.",
@@ -910,7 +707,7 @@ Allows you to check for simple text matches or regex evaluation.
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
-        default: 4096,
+        default: 8192,
       },
       rules: {
         description:
@@ -941,14 +738,6 @@ This evaluator checks if any of the specified competitors was mentioned
     requiredFields: [],
     optionalFields: ["output", "input"],
     settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       competitors: {
         description: "The competitors that must not be mentioned.",
         default: ["OpenAI", "Google", "Microsoft"],
@@ -980,7 +769,7 @@ This evaluator use an LLM-as-judge to check if the conversation is related to co
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
-        default: 4096,
+        default: 8192,
       },
       name: {
         description: "The name of your company",
@@ -1018,7 +807,7 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
-        default: 4096,
+        default: 8192,
       },
       name: {
         description: "The name of your company",
@@ -1127,7 +916,7 @@ This evaluator checks if the user message is concerning one of the allowed topic
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
-        default: 4096,
+        default: 8192,
       },
       allowed_topics: {
         description:
@@ -1163,16 +952,7 @@ For messages about products, this evaluator checks for the nuanced sentiment dir
     isGuardrail: true,
     requiredFields: ["output"],
     optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
+    settings: {},
     result: {
       score: {
         description:
@@ -1200,7 +980,7 @@ This evaluator checks if all the user queries in the conversation were resolved.
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
-        default: 4096,
+        default: 8192,
       },
     },
     result: {},
@@ -1218,14 +998,6 @@ match on the exact text.
     requiredFields: [],
     optionalFields: ["input", "output"],
     settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       field: {
         description: undefined,
         default: "output",
@@ -1270,14 +1042,6 @@ or if it's in a specific expected language.
     requiredFields: ["input", "output"],
     optionalFields: [],
     settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       check_for: {
         description: "What should be checked",
         default: "input_matches_output",
@@ -1319,14 +1083,6 @@ social security numbers. It allows customization of the detection threshold and 
     requiredFields: [],
     optionalFields: ["input", "output"],
     settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       entity_types: {
         description: "The types of PII to check for in the input.",
         default: {
@@ -1406,14 +1162,6 @@ social security numbers. It allows customization of the detection threshold and 
     requiredFields: [],
     optionalFields: ["input", "output"],
     settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       info_types: {
         description: "The types of PII to check for in the input.",
         default: {
@@ -1457,14 +1205,6 @@ threshold and the specific categories to check.
     requiredFields: [],
     optionalFields: ["input", "output"],
     settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
       severity_threshold: {
         description:
           "The minimum severity level to consider content as unsafe, from 1 to 7.",
@@ -1502,16 +1242,7 @@ This evaluator checks for jailbreak-attempt in the input using Azure's Content S
     isGuardrail: true,
     requiredFields: ["input"],
     optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
+    settings: {},
     result: {
       passed: {
         description:
@@ -1530,16 +1261,7 @@ This evaluator checks for prompt injection attempt in the input and the contexts
     isGuardrail: true,
     requiredFields: ["input"],
     optionalFields: ["contexts"],
-    settings: {
-      model: {
-        description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
-      },
-      max_tokens: {
-        description: "Max tokens allowed for evaluation",
-        default: 4096,
-      },
-    },
+    settings: {},
     result: {
       passed: {
         description:
