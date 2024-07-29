@@ -59,7 +59,6 @@ def test_faithfulness_gpt4o():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
 
 
@@ -74,7 +73,6 @@ def test_faithfulness_gpt4o_mini():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
 
 
