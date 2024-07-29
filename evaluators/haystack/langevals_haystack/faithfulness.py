@@ -3,18 +3,14 @@ import os
 # Haystack telemetry breaks for AWS lambdas because it tries to write to home folder which is read-only
 os.environ["HAYSTACK_TELEMETRY_ENABLED"] = "false"
 
-from typing import Literal
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
     EvaluationResultSkipped,
-    EvaluatorSettings,
     SingleEvaluationResult,
-    Money,
-    LLMEvaluatorSettings
+    LLMEvaluatorSettings,
 )
-from pydantic import BaseModel, Field
 from haystack.components.evaluators import FaithfulnessEvaluator
 
 from langevals_haystack.lib.common import (
@@ -30,14 +26,7 @@ class HaystackFaithfulnessEntry(EvaluatorEntry):
 
 
 class HaystackFaithfulnessSettings(LLMEvaluatorSettings):
-    model: str = Field(
-        default="azure/gpt-35-turbo-1106",
-        description="The model to use for evaluation.",
-    )
-    max_tokens: int = Field(
-        default=2048,
-        description="The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-    )
+    pass
 
 
 class HaystackFaithfulnessResult(EvaluationResult):

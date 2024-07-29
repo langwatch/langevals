@@ -6,12 +6,12 @@ import warnings
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
-    LLMEvaluatorSettings,
+    EvaluatorSettings,
     Money,
     EvaluationResultSkipped,
-    EvaluatorEntry
+    EvaluatorEntry,
 )
-from pydantic import BaseModel, Field
+from pydantic import Field
 from ragas import evaluate
 from ragas.metrics.base import Metric
 from ragas.llms import LangchainLLMWrapper
@@ -38,34 +38,34 @@ with warnings.catch_warnings():
     from tqdm.notebook import tqdm as tqdm_notebook
 from functools import partialmethod
 
-import json
-import re
 from typing import List, Optional
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import faithfulness, Faithfulness
 from ragas.llms import LangchainLLMWrapper
-from ragas.llms.prompt import PromptValue
-from langchain_core.callbacks import Callbacks
-from pydantic import BaseModel, Field
-import litellm
-from langchain.schema.output import LLMResult
-from langchain_core.outputs.generation import Generation
+from pydantic import Field
 from langevals_core.utils import calculate_total_tokens
 
 env_vars = []
 
 
-class RagasSettings(LLMEvaluatorSettings):
-    model: str = Field(
-        default="azure/gpt-35-turbo-16k",
+class RagasSettings(EvaluatorSettings):
+    model: Literal[
+        "openai/gpt-3.5-turbo-16k",
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini",
+        "azure/gpt-35-turbo-16k",
+        "azure/gpt-4o",
+        "anthropic/claude-3-5-sonnet-20240620",
+    ] = Field(
+        default="openai/gpt-3.5-turbo-16k",
         description="The model to use for evaluation.",
     )
     embeddings_model: Literal[
         "openai/text-embedding-ada-002",
         "azure/text-embedding-ada-002",
     ] = Field(
-        default="azure/text-embedding-ada-002",
+        default="openai/text-embedding-ada-002",
         description="The model to use for embeddings.",
     )
     max_tokens: int = Field(

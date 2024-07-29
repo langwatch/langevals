@@ -106,7 +106,23 @@ export type Evaluators = {
   };
   "haystack/faithfulness": {
     settings: {
-      model: string;
+      model:
+        | "openai/gpt-3.5-turbo"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "openai/gpt-4-1106-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4o"
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "anthropic/claude-3-haiku-20240307"
+        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
     };
   };
@@ -503,65 +519,107 @@ export type Evaluators = {
   };
   "ragas/answer_correctness": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
   "ragas/answer_relevancy": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
   "ragas/context_precision": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
   "ragas/context_recall": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
   "ragas/context_relevancy": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
   "ragas/context_utilization": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
   "ragas/faithfulness": {
     settings: {
-      model: string;
-      max_tokens: number;
+      model:
+        | "openai/gpt-3.5-turbo-16k"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "azure/gpt-35-turbo-16k"
+        | "azure/gpt-4o"
+        | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
         | "azure/text-embedding-ada-002";
+      max_tokens: number;
     };
   };
 };
@@ -679,13 +737,12 @@ This evaluator assesses the extent to which the generated answer is consistent w
     optionalFields: [],
     settings: {
       model: {
-        description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-1106",
+        description: "The model to use for evaluation",
+        default: "openai/gpt-4o-mini",
       },
       max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
+        description: "Max tokens allowed for evaluation",
+        default: 8192,
       },
     },
     result: {},
@@ -1283,16 +1340,16 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
@@ -1311,16 +1368,16 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
@@ -1339,16 +1396,16 @@ This metric evaluates whether all of the ground-truth relevant items present in 
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
@@ -1367,16 +1424,16 @@ This evaluator measures the extent to which the retrieved context aligns with th
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
@@ -1395,16 +1452,16 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
@@ -1423,16 +1480,16 @@ This metric evaluates whether all of the output relevant items present in the co
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
@@ -1451,16 +1508,16 @@ This evaluator assesses the extent to which the generated answer is consistent w
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "azure/gpt-35-turbo-16k",
+        default: "openai/gpt-3.5-turbo-16k",
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
       },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "azure/text-embedding-ada-002",
       },
     },
     result: {},
