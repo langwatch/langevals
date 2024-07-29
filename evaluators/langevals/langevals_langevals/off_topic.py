@@ -1,7 +1,8 @@
 import litellm
-from litellm import get_max_tokens, completion_cost
-from litellm import ModelResponse, Choices, Message
-from litellm.utils import trim_messages
+from litellm import Choices, Message
+from litellm.files.main import ModelResponse
+from litellm.cost_calculator import completion_cost
+from litellm.utils import trim_messages, get_max_tokens
 
 from pydantic import BaseModel, Field
 from typing import Optional, List, Literal, cast
@@ -12,6 +13,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -28,7 +30,7 @@ class AllowedTopic(BaseModel):
     description: str
 
 
-class OffTopicSettings(EvaluatorSettings):
+class OffTopicSettings(LLMEvaluatorSettings):
     allowed_topics: List[AllowedTopic] = Field(
         default=[
             AllowedTopic(topic="simple_chat", description="Smalltalk with the user"),

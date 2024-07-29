@@ -12,7 +12,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
-    EvaluatorSettings,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -24,7 +24,7 @@ class CompetitorLLMFunctionCallEntry(EvaluatorEntry):
     input: Optional[str] = None
 
 
-class CompetitorLLMFunctionCallSettings(EvaluatorSettings):
+class CompetitorLLMFunctionCallSettings(LLMEvaluatorSettings):
     name: str = Field(default="LangWatch", description="The name of your company")
     description: str = Field(
         default="We are providing an LLM observability and evaluation platform",
@@ -34,6 +34,7 @@ class CompetitorLLMFunctionCallSettings(EvaluatorSettings):
         default=["OpenAI", "Google", "Microsoft"],
         description="The competitors that must not be mentioned.",
     )
+    
 
 
 class CompetitorLLMFunctionCallResult(EvaluationResult):

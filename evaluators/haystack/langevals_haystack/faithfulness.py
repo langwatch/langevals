@@ -12,6 +12,7 @@ from langevals_core.base_evaluator import (
     EvaluatorSettings,
     SingleEvaluationResult,
     Money,
+    LLMEvaluatorSettings
 )
 from pydantic import BaseModel, Field
 from haystack.components.evaluators import FaithfulnessEvaluator
@@ -28,7 +29,7 @@ class HaystackFaithfulnessEntry(EvaluatorEntry):
     contexts: list[str]
 
 
-class HaystackFaithfulnessSettings(EvaluatorSettings):
+class HaystackFaithfulnessSettings(LLMEvaluatorSettings):
     model: str = Field(
         default="azure/gpt-35-turbo-1106",
         description="The model to use for evaluation.",

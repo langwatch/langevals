@@ -6,13 +6,16 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
 )
 from pydantic import BaseModel, Field
 import litellm
-from litellm import ModelResponse, Choices, Message, completion_cost
+from litellm import Choices, Message
+from litellm.files.main import ModelResponse
+from litellm.cost_calculator import completion_cost
 
 
 class CustomLLMBooleanEntry(EvaluatorEntry):
@@ -21,7 +24,7 @@ class CustomLLMBooleanEntry(EvaluatorEntry):
     contexts: Optional[list[str]] = None
 
 
-class CustomLLMBooleanSettings(EvaluatorSettings):
+class CustomLLMBooleanSettings(LLMEvaluatorSettings):
     prompt: str = Field(
         default="You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
         description="The system prompt to use for the LLM to run the evaluation",

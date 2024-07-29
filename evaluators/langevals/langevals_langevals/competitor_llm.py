@@ -15,6 +15,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -26,7 +27,7 @@ class CompetitorLLMEntry(EvaluatorEntry):
     input: Optional[str] = None
 
 
-class CompetitorLLMSettings(EvaluatorSettings):
+class CompetitorLLMSettings(LLMEvaluatorSettings):
     name: str = Field(default="LangWatch", description="The name of your company")
     description: str = Field(
         default="We are providing an LLM observability and evaluation platform",

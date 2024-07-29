@@ -6,10 +6,10 @@ import warnings
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
+    LLMEvaluatorSettings,
     Money,
     EvaluationResultSkipped,
-    EvaluatorEntry,
-    EvaluatorSettings
+    EvaluatorEntry
 )
 from pydantic import BaseModel, Field
 from ragas import evaluate
@@ -56,7 +56,7 @@ from langevals_core.utils import calculate_total_tokens
 env_vars = []
 
 
-class RagasSettings(EvaluatorSettings):
+class RagasSettings(LLMEvaluatorSettings):
     model: str = Field(
         default="azure/gpt-35-turbo-16k",
         description="The model to use for evaluation.",

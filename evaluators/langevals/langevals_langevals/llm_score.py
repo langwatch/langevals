@@ -5,6 +5,7 @@ from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -12,7 +13,9 @@ from langevals_core.base_evaluator import (
 )
 from pydantic import Field
 import litellm
-from litellm import ModelResponse, Choices, Message, completion_cost
+from litellm import Choices, Message
+from litellm.files.main import ModelResponse
+from litellm.cost_calculator import completion_cost
 
 
 
@@ -22,7 +25,7 @@ class CustomLLMScoreEntry(EvaluatorEntry):
     contexts: Optional[list[str]] = None
 
 
-class CustomLLMScoreSettings(EvaluatorSettings):
+class CustomLLMScoreSettings(LLMEvaluatorSettings):
     prompt: str = Field(
         default="You are an LLM evaluator. Please score from 0.0 to 1.0 how likely the user is to be satisfied with this answer, from 0.0 being not satisfied at all to 1.0 being completely satisfied",
         description="The system prompt to use for the LLM to run the evaluation",

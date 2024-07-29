@@ -14,6 +14,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
@@ -29,7 +30,7 @@ class QueryResolutionEntry(EvaluatorEntry):
     conversation: List[QueryResolutionConversationEntry]
 
 
-class QueryResolutionSettings(EvaluatorSettings):
+class QueryResolutionSettings(LLMEvaluatorSettings):
     pass # maybe specify after how many turns we should run this evaluator?
 
 

@@ -5,6 +5,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
 )
 from pydantic import BaseModel, Field
@@ -26,7 +27,7 @@ class CustomBasicRule(BaseModel):
     value: str
 
 
-class CustomBasicSettings(EvaluatorSettings):
+class CustomBasicSettings(LLMEvaluatorSettings):
     rules: list[CustomBasicRule] = Field(default=[
         CustomBasicRule(field="output", rule="not_contains", value="artificial intelligence"),
     ], description="List of rules to check, the message must pass all of them")

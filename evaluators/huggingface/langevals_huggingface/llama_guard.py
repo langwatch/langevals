@@ -6,6 +6,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
+    LLMEvaluatorSettings,
     SingleEvaluationResult,
     Money,
 )
