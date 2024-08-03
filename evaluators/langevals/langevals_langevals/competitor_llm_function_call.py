@@ -34,7 +34,7 @@ class CompetitorLLMFunctionCallSettings(LLMEvaluatorSettings):
         default=["OpenAI", "Google", "Microsoft"],
         description="The competitors that must not be mentioned.",
     )
-    
+
 
 
 class CompetitorLLMFunctionCallResult(EvaluationResult):
@@ -77,10 +77,10 @@ class CompetitorLLMFunctionCallEvaluator(
         for competitor in self.settings.competitors:
             competitors += competitor + "\n"
         litellm_model = model if vendor == "openai" and model != "gpt-4o" else f"{vendor}/{model}"
-        prompt = f"""Remember that you are an advanced competitor detection system, developed by {your_company_description}. 
-                    Your task is to identify mentions of competitors in any given message. 
+        prompt = f"""Remember that you are an advanced competitor detection system, developed by {your_company_description}.
+                    Your task is to identify mentions of competitors in any given message.
                     The competitors specialize in the same field as your company and are listed below:
-                    
+
                     Competitors:
                     {competitors}
 
@@ -158,9 +158,6 @@ class CompetitorLLMFunctionCallEvaluator(
         confidence = arguments["confidence"] if "confidence" in arguments else 1
         reasoning = arguments["reasoning"] if "reasoning" in arguments else "No reasoning."
         print(reasoning)
-        # Temporary fix for gpt-4o
-        if "gpt-4o" in (response.model or ""):
-            response.model = "openai/gpt-4-turbo"
         cost = completion_cost(completion_response=response, prompt=prompt)
         details = None
         if not passed:

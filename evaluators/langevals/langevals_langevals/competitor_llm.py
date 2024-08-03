@@ -153,9 +153,6 @@ class CompetitorLLMEvaluator(
         passed = not arguments["competitor_mentioned"] if "competitor_mentioned" in arguments else True
         confidence = arguments["confidence"] if "confidence" in arguments else 1
         reasoning = arguments["reasoning"] if "reasoning" in arguments else "No reasoning."
-        # Temporary fix for gpt-4o
-        if "gpt-4o" in (response.model or ""):
-            response.model = "openai/gpt-4-turbo"
         cost = completion_cost(completion_response=response, prompt=prompt)
         details = None
         if not passed:

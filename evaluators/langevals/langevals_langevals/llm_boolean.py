@@ -130,9 +130,6 @@ class CustomLLMBooleanEvaluator(
         arguments = json.loads(
             cast(Message, choice.message).tool_calls[0].function.arguments
         )
-        # Temporary fix for gpt-4o
-        if "gpt-4o" in (response.model or ""):
-            response.model = "openai/gpt-4-turbo"
         cost = completion_cost(completion_response=response)
 
         return CustomLLMBooleanResult(
