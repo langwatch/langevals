@@ -2,8 +2,9 @@ import dotenv
 
 dotenv.load_dotenv()
 
+from langevals_core.base_evaluator import ConversationEntry
+
 from langevals_langevals.query_resolution import (
-    QueryResolutionConversationEntry,
     QueryResolutionEntry,
     QueryResolutionSettings,
     QueryResolutionResult,
@@ -12,14 +13,12 @@ from langevals_langevals.query_resolution import (
 
 
 def test_query_resolution_conversation_evaluator_pass_for_simple_greetings():
-    response1 = QueryResolutionConversationEntry(
+    response1 = ConversationEntry(
         input="Hey, how are you?",
         output="Hello, I am an assistant and I don't have feelings",
     )
     conversation = QueryResolutionEntry(conversation=[response1])
-    settings = QueryResolutionSettings(
-        model="openai/gpt-4o-mini", max_tokens=10000
-    )
+    settings = QueryResolutionSettings(model="openai/gpt-4o-mini", max_tokens=10000)
     evaluator = QueryResolutionEvaluator(settings=settings)
     result = evaluator.evaluate(conversation)
 
@@ -30,18 +29,16 @@ def test_query_resolution_conversation_evaluator_pass_for_simple_greetings():
 
 
 def test_query_resolution_conversation_evaluator_pass():
-    response1 = QueryResolutionConversationEntry(
+    response1 = ConversationEntry(
         input="Hey, how are you?",
         output="Hello, I am an assistant and I don't have feelings",
     )
-    response2 = QueryResolutionConversationEntry(
+    response2 = ConversationEntry(
         input="Okay, is there a president in the Netherlands? Also, tell me what is the system of government in the Netherlands?",
         output="There is no president in the Netherlands. The system of government is constitutional monarchy.",
     )
     conversation = QueryResolutionEntry(conversation=[response1, response2])
-    settings = QueryResolutionSettings(
-        model="openai/gpt-4o-mini", max_tokens=10000
-    )
+    settings = QueryResolutionSettings(model="openai/gpt-4o-mini", max_tokens=10000)
     evaluator = QueryResolutionEvaluator(settings=settings)
     result = evaluator.evaluate(conversation)
 
@@ -52,18 +49,16 @@ def test_query_resolution_conversation_evaluator_pass():
 
 
 def test_query_resolution_conversation_evaluator_fail():
-    response1 = QueryResolutionConversationEntry(
+    response1 = ConversationEntry(
         input="Hey, how are you?",
         output="Hello, I am an assistant and I don't have feelings",
     )
-    response2 = QueryResolutionConversationEntry(
+    response2 = ConversationEntry(
         input="Okay, is there a president in the Netherlands? Also, what equals 2 + 2? How many paws does a standard dog have?",
         output="There is no president in the Netherlands.",
     )
     conversation = QueryResolutionEntry(conversation=[response1, response2])
-    settings = QueryResolutionSettings(
-        model="openai/gpt-4o-mini", max_tokens=10000
-    )
+    settings = QueryResolutionSettings(model="openai/gpt-4o-mini", max_tokens=10000)
     evaluator = QueryResolutionEvaluator(settings=settings)
     result = evaluator.evaluate(conversation)
 
@@ -74,14 +69,12 @@ def test_query_resolution_conversation_evaluator_fail():
 
 
 def test_query_resolution_conversation_evaluator_fails_with_i_dont_know():
-    response1 = QueryResolutionConversationEntry(
+    response1 = ConversationEntry(
         input="What time is it?",
         output="Sorry, I don't have any information about the current time",
     )
     conversation = QueryResolutionEntry(conversation=[response1])
-    settings = QueryResolutionSettings(
-        model="openai/gpt-4o-mini", max_tokens=10000
-    )
+    settings = QueryResolutionSettings(model="openai/gpt-4o-mini", max_tokens=10000)
     evaluator = QueryResolutionEvaluator(settings=settings)
     result = evaluator.evaluate(conversation)
 
@@ -92,12 +85,10 @@ def test_query_resolution_conversation_evaluator_fails_with_i_dont_know():
 
 
 def test_product_sentiment_polarity_evaluator_skipped_for_non_product_related_outputs():
-    response1 = QueryResolutionConversationEntry(input="", output="")
-    response2 = QueryResolutionConversationEntry(input="", output="")
+    response1 = ConversationEntry(input="", output="")
+    response2 = ConversationEntry(input="", output="")
     conversation = QueryResolutionEntry(conversation=[response1, response2])
-    settings = QueryResolutionSettings(
-        model="openai/gpt-4o-mini", max_tokens=10000
-    )
+    settings = QueryResolutionSettings(model="openai/gpt-4o-mini", max_tokens=10000)
     evaluator = QueryResolutionEvaluator(settings=settings)
     result = evaluator.evaluate(conversation)
 

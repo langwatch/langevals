@@ -12,6 +12,7 @@ import json
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
+    ConversationEntry,
     EvaluationResult,
     EvaluatorSettings,
     LLMEvaluatorSettings,
@@ -21,13 +22,8 @@ from langevals_core.base_evaluator import (
 )
 
 
-class QueryResolutionConversationEntry(EvaluatorEntry):
-    input: str
-    output: str
-
-
 class QueryResolutionEntry(EvaluatorEntry):
-    conversation: List[QueryResolutionConversationEntry]
+    conversation: List[ConversationEntry]
 
 
 class QueryResolutionSettings(LLMEvaluatorSettings):

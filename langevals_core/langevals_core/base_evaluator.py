@@ -28,10 +28,13 @@ EvalCategories = Literal[
     "quality", "rag", "safety", "policy", "other", "custom", "similarity"
 ]
 
+
 class EvaluatorSettings(BaseModel):
-     pass
+    pass
+
 
 TSettings = TypeVar("TSettings", bound=EvaluatorSettings)
+
 
 class LLMEvaluatorSettings(EvaluatorSettings):
     model: Literal[
@@ -60,6 +63,12 @@ class LLMEvaluatorSettings(EvaluatorSettings):
         description="Max tokens allowed for evaluation",
     )
 
+
+class ConversationEntry(BaseModel):
+    input: str = Field(default="")
+    output: str = Field(default="")
+
+
 class EvaluatorEntry(BaseModel):
     """
     Entry datapoint for an evaluator, it should contain all the necessary information for the evaluator to run.
@@ -78,7 +87,7 @@ class EvaluatorEntry(BaseModel):
         super().__init_subclass__(**kwargs)  # Always call super()!
 
         required_fields_types = {
-            "conversation": [EvaluatorEntry, Optional[EvaluatorEntry]],
+            "conversation": [ConversationEntry, Optional[ConversationEntry]],
             "input": [str, Optional[str]],
             "output": [str, Optional[str]],
             "contexts": [
