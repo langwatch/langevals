@@ -82,6 +82,11 @@ for evaluator_name, evaluator_package in evaluators.items():
         create_evaluator_routes(evaluator_cls)
 
 
+@app.get("/healthcheck")
+async def healthcheck():
+    return {"status": "healthy"}
+
+
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):
     raise HTTPException(
