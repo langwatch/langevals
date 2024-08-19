@@ -31,7 +31,6 @@ def test_query_resolution_conversation_evaluator_pass_for_simple_greetings():
 def test_query_resolution_conversation_evaluator_pass():
     response1 = ConversationEntry(
         input="Hey, how are you?",
-        output="Hello, I am an assistant and I don't have feelings",
     )
     response2 = ConversationEntry(
         input="Okay, is there a president in the Netherlands? Also, tell me what is the system of government in the Netherlands?",
