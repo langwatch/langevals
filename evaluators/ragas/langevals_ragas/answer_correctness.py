@@ -4,7 +4,7 @@ from langevals_core.base_evaluator import (
     SingleEvaluationResult,
     EvaluationResultSkipped,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import RagasEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasAnswerCorrectnessEntry(EvaluatorEntry):
@@ -14,7 +14,7 @@ class RagasAnswerCorrectnessEntry(EvaluatorEntry):
 
 
 class RagasAnswerCorrectnessEvaluator(
-    BaseEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasResult]
+    RagasEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasResult]
 ):
     """
     This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better Correctness.

@@ -3,6 +3,7 @@ import os
 from abc import ABC
 import traceback
 from typing import (
+    Callable,
     ClassVar,
     Generic,
     List,
@@ -19,7 +20,7 @@ from litellm.utils import get_max_tokens
 from pydantic import BaseModel, ConfigDict, Field
 import pandas as pd
 from tqdm.auto import tqdm
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, as_completed, wait
 from langevals_core.azure_patch import patch_litellm
 
 patch_litellm()
@@ -48,11 +49,12 @@ class LLMEvaluatorSettings(EvaluatorSettings):
         "openai/gpt-4-1106-preview",
         "azure/gpt-35-turbo-1106",
         "azure/gpt-4o",
+        "azure/gpt-4o-mini",
         "azure/gpt-4-turbo-2024-04-09",
         "azure/gpt-4-1106-preview",
         "groq/llama3-70b-8192",
         "anthropic/claude-3-haiku-20240307",
-        "anthropic/claude-3-sonnet-20240229",
+        "anthropic/claude-3-5-sonnet-20240620",
         "anthropic/claude-3-opus-20240229",
     ] = Field(
         default="openai/gpt-4o-mini",
@@ -277,21 +279,40 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
                 ),
             )
 
-    def evaluate_batch(self, data: List[TEntry], index=0) -> BatchEvaluationResult:
+    def evaluate_batch(
+        self,
+        data: List[TEntry],
+        index=0,
+        max_evaluations_in_parallel=50,
+        _executor_ref: Optional[Callable[[ThreadPoolExecutor], None]] = None,
+    ) -> BatchEvaluationResult:
         results: list[SingleEvaluationResult] = [
             EvaluationResultSkipped(details="not processed")
         ] * len(data)
-        # Use max_workers=None to use as many workers as there are CPUs
-        with ThreadPoolExecutor(max_workers=50) as executor:
+        with ThreadPoolExecutor(max_workers=max_evaluations_in_parallel) as executor:
             future_to_index = {
                 executor.submit(self._evaluate_entry, entry): idx
                 for idx, entry in enumerate(data)
             }
 
+            if _executor_ref is not None:
+                _executor_ref(executor)
+
+            not_done = list(future_to_index.keys())
             with tqdm(total=len(future_to_index), position=index) as progress:
-                for future in as_completed(future_to_index):
-                    idx = future_to_index[future]
-                    results[idx] = future.result()
-                    progress.update(1)
+                try:
+                    while not_done:
+                        if hasattr(
+                            executor, "interrupted"
+                        ) and executor.__getattribute__("interrupted"):
+                            raise KeyboardInterrupt()
+                        done, not_done = wait(not_done, timeout=0.1, return_when=FIRST_COMPLETED)
+                        for future in done:
+                            idx = future_to_index[future]
+                            results[idx] = future.result()
+                            progress.update(1)
+                except KeyboardInterrupt:
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    raise
 
         return results

@@ -3,7 +3,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import RagasEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasContextPrecisionEntry(EvaluatorEntry):
@@ -13,7 +13,7 @@ class RagasContextPrecisionEntry(EvaluatorEntry):
 
 
 class RagasContextPrecisionEvaluator(
-    BaseEvaluator[RagasContextPrecisionEntry, RagasSettings, RagasResult]
+    RagasEvaluator[RagasContextPrecisionEntry, RagasSettings, RagasResult]
 ):
     """
     This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.

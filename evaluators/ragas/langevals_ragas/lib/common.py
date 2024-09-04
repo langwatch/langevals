@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 import math
 import os
+import time
 from typing import List, Literal, Optional
 import warnings
 from langevals_core.base_evaluator import (
@@ -10,6 +11,9 @@ from langevals_core.base_evaluator import (
     Money,
     EvaluationResultSkipped,
     EvaluatorEntry,
+    TEntry,
+    TResult,
+    TSettings,
 )
 from pydantic import Field
 from ragas import evaluate
@@ -56,6 +60,7 @@ class RagasSettings(EvaluatorSettings):
         "openai/gpt-4o-mini",
         "azure/gpt-35-turbo-16k",
         "azure/gpt-4o",
+        "azure/gpt-4o-mini",
         "anthropic/claude-3-5-sonnet-20240620",
     ] = Field(
         default="openai/gpt-3.5-turbo-16k",
@@ -82,6 +87,18 @@ class _GenericEvaluatorEntry(EvaluatorEntry):
     input: Optional[str]
     output: Optional[str]
     contexts: Optional[List[str]]
+
+
+class RagasEvaluator(BaseEvaluator[TEntry, TSettings, TResult]):
+    def _evaluate_entry(self, entry):
+        disable_tqdm()
+        return super()._evaluate_entry(entry)
+
+    def evaluate_batch(self, *args, **kwargs):
+        restore_tqdm()
+        results = super().evaluate_batch(*args, **kwargs)
+        restore_tqdm()
+        return results
 
 
 def evaluate_ragas(
@@ -150,8 +167,7 @@ def evaluate_ragas(
     )
 
     with get_openai_callback() as cb:
-        with disable_tqdm():
-            result = evaluate(dataset, metrics=[ragas_metric])
+        result = evaluate(dataset, metrics=[ragas_metric])
 
         score = result[metric]
 
@@ -168,15 +184,24 @@ def evaluate_ragas(
     )
 
 
+_original_tqdm_init = tqdm.__init__
+_original_tqdm_notebook_init = tqdm_notebook.__init__
+_tqdm_disabled_once = False
+
+
 # Hack to disable tqdm output from Ragas and use the one from langevals instead
-@contextmanager
 def disable_tqdm():
-    prev_init = tqdm.__init__
-    prev_init_notebook = tqdm_notebook.__init__
+    global _tqdm_disabled_once
+    if not _tqdm_disabled_once:
+        time.sleep(0.1)
+        _tqdm_disabled_once = True
     tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)  # type: ignore
     tqdm_notebook.__init__ = partialmethod(tqdm_notebook.__init__, disable=True)  # type: ignore
 
-    yield
 
-    tqdm.__init__ = prev_init
-    tqdm_notebook.__init__ = prev_init_notebook
+def restore_tqdm():
+    global _tqdm_disabled_once
+    _tqdm_disabled_once = False
+
+    tqdm.__init__ = _original_tqdm_init
+    tqdm_notebook.__init__ = _original_tqdm_notebook_init

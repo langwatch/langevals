@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, as_completed, wait
 from typing import Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
@@ -78,20 +78,43 @@ class EvaluationResultSet(BaseModel):
 
 # TODO: docs, and auto-generated docs from evaluators
 def evaluate(
-    entries: pd.DataFrame, evaluators: list[BaseEvaluator]
+    entries: pd.DataFrame,
+    evaluators: list[BaseEvaluator],
+    max_evaluations_in_parallel: int = 50,
+    max_evaluators_in_parallel: int = 5,
 ) -> EvaluationResultSet:
     entries_ = _pandas_to_generic_entries(entries)
     result_set: list[BatchEvaluationResult] = [[]] * len(evaluators)
 
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    child_executor: Optional[ThreadPoolExecutor] = None
+
+    def set_child_executor(executor: ThreadPoolExecutor):
+        nonlocal child_executor
+        child_executor = executor
+
+    with ThreadPoolExecutor(max_workers=max_evaluators_in_parallel) as executor:
         future_to_index = {
-            executor.submit(evaluator.evaluate_batch, entries_): idx
+            executor.submit(
+                evaluator.evaluate_batch,
+                entries_,
+                max_evaluations_in_parallel=max_evaluations_in_parallel,
+                _executor_ref=set_child_executor,
+            ): idx
             for idx, evaluator in enumerate(evaluators)
         }
 
-        for future in as_completed(future_to_index):
-            idx = future_to_index[future]
-            result_set[idx] = future.result()
+        not_done = list(future_to_index.keys())
+        try:
+            while not_done:
+                done, not_done = wait(not_done, timeout=0.1, return_when=FIRST_COMPLETED)
+                for future in done:
+                    idx = future_to_index[future]
+                    result_set[idx] = future.result()
+        except KeyboardInterrupt:
+            executor.shutdown(wait=False, cancel_futures=True)
+            if child_executor is not None:
+                child_executor.__setattr__("interrupted", True)
+            raise
 
     return EvaluationResultSet(
         entries=entries_, evaluators=evaluators, results=result_set
