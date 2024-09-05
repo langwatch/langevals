@@ -3,7 +3,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import RagasEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasAnswerRelevancyEntry(EvaluatorEntry):
@@ -12,7 +12,7 @@ class RagasAnswerRelevancyEntry(EvaluatorEntry):
 
 
 class RagasAnswerRelevancyEvaluator(
-    RagasEvaluator[RagasAnswerRelevancyEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasAnswerRelevancyEntry, RagasSettings, RagasResult]
 ):
     """
     This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.

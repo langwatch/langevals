@@ -55,7 +55,7 @@ class HaystackFaithfulnessEvaluator(
         questions = [entry.input]
         contexts = [entry.contexts]
         predicted_answers = [entry.output]
-        evaluator = FaithfulnessEvaluator()
+        evaluator = FaithfulnessEvaluator(progress_bar=False)
 
         total_tokens = calculate_total_tokens(self.settings.model, entry)
         max_tokens = min(self.settings.max_tokens, 16384)

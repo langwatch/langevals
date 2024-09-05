@@ -9,20 +9,24 @@ from typing import (
     List,
     Literal,
     Optional,
-    Type,
     TypeVar,
     Union,
-    get_args,
     get_type_hints,
 )
-from litellm.utils import get_max_tokens
 
 from pydantic import BaseModel, ConfigDict, Field
-import pandas as pd
-from tenacity import Retrying, retry, stop_after_attempt, wait_exponential
-from tqdm.auto import tqdm
-from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, as_completed, wait
+from tenacity import Retrying, stop_after_attempt
+from tqdm.auto import tqdm as tqdm_auto
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from langevals_core.azure_patch import patch_litellm
+
+import time
+import warnings
+from tqdm import tqdm
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from tqdm.notebook import tqdm as tqdm_notebook
+from functools import partialmethod
 
 patch_litellm()
 
@@ -268,7 +272,8 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
-    def _evaluate_entry(self, entry, retries=0):
+    def _evaluate_entry(self, entry, retries=0, restore_tqdm=True):
+        _disable_tqdm()
         try:
             retryer = Retrying(stop=stop_after_attempt(retries), reraise=True)
             return retryer(self.evaluate, entry)
@@ -280,6 +285,9 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
                     traceback.TracebackException.from_exception(exception).format()
                 ),
             )
+        finally:
+            if restore_tqdm:
+                _restore_tqdm()
 
     def evaluate_batch(
         self,
@@ -289,12 +297,15 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         retries=3,
         _executor_ref: Optional[Callable[[ThreadPoolExecutor], None]] = None,
     ) -> BatchEvaluationResult:
+        _restore_tqdm()
         results: list[SingleEvaluationResult] = [
             EvaluationResultSkipped(details="not processed")
         ] * len(data)
         with ThreadPoolExecutor(max_workers=max_evaluations_in_parallel) as executor:
             future_to_index = {
-                executor.submit(self._evaluate_entry, entry, retries): idx
+                executor.submit(
+                    self._evaluate_entry, entry, retries, restore_tqdm=False
+                ): idx
                 for idx, entry in enumerate(data)
             }
 
@@ -302,7 +313,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
                 _executor_ref(executor)
 
             not_done = list(future_to_index.keys())
-            with tqdm(total=len(future_to_index), position=index) as progress:
+            with tqdm_auto(total=len(future_to_index), position=index) as progress:
                 try:
                     while not_done:
                         if hasattr(
@@ -320,4 +331,28 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
                     executor.shutdown(wait=False, cancel_futures=True)
                     raise
 
+        _restore_tqdm()
         return results
+
+
+_original_tqdm_init = tqdm.__init__
+_original_tqdm_notebook_init = tqdm_notebook.__init__
+_tqdm_disabled_once = False
+
+
+# Hack to disable tqdm output from Ragas and other libraries and use the one from langevals instead
+def _disable_tqdm():
+    global _tqdm_disabled_once
+    if not _tqdm_disabled_once:
+        time.sleep(0.1)
+        _tqdm_disabled_once = True
+    tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)  # type: ignore
+    tqdm_notebook.__init__ = partialmethod(tqdm_notebook.__init__, disable=True)  # type: ignore
+
+
+def _restore_tqdm():
+    global _tqdm_disabled_once
+    _tqdm_disabled_once = False
+
+    tqdm.__init__ = _original_tqdm_init
+    tqdm_notebook.__init__ = _original_tqdm_notebook_init

@@ -4,7 +4,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import RagasEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import BaseEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasFaithfulnessEntry(EvaluatorEntry):
@@ -13,7 +13,7 @@ class RagasFaithfulnessEntry(EvaluatorEntry):
 
 
 class RagasFaithfulnessEvaluator(
-    RagasEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasResult]
 ):
     """
     This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.

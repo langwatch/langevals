@@ -4,7 +4,7 @@ from langevals_core.base_evaluator import (
     SingleEvaluationResult,
     EvaluationResultSkipped,
 )
-from .lib.common import RagasEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasAnswerCorrectnessEntry(EvaluatorEntry):
@@ -14,7 +14,7 @@ class RagasAnswerCorrectnessEntry(EvaluatorEntry):
 
 
 class RagasAnswerCorrectnessEvaluator(
-    RagasEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasResult]
 ):
     """
     This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better Correctness.
@@ -24,7 +24,9 @@ class RagasAnswerCorrectnessEvaluator(
     category = "rag"
     env_vars = env_vars
     default_settings = RagasSettings()
-    docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html"
+    docs_url = (
+        "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html"
+    )
     is_guardrail = False
 
     def evaluate(self, entry: RagasAnswerCorrectnessEntry) -> SingleEvaluationResult:

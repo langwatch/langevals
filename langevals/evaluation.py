@@ -47,26 +47,29 @@ class EvaluationResultSet(BaseModel):
 
         for i, evaluator in enumerate(self.evaluators):
             evaluator_definitions = get_evaluator_definitions(evaluator)
-            for result in self.results[i]:
+            present_keys = set()
+            for j, result in enumerate(self.results[i]):
                 result_dict = result.model_dump()
-                passed = result_dict.get("passed", None)
-                score = result_dict.get("score", None)
                 status = result_dict.get("status", None)
+                for key in ["passed", "score", "label"]:
+                    if result_dict.get(key, None) is not None:
+                        present_keys.add(key)
+
+                for key in present_keys:
+                    value = result_dict.get(key, None)
+                    key_column = f"{evaluator_definitions.evaluator_name}_{key}"
+                    if key_column not in records:
+                        records[key_column] = []
+                    records[key_column].append(
+                        status
+                        if status != "processed"
+                        else value
+                    )
+
                 details = result_dict.get("details", result_dict.get("message", None))
-
-                if evaluator_definitions.evaluator_name not in records:
-                    records[evaluator_definitions.evaluator_name] = []
-                records[evaluator_definitions.evaluator_name].append(
-                    status
-                    if status != "processed"
-                    else passed if passed is not None else score
-                )
-
                 details_column = f"{evaluator_definitions.evaluator_name}_details"
                 if details is not None and details_column not in records:
-                    records[details_column] = [None] * (
-                        len(records[evaluator_definitions.evaluator_name]) - 1
-                    )
+                    records[details_column] = [None] * j
                 if details_column in records:
                     records[details_column].append(details)
 
@@ -106,7 +109,9 @@ def evaluate(
         not_done = list(future_to_index.keys())
         try:
             while not_done:
-                done, not_done = wait(not_done, timeout=0.1, return_when=FIRST_COMPLETED)
+                done, not_done = wait(
+                    not_done, timeout=0.1, return_when=FIRST_COMPLETED
+                )
                 for future in done:
                     idx = future_to_index[future]
                     result_set[idx] = future.result()

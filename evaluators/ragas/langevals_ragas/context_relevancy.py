@@ -3,7 +3,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import RagasEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
 
 
 class RagasContextRelevancyEntry(EvaluatorEntry):
@@ -12,7 +12,7 @@ class RagasContextRelevancyEntry(EvaluatorEntry):
 
 
 class RagasContextRelevancyEvaluator(
-    RagasEvaluator[RagasContextRelevancyEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasContextRelevancyEntry, RagasSettings, RagasResult]
 ):
     """
     This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
