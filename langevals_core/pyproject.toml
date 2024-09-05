@@ -11,6 +11,7 @@ pydantic = "^2.6.4"
 pandas = "^2.2.2"
 tqdm = "^4.66.4"
 litellm = "^1.41.25"
+tenacity = "^9.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"
