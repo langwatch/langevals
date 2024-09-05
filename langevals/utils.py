@@ -1,6 +1,7 @@
 import importlib
 import importlib.metadata
 import pkgutil
+import re
 import textwrap
 from typing import Optional, Type, get_args
 
@@ -64,8 +65,15 @@ def get_evaluator_definitions(evaluator_cls: BaseEvaluator):
     entry_type = get_args(fields["entry"].annotation)[0]
     result_type = get_args(fields["result"].annotation)[0]
 
-    module_name, evaluator_name = evaluator_cls.__module__.split(".", 1)
-    module_name = module_name.split("langevals_")[1]
+    namespaces = evaluator_cls.__module__.split(".", 1)
+    if len(namespaces) == 2:
+        module_name, evaluator_name = namespaces
+        module_name = module_name.split("langevals_")[1]
+    else:
+        module_name = ""
+        evaluator_name = evaluator_cls.__class__.__name__
+        # CamelCase to snake_case
+        evaluator_name = re.sub(r"(?<!^)(?=[A-Z])", "_", evaluator_name).lower()
 
     if getattr(evaluator_cls, "name", None) is None:
         raise ValueError(f"Missing name attribute in {evaluator_cls}")

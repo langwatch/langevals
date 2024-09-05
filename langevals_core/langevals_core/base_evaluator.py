@@ -19,6 +19,7 @@ from litellm.utils import get_max_tokens
 
 from pydantic import BaseModel, ConfigDict, Field
 import pandas as pd
+from tenacity import Retrying, retry, stop_after_attempt, wait_exponential
 from tqdm.auto import tqdm
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, as_completed, wait
 from langevals_core.azure_patch import patch_litellm
@@ -267,9 +268,10 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     def evaluate(self, entry: TEntry) -> SingleEvaluationResult:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
-    def _evaluate_entry(self, entry):
+    def _evaluate_entry(self, entry, retries=0):
         try:
-            return self.evaluate(entry)
+            retryer = Retrying(stop=stop_after_attempt(retries), reraise=True)
+            return retryer(self.evaluate, entry)
         except Exception as exception:
             return EvaluationResultError(
                 error_type=type(exception).__name__,
@@ -284,6 +286,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         data: List[TEntry],
         index=0,
         max_evaluations_in_parallel=50,
+        retries=3,
         _executor_ref: Optional[Callable[[ThreadPoolExecutor], None]] = None,
     ) -> BatchEvaluationResult:
         results: list[SingleEvaluationResult] = [
@@ -291,7 +294,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         ] * len(data)
         with ThreadPoolExecutor(max_workers=max_evaluations_in_parallel) as executor:
             future_to_index = {
-                executor.submit(self._evaluate_entry, entry): idx
+                executor.submit(self._evaluate_entry, entry, retries): idx
                 for idx, entry in enumerate(data)
             }
 
@@ -306,7 +309,9 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
                             executor, "interrupted"
                         ) and executor.__getattribute__("interrupted"):
                             raise KeyboardInterrupt()
-                        done, not_done = wait(not_done, timeout=0.1, return_when=FIRST_COMPLETED)
+                        done, not_done = wait(
+                            not_done, timeout=0.1, return_when=FIRST_COMPLETED
+                        )
                         for future in done:
                             idx = future_to_index[future]
                             results[idx] = future.result()

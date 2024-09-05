@@ -90,9 +90,9 @@ class _GenericEvaluatorEntry(EvaluatorEntry):
 
 
 class RagasEvaluator(BaseEvaluator[TEntry, TSettings, TResult]):
-    def _evaluate_entry(self, entry):
+    def _evaluate_entry(self, *args, **kwargs):
         disable_tqdm()
-        return super()._evaluate_entry(entry)
+        return super()._evaluate_entry(*args, **kwargs)
 
     def evaluate_batch(self, *args, **kwargs):
         restore_tqdm()
