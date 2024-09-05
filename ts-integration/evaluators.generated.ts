@@ -117,11 +117,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
     };
@@ -157,11 +158,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
       name: string;
@@ -181,11 +183,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
       name: string;
@@ -206,11 +209,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
       prompt: string;
@@ -229,11 +233,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
       prompt: string;
@@ -252,11 +257,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
       allowed_topics: {
@@ -281,11 +287,12 @@ export type Evaluators = {
         | "openai/gpt-4-1106-preview"
         | "azure/gpt-35-turbo-1106"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "azure/gpt-4-turbo-2024-04-09"
         | "azure/gpt-4-1106-preview"
         | "groq/llama3-70b-8192"
         | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-sonnet-20240229"
+        | "anthropic/claude-3-5-sonnet-20240620"
         | "anthropic/claude-3-opus-20240229";
       max_tokens: number;
     };
@@ -507,6 +514,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
@@ -522,6 +530,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
@@ -537,6 +546,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
@@ -552,6 +562,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
@@ -567,6 +578,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
@@ -582,6 +594,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
@@ -597,6 +610,7 @@ export type Evaluators = {
         | "openai/gpt-4o-mini"
         | "azure/gpt-35-turbo-16k"
         | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
         | "anthropic/claude-3-5-sonnet-20240620";
       embeddings_model:
         | "openai/text-embedding-ada-002"
