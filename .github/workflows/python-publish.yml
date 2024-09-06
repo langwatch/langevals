@@ -82,7 +82,7 @@ jobs:
       - name: Publish main package
         run: |
           if [ "${{ env.NEW_VERSION }}" == "false" ]; then
-            echo "langevals_core version already exists, skipping publish"
+            echo "langevals version already exists, skipping publish"
           else
             echo "Publishing langevals"
             python scripts/replace_develop_dependencies.py pyproject.toml
