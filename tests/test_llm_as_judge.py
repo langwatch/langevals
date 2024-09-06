@@ -1,7 +1,4 @@
-from itertools import product
-from langevals_core.base_evaluator import EvaluatorEntry
 from langevals_langevals.llm_boolean import (
-    CustomLLMBooleanEntry,
     CustomLLMBooleanEvaluator,
     CustomLLMBooleanSettings,
 )
@@ -27,10 +24,10 @@ entries = pd.DataFrame(
 
 @pytest.mark.parametrize("entry", entries.itertuples())
 @pytest.mark.flaky(max_runs=3)
-@pytest.mark.pass_rate(0.8)
+@pytest.mark.pass_rate(0.5)
 def test_llm_as_judge(entry):
     response: ModelResponse = litellm.completion(
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",

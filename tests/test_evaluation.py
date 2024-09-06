@@ -104,13 +104,14 @@ def test_run_simple_evaluation():
             {
                 "input": ["hello", "how are you?", "what is your name?"],
                 "output": ["hi", "I am a chatbot, no feelings", "My name is Bob"],
-                "word_count": [1.0, 6.0, 4.0],
+                "word_count_score": [1.0, 6.0, 4.0],
                 "word_count_details": [
                     "Words found: hi",
                     "Words found: I, am, a, chatbot,, no, feelings",
                     "Words found: My, name, is, Bob",
                 ],
-                "competitor_blocklist": [True, True, False],
+                "competitor_blocklist_score": [0.0, 0.0, 1.0],
+                "competitor_blocklist_passed": [True, True, False],
                 "competitor_blocklist_details": [None, None, "Competitors mentioned: Bob"],
             }
         ).to_dict()

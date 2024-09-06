@@ -15,7 +15,7 @@ from typing import (
 )
 
 from pydantic import BaseModel, ConfigDict, Field
-from tenacity import Retrying, stop_after_attempt
+from tenacity import Retrying, stop_after_attempt, wait_random_exponential
 from tqdm.auto import tqdm as tqdm_auto
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from langevals_core.azure_patch import patch_litellm
@@ -23,6 +23,7 @@ from langevals_core.azure_patch import patch_litellm
 import time
 import warnings
 from tqdm import tqdm
+
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from tqdm.notebook import tqdm as tqdm_notebook
@@ -275,7 +276,11 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
     def _evaluate_entry(self, entry, retries=0, restore_tqdm=True):
         _disable_tqdm()
         try:
-            retryer = Retrying(stop=stop_after_attempt(retries), reraise=True)
+            retryer = Retrying(
+                stop=stop_after_attempt(retries),
+                wait=wait_random_exponential(multiplier=1, min=4, max=10),
+                reraise=True,
+            )
             return retryer(self.evaluate, entry)
         except Exception as exception:
             return EvaluationResultError(

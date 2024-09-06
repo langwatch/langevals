@@ -14,7 +14,7 @@ import pytest
 import pandas as pd
 
 import litellm
-from litellm import ModelResponse
+from litellm.files.main import ModelResponse
 
 from langevals import expect
 

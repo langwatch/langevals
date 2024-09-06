@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-core"
-version = "0.1.6"
+version = "0.1.7"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
@@ -11,7 +11,7 @@ pydantic = "^2.6.4"
 pandas = "^2.2.2"
 tqdm = "^4.66.4"
 litellm = "^1.41.25"
-tenacity = "^9.0.0"
+tenacity = "^8.4.0"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"

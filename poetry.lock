@@ -1577,7 +1577,7 @@ i18n = ["Babel (>=2.7)"]
 name = "jiter"
 version = "0.5.0"
 description = "Fast iterable JSON parser."
-optional = true
+optional = false
 python-versions = ">=3.8"
 files = [
     {file = "jiter-0.5.0-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:b599f4e89b3def9a94091e6ee52e1d7ad7bc33e238ebb9c4c63f211d74822c3f"},
@@ -1769,18 +1769,18 @@ test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"
 
 [[package]]
 name = "langchain"
-version = "0.2.11"
+version = "0.2.16"
 description = "Building applications with LLMs through composability"
 optional = true
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain-0.2.11-py3-none-any.whl", hash = "sha256:5a7a8b4918f3d3bebce9b4f23b92d050699e6f7fb97591e8941177cf07a260a2"},
-    {file = "langchain-0.2.11.tar.gz", hash = "sha256:d7a9e4165f02dca0bd78addbc2319d5b9286b5d37c51d784124102b57e9fd297"},
+    {file = "langchain-0.2.16-py3-none-any.whl", hash = "sha256:8f59ee8b45f268df4b924ea3b9c63e49286efa756d16b3f6a9de5c6e502c36e1"},
+    {file = "langchain-0.2.16.tar.gz", hash = "sha256:ffb426a76a703b73ac69abad77cd16eaf03dda76b42cff55572f592d74944166"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.8.3,<4.0.0"
-langchain-core = ">=0.2.23,<0.3.0"
+langchain-core = ">=0.2.38,<0.3.0"
 langchain-text-splitters = ">=0.2.0,<0.3.0"
 langsmith = ">=0.1.17,<0.2.0"
 numpy = [
@@ -1795,36 +1795,36 @@ tenacity = ">=8.1.0,<8.4.0 || >8.4.0,<9.0.0"
 
 [[package]]
 name = "langchain-anthropic"
-version = "0.1.21"
+version = "0.1.23"
 description = "An integration package connecting AnthropicMessages and LangChain"
 optional = true
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain_anthropic-0.1.21-py3-none-any.whl", hash = "sha256:74094162e0badd9f5d275a1e2c4019303fbb45638091c202dcaab5f88fda97aa"},
-    {file = "langchain_anthropic-0.1.21.tar.gz", hash = "sha256:04131e024f79c6a60837a4f3b1399b90440da7a9b0c984b92704e66c317f6c5b"},
+    {file = "langchain_anthropic-0.1.23-py3-none-any.whl", hash = "sha256:89cafdaf4c9e522484b0ca8bafcceb0a5e4ffca89f7c7c9cec1e2ba411208208"},
+    {file = "langchain_anthropic-0.1.23.tar.gz", hash = "sha256:f2ce045bd0ae09d5f11fed4b84a38ce306822b7bcac77232345f40115df66d51"},
 ]
 
 [package.dependencies]
-anthropic = ">=0.28.0,<1"
+anthropic = ">=0.30.0,<1"
 defusedxml = ">=0.7.1,<0.8.0"
-langchain-core = ">=0.2.24,<0.3"
+langchain-core = ">=0.2.26,<0.3.0"
 
 [[package]]
 name = "langchain-community"
-version = "0.2.10"
+version = "0.2.16"
 description = "Community contributed LangChain integrations."
 optional = true
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain_community-0.2.10-py3-none-any.whl", hash = "sha256:9f4d1b5ab7f0b0a704f538e26e50fce45a461da6d2bf6b7b636d24f22fbc088a"},
-    {file = "langchain_community-0.2.10.tar.gz", hash = "sha256:3a0404bad4bd07d6f86affdb62fb3d080a456c66191754d586a409d9d6024d62"},
+    {file = "langchain_community-0.2.16-py3-none-any.whl", hash = "sha256:115e1419c176091d4e00240cb5a38612a249e70f213516b6cacae61a8794a868"},
+    {file = "langchain_community-0.2.16.tar.gz", hash = "sha256:ab416b793a7aed1fa46ebaffd29993296b02286a99819eabc43be2ea8e41ae78"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.8.3,<4.0.0"
 dataclasses-json = ">=0.5.7,<0.7"
-langchain = ">=0.2.9,<0.3.0"
-langchain-core = ">=0.2.23,<0.3.0"
+langchain = ">=0.2.16,<0.3.0"
+langchain-core = ">=0.2.38,<0.3.0"
 langsmith = ">=0.1.0,<0.2.0"
 numpy = [
     {version = ">=1,<2", markers = "python_version < \"3.12\""},
@@ -1837,13 +1837,13 @@ tenacity = ">=8.1.0,<8.4.0 || >8.4.0,<9.0.0"
 
 [[package]]
 name = "langchain-core"
-version = "0.2.24"
+version = "0.2.38"
 description = "Building applications with LLMs through composability"
 optional = true
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain_core-0.2.24-py3-none-any.whl", hash = "sha256:9444fc082d21ef075d925590a684a73fe1f9688a3d90087580ec929751be55e7"},
-    {file = "langchain_core-0.2.24.tar.gz", hash = "sha256:f2e3fa200b124e8c45d270da9bf836bed9c09532612c96ff3225e59b9a232f5a"},
+    {file = "langchain_core-0.2.38-py3-none-any.whl", hash = "sha256:8a5729bc7e68b4af089af20eff44fe4e7ca21d0e0c87ec21cef7621981fd1a4a"},
+    {file = "langchain_core-0.2.38.tar.gz", hash = "sha256:eb69dbedd344f2ee1f15bcea6c71a05884b867588fadc42d04632e727c1238f3"},
 ]
 
 [package.dependencies]
@@ -1856,21 +1856,22 @@ pydantic = [
 ]
 PyYAML = ">=5.3"
 tenacity = ">=8.1.0,<8.4.0 || >8.4.0,<9.0.0"
+typing-extensions = ">=4.7"
 
 [[package]]
 name = "langchain-openai"
-version = "0.1.19"
+version = "0.1.23"
 description = "An integration package connecting OpenAI and LangChain"
 optional = true
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain_openai-0.1.19-py3-none-any.whl", hash = "sha256:a7a739f1469d54cd988865420e7fc21b50fb93727b2e6da5ad30273fc61ecf19"},
-    {file = "langchain_openai-0.1.19.tar.gz", hash = "sha256:3bf342bb302d1444f4abafdf01c467dbd9b248497e1133808c4bae70396c79b3"},
+    {file = "langchain_openai-0.1.23-py3-none-any.whl", hash = "sha256:8e3d215803e157f26480c6108eb4333629832b1a0e746723060c24f93b8b78f4"},
+    {file = "langchain_openai-0.1.23.tar.gz", hash = "sha256:ed7f16671ea0af177ac5f82d5645a746c5097c56f97b31798e5c07b5c84f0eed"},
 ]
 
 [package.dependencies]
-langchain-core = ">=0.2.24,<0.3.0"
-openai = ">=1.32.0,<2.0.0"
+langchain-core = ">=0.2.35,<0.3.0"
+openai = ">=1.40.0,<2.0.0"
 tiktoken = ">=0.7,<1"
 
 [[package]]
@@ -1889,7 +1890,7 @@ langchain-core = ">=0.2.10,<0.3.0"
 
 [[package]]
 name = "langevals-aws"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals integration for AWS APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -1906,7 +1907,7 @@ url = "evaluators/aws"
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.6"
+version = "0.1.7"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -1924,7 +1925,7 @@ url = "evaluators/azure"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.6"
+version = "0.1.7"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -1935,6 +1936,7 @@ develop = true
 litellm = "^1.41.25"
 pandas = "^2.2.2"
 pydantic = "^2.6.4"
+tenacity = "^8.4.0"
 tqdm = "^4.66.4"
 
 [package.source]
@@ -1943,7 +1945,7 @@ url = "langevals_core"
 
 [[package]]
 name = "langevals-example"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
@@ -1959,7 +1961,7 @@ url = "evaluators/example"
 
 [[package]]
 name = "langevals-google-cloud"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals integration for Google Cloud APIs evaluators"
 optional = true
 python-versions = "^3.11"
@@ -1976,7 +1978,7 @@ url = "evaluators/google_cloud"
 
 [[package]]
 name = "langevals-haystack"
-version = "0.1.1"
+version = "0.1.2"
 description = "LangEvals Haystack evaluator"
 optional = true
 python-versions = "^3.11"
@@ -1994,7 +1996,7 @@ url = "evaluators/haystack"
 
 [[package]]
 name = "langevals-huggingface"
-version = "0.1.4"
+version = "0.1.5"
 description = "Evaluators based on models available on huggingface."
 optional = true
 python-versions = "^3.11"
@@ -2012,7 +2014,7 @@ url = "evaluators/huggingface"
 
 [[package]]
 name = "langevals-langevals"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals home-made evaluators."
 optional = false
 python-versions = "^3.11"
@@ -2032,7 +2034,7 @@ url = "evaluators/langevals"
 
 [[package]]
 name = "langevals-lingua"
-version = "0.1.4"
+version = "0.1.5"
 description = "LangEvals lingua evaluator for language detection."
 optional = true
 python-versions = "^3.11"
@@ -2049,7 +2051,7 @@ url = "evaluators/lingua"
 
 [[package]]
 name = "langevals-openai"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -2067,7 +2069,7 @@ url = "evaluators/openai"
 
 [[package]]
 name = "langevals-ragas"
-version = "0.1.6"
+version = "0.1.7"
 description = "LangEvals Ragas evaluator"
 optional = true
 python-versions = "^3.11"
@@ -2076,9 +2078,9 @@ develop = true
 
 [package.dependencies]
 datasets = "2.14.6"
-langchain-anthropic = "^0.1.21"
-langchain_community = "^0.2.10"
-langchain-openai = "^0.1.19"
+langchain-anthropic = "^0.1.23"
+langchain_community = "^0.2.16"
+langchain-openai = "^0.1.23"
 langevals-core = {path = "../../langevals_core", develop = true}
 litellm = "^1.41.25"
 ragas = "^0.1.7"
@@ -2810,23 +2812,24 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.32.0"
+version = "1.43.1"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.7.1"
 files = [
-    {file = "openai-1.32.0-py3-none-any.whl", hash = "sha256:953d57669f309002044fd2f678aba9f07a43256d74b3b00cd04afb5b185568ea"},
-    {file = "openai-1.32.0.tar.gz", hash = "sha256:a6df15a7ab9344b1bc2bc8d83639f68b7a7e2453c0f5e50c1666547eee86f0bd"},
+    {file = "openai-1.43.1-py3-none-any.whl", hash = "sha256:23ed3aa71e89cf644c911f7ab80087d08c0bf46ce6b75d9a811fc7942cff85c2"},
+    {file = "openai-1.43.1.tar.gz", hash = "sha256:b64843711b7c92ded36795062ea1f8cad84ec6c2848646f2a786ac4617a6b9f5"},
 ]
 
 [package.dependencies]
 anyio = ">=3.5.0,<5"
 distro = ">=1.7.0,<2"
 httpx = ">=0.23.0,<1"
+jiter = ">=0.4.0,<1"
 pydantic = ">=1.9.0,<3"
 sniffio = "*"
 tqdm = ">4"
-typing-extensions = ">=4.7,<5"
+typing-extensions = ">=4.11,<5"
 
 [package.extras]
 datalib = ["numpy (>=1)", "pandas (>=1.2.3)", "pandas-stubs (>=1.1.0.11)"]
@@ -4194,13 +4197,13 @@ files = [
 
 [[package]]
 name = "tenacity"
-version = "8.3.0"
+version = "8.5.0"
 description = "Retry code until it succeeds"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "tenacity-8.3.0-py3-none-any.whl", hash = "sha256:3649f6443dbc0d9b01b9d8020a9c4ec7a1ff5f6f3c6c8a036ef371f573fe9185"},
-    {file = "tenacity-8.3.0.tar.gz", hash = "sha256:953d4e6ad24357bceffbc9707bc74349aca9d245f68eb65419cf0c249a1949a2"},
+    {file = "tenacity-8.5.0-py3-none-any.whl", hash = "sha256:b594c2a5945830c267ce6b79a166228323ed52718f30302c1359836112346687"},
+    {file = "tenacity-8.5.0.tar.gz", hash = "sha256:8bc6c0c8a09b31e6cad13c47afbed1a567518250a9a171418582ed8d9c20ca78"},
 ]
 
 [package.extras]
