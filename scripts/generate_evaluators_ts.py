@@ -115,6 +115,15 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
     ):
         evaluator_info["result"]["passed"] = {"description": passed_field.description}
 
+    base_label_description = EvaluationResult.model_fields["label"].description
+    label_field = definitions.result_type.model_fields.get("label")
+    if (
+        label_field
+        and label_field.description
+        and label_field.description != base_label_description
+    ):
+        evaluator_info["result"]["label"] = {"description": label_field.description}
+
     def is_field_optional(field):
         if not field.is_required:
             return True
@@ -164,6 +173,9 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"        passed?: {{\n"
         f"        description: string;\n"
         f"        }};\n"
+        f"        label?: {{\n"
+        f"        description: string;\n"
+        f"        }};\n"
         f"    }};\n"
         f"}};\n\n"
         f"export type EvaluatorTypes = keyof Evaluators;\n\n"
@@ -171,6 +183,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"    status: 'processed';\n"
         f"    score: number;\n"
         f"    passed?: boolean | undefined;\n"
+        f"    label?: string | undefined;\n"
         f"    details?: string | undefined;\n"
         f"    cost?: Money | undefined;\n"
         f"    raw_result?: any;\n"

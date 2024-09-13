@@ -38,6 +38,9 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
     passed?: {
       description: string;
     };
+    label?: {
+      description: string;
+    };
   };
 };
 
@@ -47,6 +50,7 @@ export type EvaluationResult = {
   status: "processed";
   score: number;
   passed?: boolean | undefined;
+  label?: string | undefined;
   details?: string | undefined;
   cost?: Money | undefined;
   raw_result?: any;

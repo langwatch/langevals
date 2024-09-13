@@ -145,6 +145,7 @@ class EvaluationResult(BaseModel):
     status: Literal["processed"] = "processed"
     score: float = Field(description="No description provided")
     passed: Optional[bool] = None
+    label: Optional[str] = None
     details: Optional[str] = Field(
         default=None, description="Short human-readable description of the result"
     )
