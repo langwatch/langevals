@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Any, Literal, Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
@@ -100,11 +101,14 @@ class PresidioPIIDetectionEvaluator(
 
     @classmethod
     def preload(cls):
+        cache_dir = os.path.join(os.path.dirname(__file__), ".cache")
+        os.makedirs(cache_dir, exist_ok=True)
         try:
-            spacy.load("en_core_web_lg")
+            spacy.load(os.path.join(cache_dir, "en_core_web_lg"))
         except Exception:
-            spacy.cli.download("en_core_web_lg")  # type: ignore
-            spacy.load("en_core_web_lg")
+            spacy.cli.download("en_core_web_lg", False, False, "--no-cache-dir")  # type: ignore
+            nlp = spacy.load("en_core_web_lg")
+            nlp.to_disk(os.path.join(cache_dir, "en_core_web_lg"))
         cls.analyzer = AnalyzerEngine(
             nlp_engine=SpacyNlpEngine(
                 models=[{"lang_code": "en", "model_name": "en_core_web_lg"}]
@@ -130,9 +134,7 @@ class PresidioPIIDetectionEvaluator(
                 "Content exceeds the maximum length of 524288 bytes allowed by PII Detection"
             )
 
-        results = self.analyzer.analyze(
-            text=content, entities=entities, language="en"
-        )
+        results = self.analyzer.analyze(text=content, entities=entities, language="en")
         results = [
             result for result in results if result.score >= self.settings.min_threshold
         ]

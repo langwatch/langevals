@@ -6,3 +6,4 @@ langevals.code-workspace
 __pycache__
 dist
 openapi.json
+*/**/.cache
