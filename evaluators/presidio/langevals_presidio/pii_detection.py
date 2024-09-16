@@ -67,7 +67,7 @@ class PresidioPIIDetectionSettings(EvaluatorSettings):
         default=PresidioEntities(),
         description="The types of PII to check for in the input.",
     )
-    min_threshold: int = Field(
+    min_threshold: float = Field(
         default=0.5,
         description="The minimum confidence required for failing the evaluation on a PII match.",
     )
