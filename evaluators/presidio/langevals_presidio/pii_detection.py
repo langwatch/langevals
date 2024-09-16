@@ -28,7 +28,7 @@ class PresidioEntities(BaseModel):
     iban_code: bool = True
     ip_address: bool = True
     location: bool = False
-    person: bool = True
+    person: bool = False
     phone_number: bool = True
     medical_license: bool = True
     us_bank_number: bool = False

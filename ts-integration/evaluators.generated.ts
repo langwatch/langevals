@@ -272,16 +272,13 @@ export type Evaluators = {
       entities: {
         credit_card: boolean;
         crypto: boolean;
-        date_time: boolean;
         email_address: boolean;
         iban_code: boolean;
         ip_address: boolean;
-        nrp: boolean;
         location: boolean;
         person: boolean;
         phone_number: boolean;
         medical_license: boolean;
-        url: boolean;
         us_bank_number: boolean;
         us_driver_license: boolean;
         us_itin: boolean;
@@ -894,16 +891,13 @@ social security numbers. It allows customization of the detection threshold and 
         default: {
           credit_card: true,
           crypto: true,
-          date_time: true,
           email_address: true,
           iban_code: true,
           ip_address: true,
-          nrp: true,
-          location: true,
-          person: true,
+          location: false,
+          person: false,
           phone_number: true,
           medical_license: true,
-          url: true,
           us_bank_number: false,
           us_driver_license: false,
           us_itin: false,
