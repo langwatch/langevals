@@ -133,7 +133,9 @@ class PresidioPIIDetectionEvaluator(
                 "Content exceeds the maximum length of 524288 bytes allowed by PII Detection"
             )
 
-        results = self.analyzer.analyze(text=content, entities=entities, language="en")
+        results = self.analyzer.analyze(
+            text=content, entities=entities, language="en"
+        )
         results = [
             result for result in results if result.score >= self.settings.min_threshold
         ]
@@ -148,6 +150,8 @@ class PresidioPIIDetectionEvaluator(
             analyzer_results=results,  # type: ignore
         )
 
+        serialized_results = [result.to_dict() for result in results]
+
         return PresidioPIIDetectionResult(
             score=len(results),
             passed=len(results) == 0,
@@ -155,7 +159,7 @@ class PresidioPIIDetectionEvaluator(
                 None if len(results) == 0 else f"PII detected: {', '.join(findings)}"
             ),
             raw_response={
-                "results": results,
+                "results": serialized_results,
                 "anonymized": anonymized_text.text,
             },
         )
