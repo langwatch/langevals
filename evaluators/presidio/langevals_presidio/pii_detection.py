@@ -24,16 +24,13 @@ class PresidioPIIDetectionEntry(EvaluatorEntry):
 class PresidioEntities(BaseModel):
     credit_card: bool = True
     crypto: bool = True
-    date_time: bool = True
     email_address: bool = True
     iban_code: bool = True
     ip_address: bool = True
-    nrp: bool = True
-    location: bool = True
+    location: bool = False
     person: bool = True
     phone_number: bool = True
     medical_license: bool = True
-    url: bool = True
     us_bank_number: bool = False
     us_driver_license: bool = False
     us_itin: bool = False
