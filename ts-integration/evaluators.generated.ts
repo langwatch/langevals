@@ -285,14 +285,6 @@ export type Evaluators = {
         us_passport: boolean;
         us_ssn: boolean;
         uk_nhs: boolean;
-        es_nif: boolean;
-        es_nie: boolean;
-        it_fiscal_code: boolean;
-        it_driver_license: boolean;
-        it_vat_code: boolean;
-        it_passport: boolean;
-        it_identity_card: boolean;
-        pl_pesel: boolean;
         sg_nric_fin: boolean;
         sg_uen: boolean;
         au_abn: boolean;
@@ -904,14 +896,6 @@ social security numbers. It allows customization of the detection threshold and 
           us_passport: false,
           us_ssn: false,
           uk_nhs: false,
-          es_nif: false,
-          es_nie: false,
-          it_fiscal_code: false,
-          it_driver_license: false,
-          it_vat_code: false,
-          it_passport: false,
-          it_identity_card: false,
-          pl_pesel: false,
           sg_nric_fin: false,
           sg_uen: false,
           au_abn: false,

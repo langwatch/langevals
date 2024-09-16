@@ -38,14 +38,6 @@ class PresidioEntities(BaseModel):
     us_passport: bool = False
     us_ssn: bool = False
     uk_nhs: bool = False
-    es_nif: bool = False
-    es_nie: bool = False
-    it_fiscal_code: bool = False
-    it_driver_license: bool = False
-    it_vat_code: bool = False
-    it_passport: bool = False
-    it_identity_card: bool = False
-    pl_pesel: bool = False
     sg_nric_fin: bool = False
     sg_uen: bool = False
     au_abn: bool = False
