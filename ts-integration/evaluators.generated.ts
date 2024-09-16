@@ -666,6 +666,10 @@ or if it's in a specific expected language.
         description:
           "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
       },
+      label: {
+        description:
+          "Language detected on the input for input_matches_output, or language detected on the output for output_matches_language",
+      },
     },
   },
   "aws/comprehend_pii_detection": {
@@ -1266,6 +1270,10 @@ This evaluator checks if the user message is concerning one of the allowed topic
       passed: {
         description: "Is the message concerning allowed topic",
       },
+      label: {
+        description:
+          "The detected intent or 'other' if the intent is not in the allowed topics",
+      },
     },
   },
   "langevals/product_sentiment_polarity": {
@@ -1286,6 +1294,10 @@ For messages about products, this evaluator checks for the nuanced sentiment dir
       },
       passed: {
         description: "Fails if subtly or very negative",
+      },
+      label: {
+        description:
+          "The detected sentiment polarity, one of: very_negative, subtly_negative, subtly_positive, very_positive",
       },
     },
   },

@@ -17,6 +17,7 @@ def test_language_detection_evaluator():
 
     assert result.status == "processed"
     assert result.passed == False
+    assert result.label == "EN"
     assert result.score == 2
     assert (
         result.details
@@ -38,6 +39,7 @@ def test_language_detection_evaluator_specific_language():
 
     assert result.status == "processed"
     assert result.passed == True
+    assert result.label == "EN"
     assert result.score == 1
     assert (
         result.details == "Input languages detected: EN. Output languages detected: EN"
@@ -73,6 +75,7 @@ def test_language_detection_evaluator_any_language():
     result = evaluator.evaluate(entry)
 
     assert result.status == "processed"
+    assert result.label == "EN"
     assert result.passed == True
     assert result.score == 1
     assert result.details == "Languages detected: EN"
@@ -92,6 +95,7 @@ def test_language_detection_evaluator_long_context():
 
     assert result.status == "processed"
     assert result.passed == True
+    assert result.label == "LA"
     assert result.score == 1
     assert (
         result.details == "Input languages detected: LA. Output languages detected: LA"

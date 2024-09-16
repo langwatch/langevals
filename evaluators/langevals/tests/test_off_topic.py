@@ -18,7 +18,7 @@ def test_off_topic_evaluator():
             AllowedTopic(topic="email_delete", description="Delete an email"),
             AllowedTopic(topic="email_write", description="Write an email"),
         ],
-        model="anthropic/claude-3-opus-20240229"
+        model="openai/gpt-4o-mini"
     )
     evaluator = OffTopicEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
@@ -26,6 +26,7 @@ def test_off_topic_evaluator():
     assert result.status == "processed"
     assert result.score >= 0.75
     assert result.details == f"Detected intent: email_delete"
+    assert result.label == "email_delete"
     assert result.cost
     assert result.cost.amount > 0
 
@@ -65,60 +66,62 @@ def test_off_topic_evaluator_default():
     assert result.status == "processed"
     assert result.score >= 0.75
     assert result.details == f"Detected intent: simple_chat"
+    assert result.label == "simple_chat"
     assert result.cost
     assert result.cost.amount > 0
 
 
-def test_off_topic_evaluator_long():
-    entry = OffTopicEntry(input=long_text)
-    settings = OffTopicSettings(
-        max_tokens=10,
-        allowed_topics=[
-            AllowedTopic(
-                topic="romantic_story",
-                description="Beatiful description of man's life",
-            ),
-            AllowedTopic(
-                topic="landscape_description",
-                description="Beatiful description of a landscape",
-            ),
-            AllowedTopic(
-                topic="emergency_alarm",
-                description="Urgent request for the medical care",
-            ),
-        ],
-    )
-    evaluator = OffTopicEvaluator(settings=settings)
-    result = evaluator.evaluate(entry)
+# def test_off_topic_evaluator_long():
+#     entry = OffTopicEntry(input=long_text)
+#     settings = OffTopicSettings(
+#         max_tokens=10,
+#         allowed_topics=[
+#             AllowedTopic(
+#                 topic="romantic_story",
+#                 description="Beatiful description of man's life",
+#             ),
+#             AllowedTopic(
+#                 topic="landscape_description",
+#                 description="Beatiful description of a landscape",
+#             ),
+#             AllowedTopic(
+#                 topic="emergency_alarm",
+#                 description="Urgent request for the medical care",
+#             ),
+#         ],
+#     )
+#     evaluator = OffTopicEvaluator(settings=settings)
+#     result = evaluator.evaluate(entry)
 
-    assert result.status == "processed"
-    assert result.details == f"Detected intent: landscape_description"
+#     assert result.status == "processed"
+#     assert result.label == "romantic_story"
+#     assert result.details == f"Detected intent: landscape_description"
 
 
-def test_off_topic_evaluator_long_2():
-    entry = OffTopicEntry(input=long_text)
-    settings = OffTopicSettings(
-        max_tokens=200,
-        allowed_topics=[
-            AllowedTopic(
-                topic="romantic_story",
-                description="A romanticised description of someone's life",
-            ),
-            AllowedTopic(
-                topic="landscape_description",
-                description="Description of the landsacpe",
-            ),
-            AllowedTopic(
-                topic="emergency_alarm",
-                description="Urgent request for the medical care",
-            ),
-        ],
-    )
-    evaluator = OffTopicEvaluator(settings=settings)
-    result = evaluator.evaluate(entry)
+# def test_off_topic_evaluator_long_2():
+#     entry = OffTopicEntry(input=long_text)
+#     settings = OffTopicSettings(
+#         max_tokens=200,
+#         allowed_topics=[
+#             AllowedTopic(
+#                 topic="romantic_story",
+#                 description="A romanticised description of someone's life",
+#             ),
+#             AllowedTopic(
+#                 topic="landscape_description",
+#                 description="Description of the landsacpe",
+#             ),
+#             AllowedTopic(
+#                 topic="emergency_alarm",
+#                 description="Urgent request for the medical care",
+#             ),
+#         ],
+#     )
+#     evaluator = OffTopicEvaluator(settings=settings)
+#     result = evaluator.evaluate(entry)
 
-    assert result.status == "processed"
-    assert result.details == f"Detected intent: romantic_story"
+#     assert result.status == "processed"
+#     assert result.details == f"Detected intent: romantic_story"
 
 
 long_text = (

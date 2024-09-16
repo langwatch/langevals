@@ -52,6 +52,7 @@ class OffTopicResult(EvaluationResult):
         default="1.0 confidence that the actual intent is other",
         description="Predicted intent of the message and the confidence",
     )
+    label: Optional[str] = Field(default=None, description="The detected intent or 'other' if the intent is not in the allowed topics")
 
 
 class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicResult]):
@@ -156,6 +157,7 @@ class OffTopicEvaluator(BaseEvaluator[OffTopicEntry, OffTopicSettings, OffTopicR
         return OffTopicResult(
             score=float(confidence),
             details=f"Detected intent: {intent}",
+            label=intent,
             passed=passed,
             cost=Money(amount=cost, currency="USD") if cost else None,
         )

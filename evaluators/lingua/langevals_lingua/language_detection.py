@@ -123,6 +123,9 @@ class LinguaLanguageDetectionResult(EvaluationResult):
     passed: Optional[bool] = Field(
         description="Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language", default=None
     )
+    label: Optional[str] = Field(
+        description="Language detected on the input for input_matches_output, or language detected on the output for output_matches_language", default=None
+    )
     raw_response: LinguaLanguageDetectionRawResponse
 
 
@@ -180,6 +183,7 @@ class LinguaLanguageDetectionEvaluator(
             return EvaluationResultSkipped(
                 details=f"Skipped because no language could be detected on the output with a confidence higher than {self.settings.threshold}"
             )
+        output_language_highest_confidence = sorted(output_languages.items(), key=lambda x: x[1], reverse=True)[0][0]
 
         if self.settings.check_for == "output_matches_language":
             passed = (
@@ -189,6 +193,7 @@ class LinguaLanguageDetectionEvaluator(
             return LinguaLanguageDetectionResult(
                 score=len(output_languages),
                 passed=passed,
+                label=output_language_highest_confidence,
                 details=f"Languages detected: {', '.join(output_languages.keys())}",
                 raw_response=LinguaLanguageDetectionRawResponse(
                     output=output_languages
@@ -207,6 +212,7 @@ class LinguaLanguageDetectionEvaluator(
             return EvaluationResultSkipped(
                 details=f"Skipped because no language could be detected on the input with a confidence higher than {self.settings.threshold}"
             )
+        input_language_highest_confidence = sorted(input_languages.items(), key=lambda x: x[1], reverse=True)[0][0]
 
         passed = any(lang in input_languages for lang in output_languages)
         details = "" if passed else "Input and output languages do not match. "
@@ -218,6 +224,7 @@ class LinguaLanguageDetectionEvaluator(
         return LinguaLanguageDetectionResult(
             score=len(output_languages | input_languages),
             passed=passed,
+            label=input_language_highest_confidence,
             details=f"{details}Input languages detected: {', '.join(input_languages.keys())}. Output languages detected: {', '.join(output_languages.keys())}",
             raw_response=LinguaLanguageDetectionRawResponse(
                 output=output_languages, input=input_languages

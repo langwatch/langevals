@@ -19,7 +19,7 @@ def test_product_sentiment_polarity_evaluator_pass():
     assert result.score == 3
     assert result.passed == True
     assert result.details
-    assert result.raw_response == "very_positive"
+    assert result.label == "very_positive"
 
 
 def test_product_sentiment_polarity_evaluator_fail():
@@ -31,7 +31,7 @@ def test_product_sentiment_polarity_evaluator_fail():
     assert result.score == 0
     assert result.passed == False
     assert result.details
-    assert result.raw_response == "very_negative"
+    assert result.label == "very_negative"
 
 
 def test_product_sentiment_polarity_evaluator_skipped_for_non_product_related_outputs():

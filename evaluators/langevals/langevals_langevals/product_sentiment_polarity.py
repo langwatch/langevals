@@ -13,7 +13,7 @@ from langevals_core.base_evaluator import (
     EvaluationResultSkipped,
 )
 from pydantic import Field
-from typing import Optional
+from typing import Literal, Optional
 import re
 import dspy
 import json
@@ -36,7 +36,7 @@ class ProductSentimentPolarityResult(EvaluationResult):
         description="0 - very negative, 1 - subtly negative, 2 - subtly positive, 3 - very positive"
     )
     passed: Optional[bool] = Field(description="Fails if subtly or very negative", default=None)
-    raw_response: str = Field("The detected sentiment polarity")
+    label: Optional[Literal["very_negative", "subtly_negative", "subtly_positive", "very_positive"]] = Field(default=None, description="The detected sentiment polarity, one of: very_negative, subtly_negative, subtly_positive, very_positive")
 
 
 class ProductSentimentPolarityEvaluator(
@@ -79,7 +79,7 @@ class ProductSentimentPolarityEvaluator(
             score=score,
             passed=score >= 2,
             details=f"{result.sentiment} - {result.reasoning}",
-            raw_response=result.sentiment,
+            label=result.sentiment,
         )
 
 
