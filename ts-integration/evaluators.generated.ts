@@ -267,6 +267,51 @@ export type Evaluators = {
         | "VERY_LIKELY";
     };
   };
+  "presidio/pii_detection": {
+    settings: {
+      entities: {
+        credit_card: boolean;
+        crypto: boolean;
+        date_time: boolean;
+        email_address: boolean;
+        iban_code: boolean;
+        ip_address: boolean;
+        nrp: boolean;
+        location: boolean;
+        person: boolean;
+        phone_number: boolean;
+        medical_license: boolean;
+        url: boolean;
+        us_bank_number: boolean;
+        us_driver_license: boolean;
+        us_itin: boolean;
+        us_passport: boolean;
+        us_ssn: boolean;
+        uk_nhs: boolean;
+        es_nif: boolean;
+        es_nie: boolean;
+        it_fiscal_code: boolean;
+        it_driver_license: boolean;
+        it_vat_code: boolean;
+        it_passport: boolean;
+        it_identity_card: boolean;
+        pl_pesel: boolean;
+        sg_nric_fin: boolean;
+        sg_uen: boolean;
+        au_abn: boolean;
+        au_acn: boolean;
+        au_tfn: boolean;
+        au_medicare: boolean;
+        in_pan: boolean;
+        in_aadhaar: boolean;
+        in_vehicle_registration: boolean;
+        in_voter: boolean;
+        in_passport: boolean;
+        fi_personal_identity_code: boolean;
+      };
+      min_threshold: number;
+    };
+  };
   "ragas/answer_correctness": {
     settings: {
       model:
@@ -820,6 +865,77 @@ social security numbers. It allows customization of the detection threshold and 
         description:
           "The minimum confidence required for failing the evaluation on a PII match.",
         default: "POSSIBLE",
+      },
+    },
+    result: {
+      score: {
+        description: "Amount of PII detected, 0 means no PII detected",
+      },
+      passed: {
+        description:
+          "If true then no PII was detected, if false then at least one PII was detected",
+      },
+    },
+  },
+  "presidio/pii_detection": {
+    name: `Presidio PII Detection`,
+    description: `
+Detects personally identifiable information in text, including phone numbers, email addresses, and
+social security numbers. It allows customization of the detection threshold and the specific types of PII to check.
+`,
+    category: "safety",
+    docsUrl: "https://microsoft.github.io/presidio",
+    isGuardrail: true,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      entities: {
+        description: "The types of PII to check for in the input.",
+        default: {
+          credit_card: true,
+          crypto: true,
+          date_time: true,
+          email_address: true,
+          iban_code: true,
+          ip_address: true,
+          nrp: true,
+          location: true,
+          person: true,
+          phone_number: true,
+          medical_license: true,
+          url: true,
+          us_bank_number: false,
+          us_driver_license: false,
+          us_itin: false,
+          us_passport: false,
+          us_ssn: false,
+          uk_nhs: false,
+          es_nif: false,
+          es_nie: false,
+          it_fiscal_code: false,
+          it_driver_license: false,
+          it_vat_code: false,
+          it_passport: false,
+          it_identity_card: false,
+          pl_pesel: false,
+          sg_nric_fin: false,
+          sg_uen: false,
+          au_abn: false,
+          au_acn: false,
+          au_tfn: false,
+          au_medicare: false,
+          in_pan: false,
+          in_aadhaar: false,
+          in_vehicle_registration: false,
+          in_voter: false,
+          in_passport: false,
+          fi_personal_identity_code: false,
+        },
+      },
+      min_threshold: {
+        description:
+          "The minimum confidence required for failing the evaluation on a PII match.",
+        default: 0.5,
       },
     },
     result: {
