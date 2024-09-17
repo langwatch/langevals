@@ -39,7 +39,6 @@ class PresidioEntities(BaseModel):
     us_ssn: bool = False
     uk_nhs: bool = False
     sg_nric_fin: bool = False
-    sg_uen: bool = False
     au_abn: bool = False
     au_acn: bool = False
     au_tfn: bool = False
@@ -49,7 +48,6 @@ class PresidioEntities(BaseModel):
     in_vehicle_registration: bool = False
     in_voter: bool = False
     in_passport: bool = False
-    fi_personal_identity_code: bool = False
 
 
 class PresidioPIIDetectionSettings(EvaluatorSettings):

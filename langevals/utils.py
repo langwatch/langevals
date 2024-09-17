@@ -1,5 +1,7 @@
 import importlib
 import importlib.metadata
+import math
+import os
 import pkgutil
 import re
 import textwrap
@@ -99,3 +101,21 @@ def get_evaluator_definitions(evaluator_cls: BaseEvaluator):
         is_guardrail=is_guardrail,
         category=category,
     )
+
+
+def get_cpu_count():
+    cpu_count = os.getenv("CPU_COUNT", None)
+    if cpu_count is not None:
+        return int(cpu_count)
+    try:
+        # Kubernetes
+        with open("/sys/fs/cgroup/cpu/cpu.shares") as f:
+            cpu_shares = int(f.read().strip())
+        return max(1, math.ceil(cpu_shares / 1024))
+    except FileNotFoundError:
+        try:
+            # Local for UNIX
+            return len(os.sched_getaffinity(0))
+        except AttributeError:
+            # Local fallback
+            return os.cpu_count() or 4

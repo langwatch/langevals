@@ -3,6 +3,7 @@ import sys
 import dotenv
 
 from langevals.utils import (
+    get_cpu_count,
     get_evaluator_classes,
     get_evaluator_definitions,
     load_evaluator_packages,
@@ -10,7 +11,6 @@ from langevals.utils import (
 
 dotenv.load_dotenv()
 
-import asyncio
 from fastapi import FastAPI, HTTPException, Request
 from typing import List, Optional
 from langevals_core.base_evaluator import (
@@ -106,16 +106,39 @@ def main():
             f.write(json.dumps(app.openapi(), indent=2))
         print("openapi.json exported")
         return
-    from hypercorn.config import Config
-    from hypercorn.asyncio import serve
+    import gunicorn.app.base
+
+    class StandaloneApplication(gunicorn.app.base.BaseApplication):
+        def __init__(self, app, options=None):
+            self.options = options or {}
+            self.application = app
+            super().__init__()
+
+        def load_config(self):
+            config = {key: value for key, value in self.options.items()
+                    if key in self.cfg.settings and value is not None} # type: ignore
+            for key, value in config.items():
+                self.cfg.set(key.lower(), value) # type: ignore
+
+        def load(self):
+            return self.application
+
 
     host = "0.0.0.0"
     port = int(os.getenv("PORT", 8000))
+    workers = get_cpu_count()
 
-    config = Config()
-    config.bind = [f"{host}:{port}"]
+    print(f"Starting server with {workers} workers")
 
-    asyncio.run(serve(app, config))  # type: ignore
+    options = {
+        'bind': f'{host}:{port}',
+        'workers': workers,
+        'worker_class': 'uvicorn.workers.UvicornWorker',
+        'preload_app': True,
+        'forwarded_allow_ips': '*',
+    }
+
+    StandaloneApplication(app, options).run()
 
 
 if __name__ == "__main__":

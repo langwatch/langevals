@@ -286,7 +286,6 @@ export type Evaluators = {
         us_ssn: boolean;
         uk_nhs: boolean;
         sg_nric_fin: boolean;
-        sg_uen: boolean;
         au_abn: boolean;
         au_acn: boolean;
         au_tfn: boolean;
@@ -296,7 +295,6 @@ export type Evaluators = {
         in_vehicle_registration: boolean;
         in_voter: boolean;
         in_passport: boolean;
-        fi_personal_identity_code: boolean;
       };
       min_threshold: number;
     };
@@ -897,7 +895,6 @@ social security numbers. It allows customization of the detection threshold and 
           us_ssn: false,
           uk_nhs: false,
           sg_nric_fin: false,
-          sg_uen: false,
           au_abn: false,
           au_acn: false,
           au_tfn: false,
@@ -907,7 +904,6 @@ social security numbers. It allows customization of the detection threshold and 
           in_vehicle_registration: false,
           in_voter: false,
           in_passport: false,
-          fi_personal_identity_code: false,
         },
       },
       min_threshold: {
