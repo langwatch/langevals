@@ -186,7 +186,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"    label?: string | undefined;\n"
         f"    details?: string | undefined;\n"
         f"    cost?: Money | undefined;\n"
-        f"    raw_result?: any;\n"
+        f"    raw_response?: any;\n"
         f"}};\n\n"
         f"export type EvaluationResultSkipped = {{\n"
         f"    status: 'skipped';\n"

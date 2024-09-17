@@ -53,7 +53,7 @@ export type EvaluationResult = {
   label?: string | undefined;
   details?: string | undefined;
   cost?: Money | undefined;
-  raw_result?: any;
+  raw_response?: any;
 };
 
 export type EvaluationResultSkipped = {
