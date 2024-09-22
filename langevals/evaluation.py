@@ -95,6 +95,7 @@ def evaluate(
         nonlocal child_executor
         child_executor = executor
 
+    # TODO: make this more cancellable, copy dspy's evaluate sigint cancellation implementation
     with ThreadPoolExecutor(max_workers=max_evaluators_in_parallel) as executor:
         future_to_index = {
             executor.submit(

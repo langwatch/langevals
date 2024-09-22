@@ -679,7 +679,7 @@ referencing = ">=0.31.0"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.7"
+version = "0.1.8"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -687,7 +687,7 @@ files = []
 develop = true
 
 [package.dependencies]
-litellm = "^1.41.25"
+litellm = "^1.40.7"
 pandas = "^2.2.2"
 pydantic = "^2.6.4"
 tenacity = "^8.4.0"
