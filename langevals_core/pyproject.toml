@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "langevals-core"
-version = "0.1.8"
+version = "0.1.9"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pydantic = "^2.6.4"
+pydantic = "^2.4.0"
 pandas = "^2.2.2"
 tqdm = "^4.66.4"
 litellm = "^1.40.7"

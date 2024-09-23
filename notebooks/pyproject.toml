@@ -22,7 +22,7 @@ openinference-instrumentation-dspy = {version = "^0.1.9", python = ">=3.11,<3.13
 opentelemetry-exporter-otlp = "^1.25.0"
 fastapi = "^0.110.0"
 hypercorn = "^0.16.0"
-pydantic = "^2.6.4"
+pydantic = "^2.4.0"
 python-dotenv = "1.0.1"
 mangum = "^0.17.0"
 pandas = "^2.2.2"
