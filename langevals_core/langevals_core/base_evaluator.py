@@ -168,7 +168,7 @@ class EvaluationResultError(BaseModel):
 
     status: Literal["error"] = "error"
     error_type: str = Field(description="The type of the exception")
-    message: str = Field(description="Error message")
+    details: str = Field(description="Error message")
     traceback: List[str] = Field(description="Traceback information for debugging")
 
 
@@ -286,7 +286,7 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
         except Exception as exception:
             return EvaluationResultError(
                 error_type=type(exception).__name__,
-                message=str(exception),
+                details=str(exception),
                 traceback=list(
                     traceback.TracebackException.from_exception(exception).format()
                 ),

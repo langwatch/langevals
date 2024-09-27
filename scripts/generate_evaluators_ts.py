@@ -195,7 +195,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"export type EvaluationResultError = {{\n"
         f"    status: 'error';\n"
         f"    error_type: string;\n"
-        f"    message: string;\n"
+        f"    details: string;\n"
         f"    traceback: string[];\n"
         f"}};\n\n"
         f"export type SingleEvaluationResult = EvaluationResult | EvaluationResultSkipped | EvaluationResultError;\n"

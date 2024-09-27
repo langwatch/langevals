@@ -28,8 +28,8 @@ class Expectation(BaseModel):
         result = self.evaluate(evaluator)
         assert result.status == "processed", (
             result.details
-            if result.status == "skipped"
-            else result.message if result.status == "error" else None
+            if result.status == "skipped" or result.status == "error"
+            else None
         )
         assert result.passed, self._result_details_print(
             entry, f"{evaluator.name} to_pass FAILED", result.details
@@ -40,8 +40,8 @@ class Expectation(BaseModel):
         result = self.evaluate(evaluator)
         assert result.status == "processed", (
             result.details
-            if result.status == "skipped"
-            else result.message if result.status == "error" else None
+            if result.status == "skipped" or result.status == "error"
+            else None
         )
         assert not result.passed, self._result_details_print(
             entry, f"{evaluator.name} to_fail FAILED", result.details
@@ -61,8 +61,8 @@ class Expectation(BaseModel):
         result = self.evaluate(evaluator)
         assert result.status == "processed", (
             result.details
-            if result.status == "skipped"
-            else result.message if result.status == "error" else None
+            if result.status == "skipped" or result.status == "error"
+            else None
         )
         return NumericExpectation(entry=entry, evaluator=evaluator, result=result)
 
@@ -115,7 +115,7 @@ class NumericExpectation(BaseModel):
 
     def to_be_less_than_or_equal(self, value: float):
         assert self.result.score <= value, self._result_details_print(
-            "to_be_less_than_or_equal"
+            "to_be_less_than_or_equal", value
         )
 
 

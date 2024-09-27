@@ -61,12 +61,10 @@ class EvaluationResultSet(BaseModel):
                     if key_column not in records:
                         records[key_column] = []
                     records[key_column].append(
-                        status
-                        if status != "processed"
-                        else value
+                        status if status != "processed" else value
                     )
 
-                details = result_dict.get("details", result_dict.get("message", None))
+                details = result_dict.get("details", None)
                 details_column = f"{evaluator_definitions.evaluator_name}_details"
                 if details is not None and details_column not in records:
                     records[details_column] = [None] * j

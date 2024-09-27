@@ -64,7 +64,7 @@ export type EvaluationResultSkipped = {
 export type EvaluationResultError = {
   status: "error";
   error_type: string;
-  message: string;
+  details: string;
   traceback: string[];
 };
 
