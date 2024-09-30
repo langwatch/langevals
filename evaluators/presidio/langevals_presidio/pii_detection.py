@@ -109,6 +109,15 @@ class PresidioPIIDetectionEvaluator(
 
     def evaluate(self, entry: PresidioPIIDetectionEntry) -> SingleEvaluationResult:
         content = "\n\n".join([entry.input or "", entry.output or ""]).strip()
+        try:
+            json.loads(content)
+            content = (
+                content.replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r")
+            )
+            is_valid_json = True
+        except:
+            is_valid_json = False
+
         if not content:
             return EvaluationResultSkipped(details="Input and output are both empty")
 
@@ -137,7 +146,14 @@ class PresidioPIIDetectionEvaluator(
         anonymized_text = anonymizer.anonymize(
             text=content,
             analyzer_results=results,  # type: ignore
-        )
+        ).text
+
+        if is_valid_json:
+            anonymized_text = (
+                anonymized_text.replace("\n", "\\n")
+                .replace("\t", "\\t")
+                .replace("\r", "\\r")
+            )
 
         serialized_results = [result.to_dict() for result in results]
 
@@ -149,6 +165,6 @@ class PresidioPIIDetectionEvaluator(
             ),
             raw_response={
                 "results": serialized_results,
-                "anonymized": anonymized_text.text,
+                "anonymized": anonymized_text,
             },
         )
