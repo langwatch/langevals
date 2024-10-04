@@ -121,10 +121,12 @@ class LinguaLanguageDetectionRawResponse(BaseModel):
 class LinguaLanguageDetectionResult(EvaluationResult):
     score: float = Field(description="How many languages were detected")
     passed: Optional[bool] = Field(
-        description="Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language", default=None
+        description="Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
+        default=None,
     )
     label: Optional[str] = Field(
-        description="Language detected on the input for input_matches_output, or language detected on the output for output_matches_language", default=None
+        description="Language detected on the input for input_matches_output, or language detected on the output for output_matches_language",
+        default=None,
     )
     raw_response: LinguaLanguageDetectionRawResponse
 
@@ -157,14 +159,16 @@ class LinguaLanguageDetectionEvaluator(
         super().preload()
 
     def evaluate(self, entry: LinguaLanguageDetectionEntry) -> SingleEvaluationResult:
-        words = entry.input.split(" ")
+        words = max(len(entry.input.split(" ")), len(entry.input.encode("utf-8")) // 5)
         if self.settings.check_for == "input_matches_output":
-            if len(words) < self.settings.min_words:
+            if words < self.settings.min_words:
                 return EvaluationResultSkipped(
                     details=f"Skipped because the input has less than {self.settings.min_words} words"
                 )
-        words = entry.output.split(" ")
-        if len(words) < self.settings.min_words:
+        words = max(
+            len(entry.output.split(" ")), len(entry.output.encode("utf-8")) // 5
+        )
+        if words < self.settings.min_words:
             return EvaluationResultSkipped(
                 details=f"Skipped because the output has less than {self.settings.min_words} words"
             )
@@ -183,7 +187,9 @@ class LinguaLanguageDetectionEvaluator(
             return EvaluationResultSkipped(
                 details=f"Skipped because no language could be detected on the output with a confidence higher than {self.settings.threshold}"
             )
-        output_language_highest_confidence = sorted(output_languages.items(), key=lambda x: x[1], reverse=True)[0][0]
+        output_language_highest_confidence = sorted(
+            output_languages.items(), key=lambda x: x[1], reverse=True
+        )[0][0]
 
         if self.settings.check_for == "output_matches_language":
             passed = (
@@ -212,7 +218,9 @@ class LinguaLanguageDetectionEvaluator(
             return EvaluationResultSkipped(
                 details=f"Skipped because no language could be detected on the input with a confidence higher than {self.settings.threshold}"
             )
-        input_language_highest_confidence = sorted(input_languages.items(), key=lambda x: x[1], reverse=True)[0][0]
+        input_language_highest_confidence = sorted(
+            input_languages.items(), key=lambda x: x[1], reverse=True
+        )[0][0]
 
         passed = any(lang in input_languages for lang in output_languages)
         details = "" if passed else "Input and output languages do not match. "
