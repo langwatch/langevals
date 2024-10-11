@@ -1,23 +1,32 @@
+from typing import Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
     EvaluationResultSkipped,
 )
 from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from pydantic import Field
 
 
 class RagasAnswerCorrectnessEntry(EvaluatorEntry):
-    input: str
+    input: Optional[str] = Field(default="")
     output: str
     expected_output: str
 
 
+class RagasAnswerCorrectnessResult(EvaluationResult):
+    score: float = Field(
+        description="A score between 0.0 and 1.0 indicating the correctness of the answer."
+    )
+
+
 class RagasAnswerCorrectnessEvaluator(
-    BaseEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasAnswerCorrectnessResult]
 ):
     """
-    This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better Correctness.
+    Computes with an LLM a weighted combination of factual as well as semantic similarity between the generated answer and the expected output.
     """
 
     name = "Ragas Answer Correctness"
@@ -30,13 +39,11 @@ class RagasAnswerCorrectnessEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: RagasAnswerCorrectnessEntry) -> SingleEvaluationResult:
-        content = entry.input or ""
-        if not content:
-            return EvaluationResultSkipped(details="Input is empty")
+        input = entry.input or ""
         return evaluate_ragas(
             evaluator=self,
             metric="answer_correctness",
-            question=entry.input,
+            question=input,
             answer=entry.output,
             ground_truth=entry.expected_output,
             settings=self.settings,

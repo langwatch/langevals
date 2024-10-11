@@ -27,14 +27,21 @@ class CustomBasicRule(BaseModel):
 
 
 class CustomBasicSettings(EvaluatorSettings):
-    rules: list[CustomBasicRule] = Field(default=[
-        CustomBasicRule(field="output", rule="not_contains", value="artificial intelligence"),
-    ], description="List of rules to check, the message must pass all of them")
+    rules: list[CustomBasicRule] = Field(
+        default=[
+            CustomBasicRule(
+                field="output", rule="not_contains", value="artificial intelligence"
+            ),
+        ],
+        description="List of rules to check, the message must pass all of them",
+    )
 
 
 class CustomBasicResult(EvaluationResult):
-    score: float = Field(description="Returns 1 if all rules pass, 0 if any rule fails")
-    passed: Optional[bool] = Field(default=True)
+    score: float
+    passed: Optional[bool] = Field(
+        default=True, description="True if all rules pass, False if any rule fails"
+    )
 
 
 class CustomBasicEvaluator(

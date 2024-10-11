@@ -1,9 +1,11 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
 from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from pydantic import Field
 
 
 class RagasAnswerRelevancyEntry(EvaluatorEntry):
@@ -11,11 +13,17 @@ class RagasAnswerRelevancyEntry(EvaluatorEntry):
     output: str
 
 
+class RagasAnswerRelevancyResult(EvaluationResult):
+    score: float = Field(
+        description="A score between 0.0 and 1.0 indicating the relevance of the answer."
+    )
+
+
 class RagasAnswerRelevancyEvaluator(
-    BaseEvaluator[RagasAnswerRelevancyEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasAnswerRelevancyEntry, RagasSettings, RagasAnswerRelevancyResult]
 ):
     """
-    This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
+    Evaluates how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
     """
 
     name = "Ragas Answer Relevancy"

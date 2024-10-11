@@ -33,10 +33,10 @@ class CustomLLMBooleanSettings(LLMEvaluatorSettings):
 
 
 class CustomLLMBooleanResult(EvaluationResult):
-    score: float = Field(
-        description="Returns 1 if LLM evaluates it as true, 0 if as false"
+    score: float
+    passed: Optional[bool] = Field(
+        description="The veredict given by the LLM", default=True
     )
-    passed: Optional[bool] = Field(description="The veredict given by the LLM", default=True)
 
 
 class CustomLLMBooleanEvaluator(

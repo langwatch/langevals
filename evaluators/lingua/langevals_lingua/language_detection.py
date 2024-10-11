@@ -119,7 +119,7 @@ class LinguaLanguageDetectionRawResponse(BaseModel):
 
 
 class LinguaLanguageDetectionResult(EvaluationResult):
-    score: float = Field(description="How many languages were detected")
+    score: float
     passed: Optional[bool] = Field(
         description="Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
         default=None,

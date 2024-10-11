@@ -45,6 +45,10 @@ class OpenAIModerationSettings(EvaluatorSettings):
 
 
 class OpenAIModerationResult(EvaluationResult):
+    passed: Optional[bool] = Field(
+        description="Fails if any moderation category is flagged",
+        default=None,
+    )
     score: float = Field(
         description="The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence."
     )

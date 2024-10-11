@@ -51,7 +51,7 @@ class RagasSettings(EvaluatorSettings):
         "azure/gpt-4o-mini",
         "anthropic/claude-3-5-sonnet-20240620",
     ] = Field(
-        default="openai/gpt-3.5-turbo-16k",
+        default="openai/gpt-4o-mini",
         description="The model to use for evaluation.",
     )
     embeddings_model: Literal[

@@ -691,9 +691,6 @@ or if it's in a specific expected language.
       },
     },
     result: {
-      score: {
-        description: "How many languages were detected",
-      },
       passed: {
         description:
           "Passes if the detected language on the output matches the detected language on the input, or if the output matches the expected language",
@@ -925,18 +922,18 @@ social security numbers. It allows customization of the detection threshold and 
   "ragas/answer_correctness": {
     name: `Ragas Answer Correctness`,
     description: `
-This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better Correctness.
+Computes with an LLM a weighted combination of factual as well as semantic similarity between the generated answer and the expected output.
 `,
     category: "rag",
     docsUrl:
       "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html",
     isGuardrail: false,
-    requiredFields: ["input", "output", "expected_output"],
-    optionalFields: [],
+    requiredFields: ["output", "expected_output"],
+    optionalFields: ["input"],
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -948,12 +945,17 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the correctness of the answer.",
+      },
+    },
   },
   "ragas/answer_relevancy": {
     name: `Ragas Answer Relevancy`,
     description: `
-This evaluator focuses on assessing how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
+Evaluates how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
 `,
     category: "rag",
     docsUrl:
@@ -964,7 +966,7 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -976,7 +978,12 @@ This evaluator focuses on assessing how pertinent the generated answer is to the
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the relevance of the answer.",
+      },
+    },
   },
   "ragas/context_precision": {
     name: `Ragas Context Precision`,
@@ -992,7 +999,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -1020,7 +1027,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -1048,7 +1055,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -1076,7 +1083,7 @@ This metric evaluates whether all of the output relevant items present in the co
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -1104,7 +1111,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-3.5-turbo-16k",
+        default: "openai/gpt-4o-mini",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -1142,8 +1149,8 @@ Allows you to check for simple text matches or regex evaluation.
       },
     },
     result: {
-      score: {
-        description: "Returns 1 if all rules pass, 0 if any rule fails",
+      passed: {
+        description: "True if all rules pass, False if any rule fails",
       },
     },
   },
@@ -1279,9 +1286,6 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
       },
     },
     result: {
-      score: {
-        description: "Returns 1 if LLM evaluates it as true, 0 if as false",
-      },
       passed: {
         description: "The veredict given by the LLM",
       },
@@ -1574,6 +1578,9 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       score: {
         description:
           "The model's confidence on primary category where the input violates the OpenAI's policy. The value is between 0 and 1, where higher values denote higher confidence.",
+      },
+      passed: {
+        description: "Fails if any moderation category is flagged",
       },
     },
   },
