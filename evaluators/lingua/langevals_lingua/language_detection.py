@@ -12,7 +12,7 @@ from lingua import LanguageDetectorBuilder
 
 
 class LinguaLanguageDetectionEntry(EvaluatorEntry):
-    input: str
+    input: Optional[str] = Field(default="")
     output: str
 
 

@@ -46,7 +46,7 @@ class CustomLLMScoreEvaluator(
     Use an LLM as a judge with custom prompt to do a numeric score evaluation of the message.
     """
 
-    name = "Custom LLM Score Evaluator"
+    name = "LLM-as-a-Judge Score Evaluator"
     category = "custom"
     env_vars = []
     default_settings = CustomLLMScoreSettings()

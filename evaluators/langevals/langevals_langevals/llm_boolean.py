@@ -48,7 +48,7 @@ class CustomLLMBooleanEvaluator(
     Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation of the message.
     """
 
-    name = "Custom LLM Boolean Evaluator"
+    name = "LLM-as-a-Judge Boolean Evaluator"
     category = "custom"
     env_vars = []
     default_settings = CustomLLMBooleanSettings()
