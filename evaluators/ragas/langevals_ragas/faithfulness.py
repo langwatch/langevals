@@ -1,10 +1,17 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EvaluationResult,
     EvaluationResultSkipped,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import BaseEvaluator, env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import (
+    BaseEvaluator,
+    env_vars,
+    evaluate_ragas,
+    RagasSettings,
+)
+from pydantic import Field
 
 
 class RagasFaithfulnessEntry(EvaluatorEntry):
@@ -12,8 +19,14 @@ class RagasFaithfulnessEntry(EvaluatorEntry):
     contexts: list[str]
 
 
+class RagasFaithfulnessResult(EvaluationResult):
+    score: float = Field(
+        description="A score between 0.0 and 1.0 indicating the faithfulness of the answer."
+    )
+
+
 class RagasFaithfulnessEvaluator(
-    BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasFaithfulnessResult]
 ):
     """
     This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.

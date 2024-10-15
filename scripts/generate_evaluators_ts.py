@@ -181,7 +181,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f"export type EvaluatorTypes = keyof Evaluators;\n\n"
         f"export type EvaluationResult = {{\n"
         f"    status: 'processed';\n"
-        f"    score: number;\n"
+        f"    score?: number | undefined;\n"
         f"    passed?: boolean | undefined;\n"
         f"    label?: string | undefined;\n"
         f"    details?: string | undefined;\n"

@@ -48,7 +48,7 @@ export type EvaluatorTypes = keyof Evaluators;
 
 export type EvaluationResult = {
   status: "processed";
-  score: number;
+  score?: number | undefined;
   passed?: boolean | undefined;
   label?: string | undefined;
   details?: string | undefined;
@@ -504,6 +504,34 @@ export type Evaluators = {
       prompt: string;
     };
   };
+  "langevals/llm_category": {
+    settings: {
+      model:
+        | "openai/gpt-3.5-turbo"
+        | "openai/gpt-3.5-turbo-0125"
+        | "openai/gpt-3.5-turbo-1106"
+        | "openai/gpt-4-turbo"
+        | "openai/gpt-4-0125-preview"
+        | "openai/gpt-4o"
+        | "openai/gpt-4o-mini"
+        | "openai/gpt-4-1106-preview"
+        | "azure/gpt-35-turbo-1106"
+        | "azure/gpt-4o"
+        | "azure/gpt-4o-mini"
+        | "azure/gpt-4-turbo-2024-04-09"
+        | "azure/gpt-4-1106-preview"
+        | "groq/llama3-70b-8192"
+        | "anthropic/claude-3-haiku-20240307"
+        | "anthropic/claude-3-5-sonnet-20240620"
+        | "anthropic/claude-3-opus-20240229";
+      max_tokens: number;
+      prompt: string;
+      categories: {
+        name: string;
+        description: string;
+      }[];
+    };
+  };
   "langevals/llm_score": {
     settings: {
       model:
@@ -668,8 +696,8 @@ or if it's in a specific expected language.
     category: "quality",
     docsUrl: "https://github.com/pemistahl/lingua-py",
     isGuardrail: true,
-    requiredFields: ["input", "output"],
-    optionalFields: [],
+    requiredFields: ["output"],
+    optionalFields: ["input"],
     settings: {
       check_for: {
         description: "What should be checked",
@@ -1123,7 +1151,12 @@ This evaluator assesses the extent to which the generated answer is consistent w
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the faithfulness of the answer.",
+      },
+    },
   },
   "langevals/basic": {
     name: `Custom Basic Evaluator`,
@@ -1260,7 +1293,7 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
     },
   },
   "langevals/llm_boolean": {
-    name: `Custom LLM Boolean Evaluator`,
+    name: `LLM-as-a-Judge Boolean Evaluator`,
     description: `
 Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation of the message.
 `,
@@ -1291,8 +1324,53 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
       },
     },
   },
+  "langevals/llm_category": {
+    name: `LLM-as-a-Judge Category Evaluator`,
+    description: `
+Use an LLM as a judge with a custom prompt to classify the message into custom defined categories.
+`,
+    category: "custom",
+    docsUrl: "",
+    isGuardrail: false,
+    requiredFields: [],
+    optionalFields: ["input", "output", "contexts"],
+    settings: {
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description: undefined,
+        default: 8192,
+      },
+      prompt: {
+        description:
+          "The system prompt to use for the LLM to run the evaluation",
+        default:
+          "You are an LLM category evaluator. Please categorize the message in one of the following categories",
+      },
+      categories: {
+        description: "The categories to use for the evaluation",
+        default: [
+          {
+            name: "smalltalk",
+            description: "Smalltalk with the user",
+          },
+          {
+            name: "company",
+            description: "Questions about the company, what we do, etc",
+          },
+        ],
+      },
+    },
+    result: {
+      label: {
+        description: "The detected category of the message",
+      },
+    },
+  },
   "langevals/llm_score": {
-    name: `Custom LLM Score Evaluator`,
+    name: `LLM-as-a-Judge Score Evaluator`,
     description: `
 Use an LLM as a judge with custom prompt to do a numeric score evaluation of the message.
 `,
