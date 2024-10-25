@@ -8,6 +8,7 @@ from langevals_core.base_evaluator import (
 )
 
 from pydantic import BaseModel
+from pydantic_core import PydanticUndefinedType
 from langevals.utils import (
     EvaluatorDefinitions,
     get_evaluator_classes,
@@ -23,9 +24,27 @@ def stringify_field_types(field_types):
         return "Record<string, never>"
 
     settings = "{\n"
-    for field_name, field_type in field_types.items():
-        optional = "?" if " | undefined" in field_type else ""
-        settings += f"        {field_name}{optional}: {field_type.replace(' | undefined', '')};\n"
+    for field_name, field in field_types.items():
+        optional = "?" if " | undefined" in field["type"] else ""
+        description = (
+            field.get("description")
+            if not isinstance(field.get("description"), PydanticUndefinedType)
+            else None
+        )
+        default = (
+            field.get("default")
+            if not isinstance(field.get("default"), PydanticUndefinedType)
+            else None
+        )
+        if description or default or type(default) == bool:
+            settings += f"        /**\n"
+            description_ = description.replace("\n", ". ") if description else None
+            if description_:
+                settings += f"        * @description {description_}\n"
+            if default or type(default) == bool:
+                settings += f"        * @default {json.dumps(default)}\n"
+            settings += f"        */\n"
+        settings += f"        {field_name}{optional}: {field['type'].replace(' | undefined', '')};\n"
     settings += "      }"
 
     return settings
@@ -47,7 +66,11 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
         if inspect.isclass(field) and issubclass(field, BaseModel):
             return stringify_field_types(
                 {
-                    field_name: get_field_type_to_typescript(field.annotation)
+                    field_name: {
+                        "type": get_field_type_to_typescript(field.annotation),
+                        "description": field.description,
+                        "default": dump_model_type(field.default),
+                    }
                     for field_name, field in field.model_fields.items()
                 }
             )
@@ -93,9 +116,11 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
             "description": field.description,
             "default": default,
         }
-        evaluator_info["settingsTypes"][field_name] = get_field_type_to_typescript(
-            field.annotation
-        )
+        evaluator_info["settingsTypes"][field_name] = {
+            "type": get_field_type_to_typescript(field.annotation),
+            "description": field.description,
+            "default": default,
+        }
 
     base_score_description = EvaluationResult.model_fields["score"].description
     score_field = definitions.result_type.model_fields.get("score")
