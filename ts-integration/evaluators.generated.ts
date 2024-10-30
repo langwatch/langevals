@@ -571,21 +571,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -599,21 +590,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -627,21 +609,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -655,21 +628,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -683,21 +647,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -711,21 +666,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -739,21 +685,12 @@ export type Evaluators = {
        * @description The model to use for evaluation.
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo-16k"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "azure/gpt-35-turbo-16k"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "anthropic/claude-3-5-sonnet-20240620";
+      model: string;
       /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
-      embeddings_model:
-        | "openai/text-embedding-ada-002"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -796,24 +733,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @description Max tokens allowed for evaluation
        * @default 8192
@@ -837,24 +757,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @description Max tokens allowed for evaluation
        * @default 8192
@@ -883,24 +786,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @default 8192
        */
@@ -918,24 +804,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @default 8192
        */
@@ -961,24 +830,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @default 8192
        */
@@ -996,24 +848,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @description Max tokens allowed for evaluation
        * @default 8192
@@ -1038,24 +873,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @description Max tokens allowed for evaluation
        * @default 8192
@@ -1199,24 +1017,7 @@ export type Evaluators = {
        * @description The model to use for evaluation
        * @default "openai/gpt-4o-mini"
        */
-      model:
-        | "openai/gpt-3.5-turbo"
-        | "openai/gpt-3.5-turbo-0125"
-        | "openai/gpt-3.5-turbo-1106"
-        | "openai/gpt-4-turbo"
-        | "openai/gpt-4-0125-preview"
-        | "openai/gpt-4o"
-        | "openai/gpt-4o-mini"
-        | "openai/gpt-4-1106-preview"
-        | "azure/gpt-35-turbo-1106"
-        | "azure/gpt-4o"
-        | "azure/gpt-4o-mini"
-        | "azure/gpt-4-turbo-2024-04-09"
-        | "azure/gpt-4-1106-preview"
-        | "groq/llama3-70b-8192"
-        | "anthropic/claude-3-haiku-20240307"
-        | "anthropic/claude-3-5-sonnet-20240620"
-        | "anthropic/claude-3-opus-20240229";
+      model: string;
       /**
        * @description Max tokens allowed for evaluation
        * @default 8192

@@ -42,22 +42,11 @@ env_vars = []
 
 
 class RagasSettings(EvaluatorSettings):
-    model: Literal[
-        "openai/gpt-3.5-turbo-16k",
-        "openai/gpt-4o",
-        "openai/gpt-4o-mini",
-        "azure/gpt-35-turbo-16k",
-        "azure/gpt-4o",
-        "azure/gpt-4o-mini",
-        "anthropic/claude-3-5-sonnet-20240620",
-    ] = Field(
+    model: str = Field(
         default="openai/gpt-4o-mini",
         description="The model to use for evaluation.",
     )
-    embeddings_model: Literal[
-        "openai/text-embedding-ada-002",
-        "azure/text-embedding-ada-002",
-    ] = Field(
+    embeddings_model: str = Field(
         default="openai/text-embedding-ada-002",
         description="The model to use for embeddings.",
     )

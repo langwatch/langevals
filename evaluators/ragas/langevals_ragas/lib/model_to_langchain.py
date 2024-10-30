@@ -18,7 +18,9 @@ def model_to_langchain(model: str) -> BaseChatModel:
 
     if vendor == "openai":
         return ChatOpenAI(
-            model=model, api_key=os.environ["OPENAI_API_KEY"]  # type: ignore
+            model=model,
+            base_url=os.environ.get("OPENAI_BASE_URL", None),
+            api_key=os.environ["OPENAI_API_KEY"],  # type: ignore
         )
     elif vendor == "azure":
         return AzureChatOpenAI(
@@ -34,7 +36,9 @@ def model_to_langchain(model: str) -> BaseChatModel:
             api_key=os.environ["ANTHROPIC_API_KEY"],  # type: ignore
         )
     else:
-        raise ValueError(f"Invalid model: {model}")
+        raise ValueError(
+            f"Model {model} not supported, please choose a model from OpenAI, Azure or Anthropic"
+        )
 
 
 def embeddings_model_to_langchain(embeddings_model: str):
@@ -43,6 +47,7 @@ def embeddings_model_to_langchain(embeddings_model: str):
     if embeddings_vendor == "openai":
         return OpenAIEmbeddings(
             model=embeddings_model,
+            base_url=os.environ.get("OPENAI_BASE_URL", None),
             api_key=os.environ["OPENAI_API_KEY"],  # type: ignore
         )
     elif embeddings_vendor == "azure":
@@ -57,4 +62,6 @@ def embeddings_model_to_langchain(embeddings_model: str):
             api_key=os.environ["AZURE_API_KEY"],  # type: ignore
         )
     else:
-        raise ValueError(f"Invalid embeddings model: {embeddings_model}")
+        raise ValueError(
+            f"Embeddings model {embeddings_model} not supported, please choose a model from OpenAI or Azure"
+        )

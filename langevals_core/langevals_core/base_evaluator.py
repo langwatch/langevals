@@ -44,25 +44,7 @@ TSettings = TypeVar("TSettings", bound=EvaluatorSettings)
 
 
 class LLMEvaluatorSettings(EvaluatorSettings):
-    model: Literal[
-        "openai/gpt-3.5-turbo",
-        "openai/gpt-3.5-turbo-0125",
-        "openai/gpt-3.5-turbo-1106",
-        "openai/gpt-4-turbo",
-        "openai/gpt-4-0125-preview",
-        "openai/gpt-4o",
-        "openai/gpt-4o-mini",
-        "openai/gpt-4-1106-preview",
-        "azure/gpt-35-turbo-1106",
-        "azure/gpt-4o",
-        "azure/gpt-4o-mini",
-        "azure/gpt-4-turbo-2024-04-09",
-        "azure/gpt-4-1106-preview",
-        "groq/llama3-70b-8192",
-        "anthropic/claude-3-haiku-20240307",
-        "anthropic/claude-3-5-sonnet-20240620",
-        "anthropic/claude-3-opus-20240229",
-    ] = Field(
+    model: str = Field(
         default="openai/gpt-4o-mini",
         description="The model to use for evaluation",
     )
