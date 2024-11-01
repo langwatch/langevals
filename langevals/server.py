@@ -1,4 +1,6 @@
+from contextlib import asynccontextmanager
 import os
+import signal
 import sys
 import dotenv
 
@@ -20,7 +22,20 @@ from langevals_core.base_evaluator import (
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from mangum import Mangum
 
-app = FastAPI()
+
+def handle_sigterm(signum, frame):
+    print("Received SIGTERM")
+    raise SystemExit(0)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    signal.signal(signal.SIGTERM, handle_sigterm)
+    signal.signal(signal.SIGINT, handle_sigterm)
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 original_env = os.environ.copy()
 
@@ -52,7 +67,8 @@ def create_evaluator_routes(evaluator_cls):
             json_schema_extra={"example": {}},
         )
 
-    evaluator_cls.preload()
+    if not os.getenv("DISABLE_EVALUATORS_PRELOAD"):
+        evaluator_cls.preload()
 
     @app.post(
         f"/{module_name}/{evaluator_name}/evaluate",
@@ -115,14 +131,16 @@ def main():
             super().__init__()
 
         def load_config(self):
-            config = {key: value for key, value in self.options.items()
-                    if key in self.cfg.settings and value is not None} # type: ignore
+            config = {
+                key: value
+                for key, value in self.options.items()
+                if key in self.cfg.settings and value is not None
+            }  # type: ignore
             for key, value in config.items():
-                self.cfg.set(key.lower(), value) # type: ignore
+                self.cfg.set(key.lower(), value)  # type: ignore
 
         def load(self):
             return self.application
-
 
     host = "0.0.0.0"
     port = int(os.getenv("PORT", 8000))
@@ -131,11 +149,11 @@ def main():
     print(f"Starting server with {workers} workers")
 
     options = {
-        'bind': f'{host}:{port}',
-        'workers': workers,
-        'worker_class': 'uvicorn.workers.UvicornWorker',
-        'preload_app': True,
-        'forwarded_allow_ips': '*',
+        "bind": f"{host}:{port}",
+        "workers": workers,
+        "worker_class": "uvicorn.workers.UvicornWorker",
+        "preload_app": True,
+        "forwarded_allow_ips": "*",
     }
 
     StandaloneApplication(app, options).run()
