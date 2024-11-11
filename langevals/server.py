@@ -30,8 +30,9 @@ def handle_sigterm(signum, frame):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    signal.signal(signal.SIGTERM, handle_sigterm)
-    signal.signal(signal.SIGINT, handle_sigterm)
+    if os.getenv("RUNNING_IN_DOCKER"):
+        signal.signal(signal.SIGTERM, handle_sigterm)
+        signal.signal(signal.SIGINT, handle_sigterm)
     yield
 
 

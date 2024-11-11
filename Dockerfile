@@ -17,6 +17,8 @@ RUN poetry install --only main --all-extras
 COPY langevals/ langevals/
 RUN PYTHONPATH="." poetry run python langevals/server.py --preload
 
+ENV RUNNING_IN_DOCKER=true
+
 COPY . .
 
 CMD PYTHONPATH="." poetry run python langevals/server.py
