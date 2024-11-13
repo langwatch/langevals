@@ -46,3 +46,14 @@ def test_llm_as_judge(entry):
     )
 
     expect(input=entry.input, output=recipe).to_pass(vegetarian_checker)
+
+
+def test_llm_as_judge_vertex_ai():
+    vegetarian_checker = CustomLLMBooleanEvaluator(
+        settings=CustomLLMBooleanSettings(
+            model="vertex_ai/gemini-1.5-flash",
+            prompt="Is the recipe vegetarian?",
+        )
+    )
+
+    expect(input="Vegetables", output="Broccoli").to_pass(vegetarian_checker)

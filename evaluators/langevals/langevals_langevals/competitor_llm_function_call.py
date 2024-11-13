@@ -157,7 +157,6 @@ class CompetitorLLMFunctionCallEvaluator(
         passed = not arguments["competitor_mentioned"] if "competitor_mentioned" in arguments else True
         confidence = arguments["confidence"] if "confidence" in arguments else 1
         reasoning = arguments["reasoning"] if "reasoning" in arguments else "No reasoning."
-        print(reasoning)
         cost = completion_cost(completion_response=response, prompt=prompt)
         details = None
         if not passed:

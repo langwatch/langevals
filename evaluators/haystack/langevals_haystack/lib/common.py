@@ -16,7 +16,10 @@ def set_evaluator_model_and_capture_cost(heystack_evaluator: LLMEvaluator, model
     def capture_completions_cost(self, **kwargs):
         kwargs["model"] = model
         response = litellm.completion(**kwargs)
-        cost.amount += litellm.completion_cost(response)
+        amount = litellm.completion_cost(response)
+        if amount is not None:
+            cost.amount += litellm.completion_cost(response)
+
         response = ChatCompletion(**response.model_dump())  # type: ignore
         return response
 

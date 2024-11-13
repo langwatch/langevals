@@ -18,7 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from tenacity import Retrying, stop_after_attempt, wait_random_exponential
 from tqdm.auto import tqdm as tqdm_auto
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
-from langevals_core.azure_patch import patch_litellm
+from langevals_core.litellm_patch import patch_litellm
 
 import time
 import warnings
@@ -181,6 +181,7 @@ models_providers_env_vars = {
     ],
     "groq": ["GROQ_API_KEY"],
     "anthropic": ["ANTHROPIC_API_KEY"],
+    "vertex_ai": ["GOOGLE_APPLICATION_CREDENTIALS"],
 }
 
 models_env_vars = [env for envs in models_providers_env_vars.values() for env in envs]

@@ -2,7 +2,10 @@
 name = "langevals-ragas"
 version = "0.1.7"
 description = "LangEvals Ragas evaluator"
-authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
+authors = [
+  "Rogerio Chaves <rogerio@langwatch.ai>",
+  "Yevhenii Budnyk <y.budnyk789@gmail.com>",
+]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -13,7 +16,6 @@ langchain-openai = "^0.1.23"
 langchain_community = "^0.2.16"
 datasets = "2.14.6"
 litellm = "^1.41.25"
-langchain-anthropic = "^0.1.23"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

@@ -1,46 +1,24 @@
 import os
-from langchain_anthropic import ChatAnthropic
 from langchain_openai import (
-    AzureChatOpenAI,
     AzureOpenAIEmbeddings,
-    ChatOpenAI,
     OpenAIEmbeddings,
 )
 from langchain_core.language_models.chat_models import (
     BaseChatModel,
 )
 
+from langchain_community.chat_models import ChatLiteLLM
+import litellm
+
 
 def model_to_langchain(model: str) -> BaseChatModel:
     if model.startswith("claude-"):
         model = model.replace("claude-", "anthropic/claude-")
-    vendor, model = model.split("/")
 
-    if vendor == "openai":
-        return ChatOpenAI(
-            model=model,
-            base_url=os.environ.get("OPENAI_BASE_URL", None),
-            api_key=os.environ["OPENAI_API_KEY"],  # type: ignore
-        )
-    elif vendor == "azure":
-        return AzureChatOpenAI(
-            model=model.replace(".", ""),
-            api_version="2023-05-15",
-            azure_endpoint=os.environ["AZURE_API_BASE"],
-            api_key=os.environ["AZURE_API_KEY"],  # type: ignore
-            azure_deployment=os.environ.get("AZURE_DEPLOYMENT_NAME", None),
-        )
-    elif vendor == "anthropic":
-        return ChatAnthropic(
-            model=model,  # type: ignore
-            api_key=os.environ["ANTHROPIC_API_KEY"],  # type: ignore
-        )
-    else:
-        raise ValueError(
-            f"Model {model} not supported, please choose a model from OpenAI, Azure or Anthropic"
-        )
+    return ChatLiteLLM(model=model, client=litellm.completion)
 
 
+# TODO: adapt to use litellm.embedding instead of langchain
 def embeddings_model_to_langchain(embeddings_model: str):
     embeddings_vendor, embeddings_model = embeddings_model.split("/")
 
