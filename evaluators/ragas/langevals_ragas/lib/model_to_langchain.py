@@ -1,23 +1,34 @@
 import os
+from typing import Optional
 from langchain_openai import (
     AzureOpenAIEmbeddings,
+    ChatOpenAI,
     OpenAIEmbeddings,
 )
 from langchain_core.language_models.chat_models import (
     BaseChatModel,
 )
 
-from langchain_community.chat_models import ChatLiteLLM
 import litellm
 
 
-def model_to_langchain(model: str) -> BaseChatModel:
+class LitellmCompletion:
+    exception: Optional[Exception] = None
+
+    def create(self, *args, **kwargs):
+        try:
+            return litellm.completion(*args, **kwargs)
+        except Exception as e:
+            self.exception = e
+            raise e
+
+
+def model_to_langchain(model: str) -> tuple[BaseChatModel, LitellmCompletion]:
     if model.startswith("claude-"):
         model = model.replace("claude-", "anthropic/claude-")
 
-    litellm.set_verbose = True  # type: ignore
-
-    return ChatLiteLLM(model=model, client=litellm.completion)
+    client = LitellmCompletion()
+    return ChatOpenAI(model=model, client=client), client
 
 
 # TODO: adapt to use litellm.embedding instead of langchain

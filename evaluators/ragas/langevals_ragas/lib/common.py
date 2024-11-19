@@ -1,6 +1,6 @@
 import math
 import os
-from typing import List, Literal, Optional
+from typing import List, Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
@@ -37,6 +37,7 @@ from ragas.metrics import faithfulness, Faithfulness
 from ragas.llms import LangchainLLMWrapper
 from pydantic import Field
 from langevals_core.utils import calculate_total_tokens
+from ragas.exceptions import ExceptionInRunner
 
 env_vars = []
 
@@ -80,7 +81,7 @@ def evaluate_ragas(
         for key, env in evaluator.env.items():
             os.environ[key] = env
 
-    gpt = model_to_langchain(settings.model)
+    gpt, client = model_to_langchain(settings.model)
     gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
     embeddings = embeddings_model_to_langchain(settings.embeddings_model)
 
@@ -132,7 +133,12 @@ def evaluate_ragas(
     )
 
     with get_openai_callback() as cb:
-        result = evaluate(dataset, metrics=[ragas_metric])
+        try:
+            result = evaluate(dataset, metrics=[ragas_metric])
+        except ExceptionInRunner as e:
+            if client.exception:
+                raise client.exception
+            raise e
 
         score = result[metric]
 
