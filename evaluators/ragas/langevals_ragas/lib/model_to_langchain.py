@@ -15,6 +15,8 @@ def model_to_langchain(model: str) -> BaseChatModel:
     if model.startswith("claude-"):
         model = model.replace("claude-", "anthropic/claude-")
 
+    litellm.set_verbose = True  # type: ignore
+
     return ChatLiteLLM(model=model, client=litellm.completion)
 
 
