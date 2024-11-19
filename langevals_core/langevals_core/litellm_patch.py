@@ -22,7 +22,11 @@ def patch_litellm():
             kwargs["vertex_credentials"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
         for key, value in os.environ.items():
-            if key.startswith("LITELLM_") and not key.startswith("LITELLM_EMBEDDINGS_"):
+            if (
+                key.startswith("LITELLM_")
+                and not key.startswith("LITELLM_EMBEDDINGS_")
+                and key != "LITELLM_LOG"
+            ):
                 kwargs[key.replace("LITELLM_", "")] = value
 
         return _original_completion(*args, **kwargs)
