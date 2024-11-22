@@ -1,9 +1,11 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings
+from pydantic import Field
 
 
 class RagasContextPrecisionEntry(EvaluatorEntry):
@@ -12,8 +14,17 @@ class RagasContextPrecisionEntry(EvaluatorEntry):
     expected_output: str
 
 
+class RagasContextPrecisionResult(EvaluationResult):
+    score: float = Field(
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the precision of the context."
+    )
+
+
 class RagasContextPrecisionEvaluator(
-    BaseEvaluator[RagasContextPrecisionEntry, RagasSettings, RagasResult]
+    BaseEvaluator[
+        RagasContextPrecisionEntry, RagasSettings, RagasContextPrecisionResult
+    ]
 ):
     """
     This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.

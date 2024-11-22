@@ -21,7 +21,8 @@ class RagasFaithfulnessEntry(EvaluatorEntry):
 
 class RagasFaithfulnessResult(EvaluationResult):
     score: float = Field(
-        description="A score between 0.0 and 1.0 indicating the faithfulness of the answer."
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the faithfulness of the answer.",
     )
 
 

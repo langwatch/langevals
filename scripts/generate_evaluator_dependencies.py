@@ -20,11 +20,9 @@ evaluator_packages = [
 package_names = []
 for package in evaluator_packages:
     package_name = f"langevals-{package}"
-    optional = "false" if package == "langevals" else "true"
-    generated_dependencies += f'{package_name} = {{ path = "evaluators/{package}", develop = true, optional = {optional} }}\n'
-    if package != "langevals":
-        package_names.append(package_name)
-        generated_extras += f'{package} = ["{package_name}"]\n'
+    generated_dependencies += f'{package_name} = {{ path = "evaluators/{package}", develop = true, optional = true }}\n'
+    package_names.append(package_name)
+    generated_extras += f'{package} = ["{package_name}"]\n'
 
 generated_extras += 'all = ["' + '", "'.join(package_names) + '"]'
 

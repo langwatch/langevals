@@ -1,9 +1,11 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings
+from pydantic import Field
 
 
 class RagasContextRecallEntry(EvaluatorEntry):
@@ -11,8 +13,15 @@ class RagasContextRecallEntry(EvaluatorEntry):
     expected_output: str
 
 
+class RagasContextRecallResult(EvaluationResult):
+    score: float = Field(
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the recall of the context.",
+    )
+
+
 class RagasContextRecallEvaluator(
-    BaseEvaluator[RagasContextRecallEntry, RagasSettings, RagasResult]
+    BaseEvaluator[RagasContextRecallEntry, RagasSettings, RagasContextRecallResult]
 ):
     """
     This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.

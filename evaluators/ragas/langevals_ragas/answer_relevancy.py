@@ -4,7 +4,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings
 from pydantic import Field
 
 
@@ -15,7 +15,8 @@ class RagasAnswerRelevancyEntry(EvaluatorEntry):
 
 class RagasAnswerRelevancyResult(EvaluationResult):
     score: float = Field(
-        description="A score between 0.0 and 1.0 indicating the relevance of the answer."
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the relevance of the answer.",
     )
 
 

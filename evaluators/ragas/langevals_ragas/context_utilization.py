@@ -1,9 +1,11 @@
 from langevals_core.base_evaluator import (
     BaseEvaluator,
+    EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings
+from pydantic import Field
 
 
 class RagasContextUtilizationEntry(EvaluatorEntry):
@@ -12,8 +14,17 @@ class RagasContextUtilizationEntry(EvaluatorEntry):
     contexts: list[str]
 
 
+class RagasContextUtilizationResult(EvaluationResult):
+    score: float = Field(
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the utilization of the context.",
+    )
+
+
 class RagasContextUtilizationEvaluator(
-    BaseEvaluator[RagasContextUtilizationEntry, RagasSettings, RagasResult]
+    BaseEvaluator[
+        RagasContextUtilizationEntry, RagasSettings, RagasContextUtilizationResult
+    ]
 ):
     """
     This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.

@@ -1382,7 +1382,12 @@ This metric evaluates whether all of the ground-truth relevant items present in 
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the precision of the context.",
+      },
+    },
   },
   "ragas/context_recall": {
     name: `Ragas Context Recall`,
@@ -1410,7 +1415,12 @@ This evaluator measures the extent to which the retrieved context aligns with th
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the recall of the context.",
+      },
+    },
   },
   "ragas/context_relevancy": {
     name: `Ragas Context Relevancy`,
@@ -1438,7 +1448,12 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the relevancy of the context.",
+      },
+    },
   },
   "ragas/context_utilization": {
     name: `Ragas Context Utilization`,
@@ -1466,7 +1481,12 @@ This metric evaluates whether all of the output relevant items present in the co
         default: 2048,
       },
     },
-    result: {},
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the utilization of the context.",
+      },
+    },
   },
   "ragas/faithfulness": {
     name: `Ragas Faithfulness`,

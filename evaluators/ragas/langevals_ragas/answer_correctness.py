@@ -4,9 +4,8 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
-    EvaluationResultSkipped,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings, RagasResult
+from .lib.common import env_vars, evaluate_ragas, RagasSettings
 from pydantic import Field
 
 
@@ -18,12 +17,15 @@ class RagasAnswerCorrectnessEntry(EvaluatorEntry):
 
 class RagasAnswerCorrectnessResult(EvaluationResult):
     score: float = Field(
-        description="A score between 0.0 and 1.0 indicating the correctness of the answer."
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the correctness of the answer.",
     )
 
 
 class RagasAnswerCorrectnessEvaluator(
-    BaseEvaluator[RagasAnswerCorrectnessEntry, RagasSettings, RagasAnswerCorrectnessResult]
+    BaseEvaluator[
+        RagasAnswerCorrectnessEntry, RagasSettings, RagasAnswerCorrectnessResult
+    ]
 ):
     """
     Computes with an LLM a weighted combination of factual as well as semantic similarity between the generated answer and the expected output.

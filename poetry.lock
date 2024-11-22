@@ -6136,4 +6136,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "488f8728c2c3c17d184138042b79444abad09c63062658ed1da6287ad1958482"
+content-hash = "b2627e10c5fa32bdb58919d9ae08a046d7e3e2ab2367f0d54f6899507d1da6fa"

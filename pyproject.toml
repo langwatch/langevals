@@ -57,7 +57,7 @@ lingua = [ "langevals-lingua",]
 aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
-all = [ "langevals-langevals", "langevals-azure", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-haystack", "langevals-presidio", "langevals-aws", "langevals-huggingface", "langevals-openai",]
+all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-haystack", "langevals-presidio", "langevals-aws", "langevals-huggingface", "langevals-openai",]
 haystack = [ "langevals-haystack",]
 presidio = [ "langevals-presidio",]
 
