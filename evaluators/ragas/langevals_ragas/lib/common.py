@@ -10,7 +10,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
 )
 from pydantic import Field
-from ragas import evaluate
+from ragas import RunConfig, evaluate
 from ragas.metrics.base import Metric
 from ragas.llms import LangchainLLMWrapper
 from ragas.metrics import (
@@ -83,6 +83,15 @@ def evaluate_ragas(
 
     gpt, client = model_to_langchain(settings.model)
     gpt_wrapper = LangchainLLMWrapper(langchain_llm=gpt)
+
+    _original_generate = gpt_wrapper.generate
+
+    def generate(*args, **kwargs):
+        kwargs["is_async"] = False
+        return _original_generate(*args, **kwargs)
+
+    gpt_wrapper.generate = generate
+
     embeddings = embeddings_model_to_langchain(settings.embeddings_model)
 
     answer_relevancy.llm = gpt_wrapper

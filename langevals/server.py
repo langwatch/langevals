@@ -79,8 +79,10 @@ def create_evaluator_routes(evaluator_cls):
     async def evaluate(
         req: Request,
     ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
-        os.environ = original_env  # always try to set env vars from the original env back again to avoid side effects
+        os.environ.clear()
+        os.environ.update(original_env)  # always try to set env vars from the original env back again to avoid side effects
         evaluator = evaluator_cls(settings=(req.settings or {}), env=req.env)  # type: ignore
+        os.environ.clear()
         result = evaluator.evaluate_batch(req.data)
         return result
 
