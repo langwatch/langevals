@@ -239,9 +239,9 @@ class BaseEvaluator(BaseModel, Generic[TEntry, TSettings, TResult], ABC):
 
     def set_model_envs(self):
         # Those variables may be used non-explicitly, so we need to set them globally here for the arguments given
-        for env_var in models_env_vars:
-            if self.env and env_var in self.env:
-                os.environ[env_var] = self.env[env_var]
+        for key, value in (self.env or {}).items():
+            if key in models_env_vars or key.startswith("LITELLM_"):
+                os.environ[key] = value
 
         # azure alias for litellm
         if os.environ.get("AZURE_OPENAI_API_KEY") is not None:

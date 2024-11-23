@@ -11,6 +11,7 @@ def patch_litellm():
     _original_completion = litellm.completion
 
     def patched_completion(*args, **kwargs):
+        kwargs["drop_params"] = True
         if (
             os.environ.get("AZURE_DEPLOYMENT_NAME") is not None
             and "model" in kwargs
@@ -36,10 +37,11 @@ def patch_litellm():
     _original_embedding = litellm.embedding
 
     def patched_embedding(*args, **kwargs):
+        kwargs["drop_params"] = True
         if os.environ.get("AZURE_EMBEDDINGS_DEPLOYMENT_NAME") is not None:
             kwargs["model"] = "azure/" + os.environ["AZURE_EMBEDDINGS_DEPLOYMENT_NAME"]
-        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None:
-            kwargs["vertex_credentials"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+        # if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None:
+        #     kwargs["vertex_credentials"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
         for key, value in os.environ.items():
             if key.startswith("LITELLM_EMBEDDINGS_"):
                 kwargs[key.replace("LITELLM_EMBEDDINGS_", "")] = value

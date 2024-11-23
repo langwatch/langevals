@@ -38,6 +38,7 @@ from ragas.llms import LangchainLLMWrapper
 from pydantic import Field
 from langevals_core.utils import calculate_total_tokens
 from ragas.exceptions import ExceptionInRunner
+from ragas.embeddings import LangchainEmbeddingsWrapper
 
 env_vars = []
 
@@ -58,7 +59,7 @@ class RagasSettings(EvaluatorSettings):
 
 
 class RagasResult(EvaluationResult):
-    score: float
+    score: float = Field(default=0.0)
 
 
 class _GenericEvaluatorEntry(EvaluatorEntry):
@@ -92,15 +93,28 @@ def evaluate_ragas(
 
     gpt_wrapper.generate = generate
 
-    embeddings = embeddings_model_to_langchain(settings.embeddings_model)
+    embeddings, embeddings_client = embeddings_model_to_langchain(
+        settings.embeddings_model
+    )
+    embeddings_wrapper = LangchainEmbeddingsWrapper(embeddings)
 
     answer_relevancy.llm = gpt_wrapper
-    answer_relevancy.embeddings = embeddings  # type: ignore
+    answer_relevancy.embeddings = embeddings_wrapper  # type: ignore
     faithfulness.llm = gpt_wrapper
+    if hasattr(faithfulness, "embeddings"):
+        faithfulness.embeddings = embeddings_wrapper  # type: ignore
     context_precision.llm = gpt_wrapper
+    if hasattr(context_precision, "embeddings"):
+        context_precision.embeddings = embeddings_wrapper  # type: ignore
     context_recall.llm = gpt_wrapper
+    if hasattr(context_recall, "embeddings"):
+        context_recall.embeddings = embeddings_wrapper  # type: ignore
     context_relevancy.llm = gpt_wrapper
+    if hasattr(context_relevancy, "embeddings"):
+        context_relevancy.embeddings = embeddings_wrapper  # type: ignore
     answer_correctness.llm = gpt_wrapper
+    # if hasattr(answer_correctness, "embeddings"):
+    #     answer_correctness.embeddings = embeddings_wrapper  # type: ignore
 
     contexts = [x for x in contexts if x] if contexts else None
 
@@ -147,6 +161,8 @@ def evaluate_ragas(
         except ExceptionInRunner as e:
             if client.exception:
                 raise client.exception
+            if embeddings_client.exception:
+                raise embeddings_client.exception
             raise e
 
         score = result[metric]

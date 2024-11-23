@@ -2220,7 +2220,7 @@ files = []
 develop = true
 
 [package.dependencies]
-litellm = "^1.40.7"
+litellm = "^1.52.14"
 pandas = "^2.2.2"
 pydantic = "^2.4.0"
 tenacity = "^8.4.0"
@@ -2276,7 +2276,7 @@ develop = true
 [package.dependencies]
 haystack-ai = "^2.2.1"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.41.25"
+litellm = "^1.52.14"
 
 [package.source]
 type = "directory"
@@ -2294,7 +2294,7 @@ develop = true
 [package.dependencies]
 httpx = "^0.27.0"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.41.25"
+litellm = "^1.52.14"
 
 [package.source]
 type = "directory"
@@ -2312,7 +2312,7 @@ develop = true
 [package.dependencies]
 dspy-ai = "^2.4.9"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.41.25"
+litellm = "^1.52.14"
 numpy = "^1.26.4"
 openai = ">=1.27.0"
 
@@ -2388,7 +2388,7 @@ datasets = "2.14.6"
 langchain_community = "^0.2.16"
 langchain-openai = "^0.1.23"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.41.25"
+litellm = "^1.52.14"
 ragas = "^0.1.7"
 
 [package.source]
@@ -2536,13 +2536,13 @@ test = ["pytest (==7.4.3)"]
 
 [[package]]
 name = "litellm"
-version = "1.41.25"
+version = "1.52.14"
 description = "Library to easily interface with LLM API providers"
 optional = false
 python-versions = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 files = [
-    {file = "litellm-1.41.25-py3-none-any.whl", hash = "sha256:80ef35f141402be4ef106a9c720169f6f613ff47df717ab3d1b8ba845c2a5b38"},
-    {file = "litellm-1.41.25.tar.gz", hash = "sha256:f6f000b8e666b51914436c26659d4a91d67b350bcc44e47b3837d3b8f0e1640d"},
+    {file = "litellm-1.52.14-py3-none-any.whl", hash = "sha256:688a084ff02796dcee172e0c2e31170eaba756bafbd1b95646fd59df33a316b8"},
+    {file = "litellm-1.52.14.tar.gz", hash = "sha256:255211fd5943da2982bccb52f7f58d816cadbb2cc45c9a805ff391b6b503504a"},
 ]
 
 [package.dependencies]
@@ -2551,7 +2551,7 @@ click = "*"
 importlib-metadata = ">=6.8.0"
 jinja2 = ">=3.1.2,<4.0.0"
 jsonschema = ">=4.22.0,<5.0.0"
-openai = ">=1.27.0"
+openai = ">=1.54.0"
 pydantic = ">=2.0.0,<3.0.0"
 python-dotenv = ">=0.2.0"
 requests = ">=2.31.0,<3.0.0"
@@ -2559,8 +2559,8 @@ tiktoken = ">=0.7.0"
 tokenizers = "*"
 
 [package.extras]
-extra-proxy = ["azure-identity (>=1.15.0,<2.0.0)", "azure-keyvault-secrets (>=4.8.0,<5.0.0)", "google-cloud-kms (>=2.21.3,<3.0.0)", "prisma (==0.11.0)", "pynacl (>=1.5.0,<2.0.0)", "resend (>=0.8.0,<0.9.0)"]
-proxy = ["PyJWT (>=2.8.0,<3.0.0)", "apscheduler (>=3.10.4,<4.0.0)", "backoff", "cryptography (>=42.0.5,<43.0.0)", "fastapi (>=0.111.0,<0.112.0)", "fastapi-sso (>=0.10.0,<0.11.0)", "gunicorn (>=22.0.0,<23.0.0)", "orjson (>=3.9.7,<4.0.0)", "python-multipart (>=0.0.9,<0.0.10)", "pyyaml (>=6.0.1,<7.0.0)", "rq", "uvicorn (>=0.22.0,<0.23.0)"]
+extra-proxy = ["azure-identity (>=1.15.0,<2.0.0)", "azure-keyvault-secrets (>=4.8.0,<5.0.0)", "google-cloud-kms (>=2.21.3,<3.0.0)", "prisma (==0.11.0)", "resend (>=0.8.0,<0.9.0)"]
+proxy = ["PyJWT (>=2.8.0,<3.0.0)", "apscheduler (>=3.10.4,<4.0.0)", "backoff", "cryptography (>=42.0.5,<43.0.0)", "fastapi (>=0.111.0,<0.112.0)", "fastapi-sso (>=0.10.0,<0.11.0)", "gunicorn (>=22.0.0,<23.0.0)", "orjson (>=3.9.7,<4.0.0)", "pynacl (>=1.5.0,<2.0.0)", "python-multipart (>=0.0.9,<0.0.10)", "pyyaml (>=6.0.1,<7.0.0)", "rq", "uvicorn (>=0.22.0,<0.23.0)"]
 
 [[package]]
 name = "mako"
@@ -3306,13 +3306,13 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.43.1"
+version = "1.55.0"
 description = "The official Python library for the openai API"
 optional = false
-python-versions = ">=3.7.1"
+python-versions = ">=3.8"
 files = [
-    {file = "openai-1.43.1-py3-none-any.whl", hash = "sha256:23ed3aa71e89cf644c911f7ab80087d08c0bf46ce6b75d9a811fc7942cff85c2"},
-    {file = "openai-1.43.1.tar.gz", hash = "sha256:b64843711b7c92ded36795062ea1f8cad84ec6c2848646f2a786ac4617a6b9f5"},
+    {file = "openai-1.55.0-py3-none-any.whl", hash = "sha256:446e08918f8dd70d8723274be860404c8c7cc46b91b93bbc0ef051f57eb503c1"},
+    {file = "openai-1.55.0.tar.gz", hash = "sha256:6c0975ac8540fe639d12b4ff5a8e0bf1424c844c4a4251148f59f06c4b2bd5db"},
 ]
 
 [package.dependencies]
@@ -6136,4 +6136,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b2627e10c5fa32bdb58919d9ae08a046d7e3e2ab2367f0d54f6899507d1da6fa"
+content-hash = "7f51f7cad549ae4e90c52aa57274029cac6b243c46a41c2c0a55539da18008cd"

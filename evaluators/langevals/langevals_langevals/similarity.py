@@ -4,11 +4,10 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
-    LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
 )
-from pydantic import BaseModel, Field
+from pydantic import Field
 import litellm
 import numpy as np
 
@@ -26,18 +25,17 @@ class CustomSimilaritySettings(EvaluatorSettings):
     ] = "is_not_similar_to"
     value: str = "example"
     threshold: float = 0.3
-    embeddings_model: Literal[
-        "openai/text-embedding-3-small", "azure/text-embedding-ada-002"
-    ] = "openai/text-embedding-3-small"
+    embeddings_model: str = "openai/text-embedding-3-small"
 
 
 class CustomSimilarityResult(EvaluationResult):
     score: float = Field(
-        description="How similar the input and output semantically, from 0.0 to 1.0, with 1.0 meaning the sentences are identical"
+        default=0.0,
+        description="How similar the input and output semantically, from 0.0 to 1.0, with 1.0 meaning the sentences are identical",
     )
     passed: Optional[bool] = Field(
         description="Passes if the cosine similarity crosses the threshold for the defined rule",
-        default=None
+        default=None,
     )
 
 
@@ -93,7 +91,7 @@ class CustomSimilarityEvaluator(
             )
 
     def get_embeddings(self, text: str):
-        vendor, model = self.settings.embeddings_model.split("/")
+        model = self.settings.embeddings_model
 
         total_tokens = len(litellm.encode(model=model, text=text))
         if total_tokens > 8192:
@@ -101,19 +99,5 @@ class CustomSimilarityEvaluator(
                 details=f"Total tokens exceed the maximum of 8192 tokens: {total_tokens} tokens used"
             )
 
-        if vendor == "openai":
-            response = litellm.embedding(
-                model=model, input=[text], api_key=self.get_env("OPENAI_API_KEY")
-            )
-            return response.data[0]["embedding"]  # type: ignore
-        elif vendor == "azure":
-            response = litellm.embedding(
-                model=f"azure/{model}",
-                input=[text],
-                api_key=self.get_env("AZURE_API_KEY"),
-                api_base=self.get_env("AZURE_API_BASE"),
-                api_version="2023-05-15",
-            )
-            return response.data[0]["embedding"]  # type: ignore
-        else:
-            raise ValueError(f"Invalid embeddings model {self.settings.embeddings_model}")
+        response = litellm.embedding(model=model, input=text)
+        return response.data[0]["embedding"]  # type: ignore

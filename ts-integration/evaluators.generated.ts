@@ -902,9 +902,7 @@ export type Evaluators = {
       /**
        * @default "openai/text-embedding-3-small"
        */
-      embeddings_model:
-        | "openai/text-embedding-3-small"
-        | "azure/text-embedding-ada-002";
+      embeddings_model: string;
     };
   };
   "azure/content_safety": {
