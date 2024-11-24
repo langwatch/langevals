@@ -55,7 +55,6 @@ class CompetitorLLMFunctionCallEvaluator(
     category = "policy"
     env_vars = []
     default_settings = CompetitorLLMFunctionCallSettings()
-    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
     is_guardrail = True
 
     def evaluate(self, entry: CompetitorLLMFunctionCallEntry) -> SingleEvaluationResult:

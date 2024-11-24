@@ -57,6 +57,7 @@ def extract_evaluator_info(definitions: EvaluatorDefinitions) -> Dict[str, Any]:
         "category": definitions.category,
         "docsUrl": definitions.docs_url,
         "isGuardrail": definitions.is_guardrail,
+        "envVars": definitions.env_vars,
         "settingsTypes": {},
         "settingsDescriptions": {},
         "result": {},
@@ -191,6 +192,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
         f'        default: Evaluators[T]["settings"][K];\n'
         f"        }};\n"
         f"    }};\n"
+        f"    envVars: string[];\n"
         f"    result: {{\n"
         f"        score?: {{\n"
         f"        description: string;\n"
@@ -258,6 +260,7 @@ def generate_typescript_definitions(evaluators_info: Dict[str, Dict[str, Any]]) 
             f'    optionalFields: {json.dumps(evaluator_info["optionalFields"])},\n'
         )
         ts_definitions += f'    settings: {json.dumps(evaluator_info["settingsDescriptions"], indent=6).replace(": null", ": undefined")},\n'
+        ts_definitions += f'    envVars: {json.dumps(evaluator_info["envVars"])},\n'
         ts_definitions += (
             f'    result: {json.dumps(evaluator_info["result"], indent=6)}\n'
         )

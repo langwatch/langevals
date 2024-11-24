@@ -52,7 +52,7 @@ class CustomSimilarityEvaluator(
 
     name = "Semantic Similarity Evaluator"
     category = "custom"
-    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+    env_vars = []
     default_settings = CustomSimilaritySettings()
     is_guardrail = True
 

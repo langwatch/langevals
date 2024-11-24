@@ -53,7 +53,6 @@ class CompetitorLLMEvaluator(
     category = "policy"
     env_vars = []
     default_settings = CompetitorLLMSettings()
-    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
     is_guardrail = True
 
     def evaluate(self, entry: CompetitorLLMEntry) -> SingleEvaluationResult:

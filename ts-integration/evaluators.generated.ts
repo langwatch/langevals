@@ -31,6 +31,7 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
       default: Evaluators[T]["settings"][K];
     };
   };
+  envVars: string[];
   result: {
     score?: {
       description: string;
@@ -1059,6 +1060,7 @@ or if it's in a specific expected language.
         default: 0.25,
       },
     },
+    envVars: [],
     result: {
       passed: {
         description:
@@ -1139,6 +1141,10 @@ social security numbers. It allows customization of the detection threshold and 
         default: "eu-central-1",
       },
     },
+    envVars: [
+      "AWS_COMPREHEND_ACCESS_KEY_ID",
+      "AWS_COMPREHEND_SECRET_ACCESS_KEY",
+    ],
     result: {
       score: {
         description: "Amount of PII detected, 0 means no PII detected",
@@ -1179,6 +1185,7 @@ It can work both as a safety evaluator and as policy enforcement.
         default: "cloudflare/thebloke/llamaguard-7b-awq",
       },
     },
+    envVars: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_KEY"],
     result: {
       score: {
         description: "How many violations were found in the content",
@@ -1220,6 +1227,7 @@ social security numbers. It allows customization of the detection threshold and 
         default: "POSSIBLE",
       },
     },
+    envVars: ["GOOGLE_APPLICATION_CREDENTIALS"],
     result: {
       score: {
         description: "Amount of PII detected, 0 means no PII detected",
@@ -1278,6 +1286,7 @@ social security numbers. It allows customization of the detection threshold and 
         default: 0.5,
       },
     },
+    envVars: [],
     result: {
       score: {
         description: "Amount of PII detected, 0 means no PII detected",
@@ -1314,6 +1323,7 @@ Computes with an LLM a weighted combination of factual as well as semantic simil
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1347,6 +1357,7 @@ Evaluates how pertinent the generated answer is to the given prompt. Higher scor
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1380,6 +1391,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1413,6 +1425,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1446,6 +1459,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1479,6 +1493,7 @@ This metric evaluates whether all of the output relevant items present in the co
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1512,6 +1527,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
         default: 2048,
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1542,6 +1558,7 @@ Allows you to check for simple text matches or regex evaluation.
         ],
       },
     },
+    envVars: [],
     result: {
       passed: {
         description: "True if all rules pass, False if any rule fails",
@@ -1564,6 +1581,7 @@ This evaluator checks if any of the specified competitors was mentioned
         default: ["OpenAI", "Google", "Microsoft"],
       },
     },
+    envVars: [],
     result: {
       score: {
         description: "Number of competitors mentioned in the input and output",
@@ -1602,6 +1620,7 @@ This evaluator use an LLM-as-judge to check if the conversation is related to co
           "We are providing an LLM observability and evaluation platform",
       },
     },
+    envVars: [],
     result: {
       score: {
         description: "Confidence that the message is competitor free",
@@ -1644,6 +1663,7 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
         default: ["OpenAI", "Google", "Microsoft"],
       },
     },
+    envVars: [],
     result: {
       score: {
         description: "Number of unique competitors mentioned",
@@ -1679,6 +1699,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
           "You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
       },
     },
+    envVars: [],
     result: {
       passed: {
         description: "The veredict given by the LLM",
@@ -1724,6 +1745,7 @@ Use an LLM as a judge with a custom prompt to classify the message into custom d
         ],
       },
     },
+    envVars: [],
     result: {
       label: {
         description: "The detected category of the message",
@@ -1756,6 +1778,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
           "You are an LLM evaluator. Please score from 0.0 to 1.0 how likely the user is to be satisfied with this answer, from 0.0 being not satisfied at all to 1.0 being completely satisfied",
       },
     },
+    envVars: [],
     result: {
       score: {
         description: "The score given by the LLM, according to the prompt",
@@ -1796,6 +1819,7 @@ This evaluator checks if the user message is concerning one of the allowed topic
         ],
       },
     },
+    envVars: [],
     result: {
       score: {
         description: "Confidence level of the intent prediction",
@@ -1820,6 +1844,7 @@ For messages about products, this evaluator checks for the nuanced sentiment dir
     requiredFields: ["output"],
     optionalFields: [],
     settings: {},
+    envVars: [],
     result: {
       score: {
         description:
@@ -1854,6 +1879,7 @@ This evaluator checks if all the user queries in the conversation were resolved.
         default: 8192,
       },
     },
+    envVars: [],
     result: {},
   },
   "langevals/similarity": {
@@ -1890,6 +1916,7 @@ match on the exact text.
         default: "openai/text-embedding-3-small",
       },
     },
+    envVars: [],
     result: {
       score: {
         description:
@@ -1935,6 +1962,7 @@ threshold and the specific categories to check.
         default: "FourSeverityLevels",
       },
     },
+    envVars: ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"],
     result: {
       score: {
         description:
@@ -1953,6 +1981,7 @@ This evaluator checks for jailbreak-attempt in the input using Azure's Content S
     requiredFields: ["input"],
     optionalFields: [],
     settings: {},
+    envVars: ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"],
     result: {
       passed: {
         description:
@@ -1972,6 +2001,7 @@ This evaluator checks for prompt injection attempt in the input and the contexts
     requiredFields: ["input"],
     optionalFields: ["contexts"],
     settings: {},
+    envVars: ["AZURE_CONTENT_SAFETY_ENDPOINT", "AZURE_CONTENT_SAFETY_KEY"],
     result: {
       passed: {
         description:
@@ -2013,6 +2043,7 @@ including harassment, hate speech, self-harm, sexual content, and violence.
         },
       },
     },
+    envVars: ["OPENAI_API_KEY"],
     result: {
       score: {
         description:
@@ -2034,6 +2065,7 @@ This evaluator serves as a boilerplate for creating new evaluators.
     requiredFields: ["output"],
     optionalFields: [],
     settings: {},
+    envVars: ["NECESSARY_ENV_VAR"],
     result: {
       score: {
         description: "How many words are there in the output, split by space",
@@ -2060,6 +2092,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
         default: 8192,
       },
     },
+    envVars: [],
     result: {},
   },
 };

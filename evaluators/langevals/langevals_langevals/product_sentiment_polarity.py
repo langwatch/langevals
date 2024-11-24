@@ -52,7 +52,7 @@ class ProductSentimentPolarityEvaluator(
 
     name = "Product Sentiment Polarity"
     category = "policy"
-    env_vars = ["OPENAI_API_KEY", "AZURE_API_KEY", "AZURE_API_BASE"]
+    env_vars = []
     default_settings = ProductSentimentPolaritySettings()
     is_guardrail = True
 
