@@ -1150,7 +1150,7 @@ referencing = ">=0.31.0"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.10"
+version = "0.1.11"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"

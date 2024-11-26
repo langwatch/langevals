@@ -18,6 +18,16 @@ pip install "langevals[all]"
 pip install "langevals[azure,ragas,lingua]"
 ```
 
+Then right away you can start LangEvals as a server with:
+
+```
+langevals-server
+```
+
+And navigate to `http://localhost:8000/docs` to try out the evaluators.
+
+Alternatively, you can use it as a library as the examples below show.
+
 ### Running Batch Evaluations on Notebooks
 
 When exploring, it is usual to generate a number of outputs from your LLM, and then evaluate them all for performance score, for example on a Jupyter Notebook. You can use LangEvals `evaluate()` to score the results in batch using diverse evaluators:

@@ -1432,7 +1432,7 @@ test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.10"
+version = "0.1.11"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
