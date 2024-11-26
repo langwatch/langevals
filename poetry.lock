@@ -2389,7 +2389,7 @@ langchain_community = "^0.2.16"
 langchain-openai = "^0.1.23"
 langevals-core = {path = "../../langevals_core", develop = true}
 litellm = "^1.52.14"
-ragas = "^0.1.7"
+ragas = "0.1.7"
 
 [package.source]
 type = "directory"

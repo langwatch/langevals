@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-ragas"
-version = "0.1.7"
+version = "0.1.8"
 description = "LangEvals Ragas evaluator"
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",
@@ -11,7 +11,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
-ragas = "^0.1.7"
+ragas = "0.1.7"
 langchain-openai = "^0.1.23"
 langchain_community = "^0.2.16"
 datasets = "2.14.6"
