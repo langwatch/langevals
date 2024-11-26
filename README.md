@@ -1,5 +1,5 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-[![Discord](https://dcbadge.limes.pink/api/server/https://discord.gg/kT4PhDS2gH?style=flat)](https://discord.gg/kT4PhDS2gH)
+[![Discord](https://img.shields.io/badge/LangWatch-Discord-%235865F2.svg)](https://discord.gg/kT4PhDS2gH)
 [![LangEvals Python version](https://img.shields.io/pypi/v/langevals?color=007EC6)](https://pypi.org/project/langevals/)
 
 # LangEvals
