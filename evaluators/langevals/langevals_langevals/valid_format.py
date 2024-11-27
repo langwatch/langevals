@@ -101,7 +101,14 @@ class ValidFormatEvaluator(
                 return ValidFormatResult(passed=False, details=f"Invalid Python: {e}")
         elif self.settings.format == "sql":
             try:
-                sqlglot.parse(entry.output)
+                try:
+                    json.loads(entry.output)
+                    return ValidFormatResult(
+                        passed=False,
+                        details="Invalid SQL: Detected JSON instead of SQL string",
+                    )
+                except Exception:
+                    sqlglot.parse(entry.output)
             except Exception as e:
                 return ValidFormatResult(passed=False, details=f"Invalid SQL: {e}")
 

@@ -3,6 +3,7 @@ import os
 import signal
 import sys
 import dotenv
+from fastapi.responses import RedirectResponse
 
 from langevals.utils import (
     get_cpu_count,
@@ -80,7 +81,9 @@ def create_evaluator_routes(evaluator_cls):
         req: Request,
     ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
         os.environ.clear()
-        os.environ.update(original_env)  # always try to set env vars from the original env back again to avoid side effects
+        os.environ.update(
+            original_env
+        )  # always try to set env vars from the original env back again to avoid side effects
         evaluator = evaluator_cls(settings=(req.settings or {}), env=req.env)  # type: ignore
         result = evaluator.evaluate_batch(req.data)
         os.environ.clear()
@@ -104,6 +107,11 @@ for evaluator_name, evaluator_package in evaluators.items():
 @app.get("/healthcheck")
 async def healthcheck():
     return {"status": "healthy"}
+
+
+@app.get("/")
+async def redirect_to_docs():
+    return RedirectResponse(url="/docs")
 
 
 @app.exception_handler(ValidationError)

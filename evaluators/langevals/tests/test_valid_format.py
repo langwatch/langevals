@@ -83,6 +83,14 @@ def test_valid_format_evaluator_sql():
     assert result.passed == False
     assert "Invalid SQL" in result.details  # type: ignore
 
+    # SQL is not valid json
+    entry = ValidFormatEntry(output='{"foo": "bar"}')
+    result = evaluator.evaluate(entry)
+
+    assert result.status == "processed"
+    assert result.passed == False
+    assert "Invalid SQL" in result.details  # type: ignore
+
 
 def test_valid_format_evaluator_empty_input():
     entry = ValidFormatEntry(output=None)
