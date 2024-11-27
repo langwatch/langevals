@@ -1,3 +1,4 @@
+import json
 from langevals_langevals.valid_format import (
     ValidFormatEvaluator,
     ValidFormatEntry,
@@ -118,7 +119,7 @@ def test_valid_format_evaluator_json_schema():
         output='{"name": "John Doe", "age": 30, "email": "john@example.com"}'
     )
     evaluator = ValidFormatEvaluator(
-        settings=ValidFormatSettings(format="json", json_schema=schema)
+        settings=ValidFormatSettings(format="json", json_schema=json.dumps(schema))
     )
     result = evaluator.evaluate(entry)
 

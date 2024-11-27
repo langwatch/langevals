@@ -8,6 +8,7 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     EvaluatorSettings,
     SingleEvaluationResult,
+    EvaluationResultError,
 )
 import markdown
 from pydantic import Field
@@ -17,7 +18,7 @@ import sqlglot
 
 class ValidFormatSettings(EvaluatorSettings):
     format: Literal["json", "markdown", "python", "sql"] = "json"
-    json_schema: Optional[Dict[str, Any]] = Field(
+    json_schema: Optional[str] = Field(
         default=None,
         description="JSON schema to validate against when format is 'json'",
     )
@@ -56,7 +57,18 @@ class ValidFormatEvaluator(
                 parsed_json = json.loads(entry.output)
                 if self.settings.json_schema:
                     try:
-                        validate(instance=parsed_json, schema=self.settings.json_schema)
+                        json_schema = json.loads(self.settings.json_schema)
+                    except Exception as e:
+                        return EvaluationResultError(
+                            details=f"Invalid JSON Schema: {e}",
+                            error_type="json_schema_error",
+                            traceback=[],
+                        )
+                    try:
+                        validate(
+                            instance=parsed_json,
+                            schema=json_schema,
+                        )
                     except ValidationError as e:
                         return ValidFormatResult(
                             passed=False, details=f"JSON Schema validation failed: {e}"
