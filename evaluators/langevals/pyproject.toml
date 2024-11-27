@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "langevals-langevals"
 version = "0.1.7"
-description = "LangEvals home-made evaluators."
+description = "LangEvals core evaluators."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
 license = "MIT"
 
@@ -12,6 +12,9 @@ langevals-core = { path = "../../langevals_core", develop = true }
 openai = ">=1.27.0"
 numpy = "^1.26.4"
 dspy-ai = "^2.4.9"
+markdown = "^3.7"
+jsonschema = "^4.23.0"
+sqlglot = {extras = ["rs"], version = "^25.32.0"}
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
