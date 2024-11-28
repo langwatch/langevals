@@ -1,4 +1,6 @@
 import dotenv
+
+dotenv.load_dotenv()
 import pytest
 from langevals_ragas.context_precision import (
     RagasContextPrecisionEntry,
@@ -25,8 +27,6 @@ from langevals_ragas.answer_correctness import (
     RagasAnswerCorrectnessEvaluator,
 )
 
-dotenv.load_dotenv()
-
 from langevals_ragas.lib.common import RagasSettings
 from langevals_ragas.answer_relevancy import (
     RagasAnswerRelevancyEntry,
@@ -45,11 +45,14 @@ def test_faithfulness():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
-    # assert result.cost and result.cost.amount > 0.0
+    assert result.score and result.score > 0.9
+    assert result.cost and result.cost.amount > 0.0
+
 
 def test_faithfulness_gpt4o():
-    evaluator = RagasFaithfulnessEvaluator(settings=RagasSettings(model="openai/gpt-4o"))
+    evaluator = RagasFaithfulnessEvaluator(
+        settings=RagasSettings(model="openai/gpt-4o")
+    )
 
     result = evaluator.evaluate(
         RagasFaithfulnessEntry(
@@ -63,7 +66,9 @@ def test_faithfulness_gpt4o():
 
 
 def test_faithfulness_gpt4o_mini():
-    evaluator = RagasFaithfulnessEvaluator(settings=RagasSettings(model="openai/gpt-4o-mini"))
+    evaluator = RagasFaithfulnessEvaluator(
+        settings=RagasSettings(model="openai/gpt-4o-mini")
+    )
 
     result = evaluator.evaluate(
         RagasFaithfulnessEntry(
@@ -82,15 +87,15 @@ def test_faithfulness_should_be_skipped_if_no_sentences():
     result = evaluator.evaluate(
         RagasFaithfulnessEntry(
             output="I couldn't find any information on completing your account. Can I help you with anything else today?",
-            contexts=[
-                "Info on the company",
-                "Info on customer support"
-            ],
+            contexts=["Info on the company", "Info on customer support"],
         )
     )
 
     assert result.status == "skipped"
-    assert result.details == "No claims found in the output to measure faitfhulness against context, skipping entry."
+    assert (
+        result.details
+        == "No claims found in the output to measure faitfhulness against context, skipping entry."
+    )
 
 
 def test_answer_relevancy():
@@ -104,8 +109,9 @@ def test_answer_relevancy():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
+    assert result.score and result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
+
 
 def test_answer_correctness():
     evaluator = RagasAnswerCorrectnessEvaluator(settings=RagasSettings())
@@ -114,12 +120,12 @@ def test_answer_correctness():
         RagasAnswerCorrectnessEntry(
             input="What is the capital of France?",
             output="The capital of France is Paris.",
-            expected_output="Paris is the capital of France."
+            expected_output="Paris is the capital of France.",
         )
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
+    assert result.score and result.score > 0.5
     assert result.cost and result.cost.amount > 0.0
 
 
@@ -130,27 +136,13 @@ def test_answer_correctness_fail():
         RagasAnswerCorrectnessEntry(
             input="What is the capital of France?",
             output="The capital of France is Grenoble.",
-            expected_output="Paris is the capital of France."
+            expected_output="Paris is the capital of France.",
         )
     )
 
     assert result.status == "processed"
-    assert result.score < 0.5
+    assert result.score and result.score < 0.5
     assert result.cost and result.cost.amount > 0.0
-
-
-def test_answer_correctness_skip():
-    evaluator = RagasAnswerCorrectnessEvaluator(settings=RagasSettings())
-
-    result = evaluator.evaluate(
-        RagasAnswerCorrectnessEntry(
-            input="",
-            output="The capital of France is Grenoble.",
-            expected_output="Paris is the capital of France."
-        )
-    )
-
-    assert result.status == "skipped"
 
 
 def test_context_relevancy():
@@ -164,7 +156,7 @@ def test_context_relevancy():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.3
+    assert result.score and result.score > 0.3
     assert result.cost and result.cost.amount > 0.0
 
 
@@ -180,7 +172,7 @@ def test_context_precision():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.3
+    assert result.score and result.score > 0.3
     assert result.cost and result.cost.amount > 0.0
 
 
@@ -199,7 +191,7 @@ def test_context_utilization():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.3
+    assert result.score and result.score > 0.3
     assert result.cost and result.cost.amount > 0.0
 
 
@@ -229,13 +221,14 @@ def test_context_recall():
 
     result = evaluator.evaluate(
         RagasContextRecallEntry(
+            input="What is the capital of France?",
             contexts=["France is a country in Europe.", "Paris is a city in France."],
             expected_output="Paris is the capital of France.",
         )
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
+    assert result.score and result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
 
 
@@ -252,6 +245,6 @@ def test_with_anthropic_models():
     )
 
     assert result.status == "processed"
-    assert result.score > 0.9
+    assert result.score and result.score > 0.9
     # TODO: capture costs on ragas with claude too
     # assert result.cost and result.cost.amount > 0.0

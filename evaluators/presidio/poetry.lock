@@ -1566,7 +1566,7 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "langevals-core"
-version = "0.1.11"
+version = "0.1.12"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"

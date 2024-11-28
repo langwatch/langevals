@@ -9,6 +9,7 @@ from pydantic import Field
 
 
 class RagasContextRecallEntry(EvaluatorEntry):
+    input: str
     contexts: list[str]
     expected_output: str
 
@@ -35,9 +36,11 @@ class RagasContextRecallEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: RagasContextRecallEntry) -> SingleEvaluationResult:
+        input = entry.input or ""
         return evaluate_ragas(
             evaluator=self,
             metric="context_recall",
+            question=input,
             contexts=entry.contexts,
             ground_truth=entry.expected_output,
             settings=self.settings,
