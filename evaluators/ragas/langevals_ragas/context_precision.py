@@ -41,8 +41,8 @@ class RagasContextPrecisionEvaluator(
         return evaluate_ragas(
             evaluator=self,
             metric="context_precision",
-            question=entry.input,
-            contexts=entry.contexts,
-            ground_truth=entry.expected_output,
+            user_input=entry.input,
+            retrieved_contexts=entry.contexts,
+            reference=entry.expected_output,
             settings=self.settings,
         )

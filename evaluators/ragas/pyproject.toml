@@ -7,15 +7,28 @@ authors = [
   "Yevhenii Budnyk <y.budnyk789@gmail.com>",
 ]
 license = "MIT"
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
-ragas = "0.1.7"
+ragas = "0.2.9"
 langchain-openai = ">=0.1.23"
 langchain_community = ">=0.2.16"
-datasets = "2.14.6"
 litellm = "^1.52.14"
+transformers = "^4.47.1"
+[[tool.poetry.dependencies.torch]]
+version = "^2.2.2+cpu"
+source = "pytorch_cpu"
+markers = "sys_platform == 'linux'"
+
+[[tool.poetry.dependencies.torch]]
+version = "^2.2.2"
+source = "pypi"
+markers = "sys_platform != 'linux'"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

@@ -41,7 +41,7 @@ class RagasFaithfulnessEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: RagasFaithfulnessEntry) -> SingleEvaluationResult:
-        from ragas.metrics._faithfulness import Faithfulness
+        from legacy_ragas.metrics._faithfulness import Faithfulness  # type: ignore
 
         _original_create_nli_prompt = Faithfulness._create_nli_prompt
 

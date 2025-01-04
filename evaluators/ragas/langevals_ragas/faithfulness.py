@@ -1,3 +1,5 @@
+import math
+from typing import Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
@@ -5,16 +7,24 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
 )
+from ragas import SingleTurnSample
 from .lib.common import (
     BaseEvaluator,
+    RagasResult,
+    capture_cost,
+    check_max_tokens,
+    clear_context,
     env_vars,
-    evaluate_ragas,
     RagasSettings,
+    prepare_llm,
 )
 from pydantic import Field
+from ragas.metrics import Faithfulness, FaithfulnesswithHHEM
+from langchain_core.prompt_values import StringPromptValue
 
 
 class RagasFaithfulnessEntry(EvaluatorEntry):
+    input: Optional[str] = Field(default="")
     output: str
     contexts: list[str]
 
@@ -26,8 +36,21 @@ class RagasFaithfulnessResult(EvaluationResult):
     )
 
 
+class RagasFaithfulnessSettings(RagasSettings):
+    use_hhem: bool = Field(
+        default=False,
+        description="Whether to use Vectara's HHEM-2.1-Open for improving faithfulness calculation.",
+    )
+    autodetect_dont_know: bool = Field(
+        default=True,
+        description="Whether to autodetect 'I don't know' in the output to avoid failing the evaluation.",
+    )
+
+
 class RagasFaithfulnessEvaluator(
-    BaseEvaluator[RagasFaithfulnessEntry, RagasSettings, RagasFaithfulnessResult]
+    BaseEvaluator[
+        RagasFaithfulnessEntry, RagasFaithfulnessSettings, RagasFaithfulnessResult
+    ]
 ):
     """
     This evaluator assesses the extent to which the generated answer is consistent with the provided context. Higher scores indicate better faithfulness to the context, useful for detecting hallucinations.
@@ -36,38 +59,98 @@ class RagasFaithfulnessEvaluator(
     name = "Ragas Faithfulness"
     category = "rag"
     env_vars = env_vars
-    default_settings = RagasSettings()
-    docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html"
+    default_settings = RagasFaithfulnessSettings()
+    docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/"
     is_guardrail = False
 
+    @classmethod
+    def preload(cls):
+        cls.faithfulnessHHEM = FaithfulnesswithHHEM()
+        super().preload()
+
     def evaluate(self, entry: RagasFaithfulnessEntry) -> SingleEvaluationResult:
-        from ragas.metrics._faithfulness import Faithfulness
+        llm, _ = prepare_llm(self, self.settings)
 
-        _original_create_nli_prompt = Faithfulness._create_nli_prompt
-
-        ragas_statements = []
-
-        def _create_nli_prompt(self, row: dict, statements: list[str]):
-            nonlocal ragas_statements
-            ragas_statements += statements
-            return _original_create_nli_prompt(self, row, statements)
-
-        Faithfulness._create_nli_prompt = _create_nli_prompt
-
-        result = evaluate_ragas(
-            evaluator=self,
-            metric="faithfulness",
-            answer=entry.output,
-            contexts=entry.contexts,
+        contexts = clear_context(entry.contexts)
+        skip = check_max_tokens(
+            input=entry.input,
+            output=entry.output,
+            contexts=contexts,
             settings=self.settings,
         )
+        if skip:
+            return skip
 
-        if len(ragas_statements) == 0:
-            return EvaluationResultSkipped(
-                details="No claims found in the output to measure faitfhulness against context, skipping entry."
+        scorer = self.faithfulnessHHEM if self.settings.use_hhem else Faithfulness()
+        scorer.llm = llm
+
+        _original_create_statements = scorer._create_statements
+        _original_create_verdicts = scorer._create_verdicts
+        ragas_statements = []
+        ragas_verdicts = []
+
+        async def _create_statements(self, row: dict, callbacks):
+            nonlocal ragas_statements
+            statements = await _original_create_statements(row, callbacks)
+            for components in statements.sentences:
+                ragas_statements += components.simpler_statements
+            return statements
+
+        scorer._create_statements = _create_statements.__get__(scorer)
+
+        async def _create_verdicts(self, row: dict, statements: list[str], callbacks):
+            nonlocal ragas_verdicts
+            verdicts = await _original_create_verdicts(row, statements, callbacks)
+            ragas_verdicts += verdicts.statements
+            return verdicts
+
+        scorer._create_verdicts = _create_verdicts.__get__(scorer)
+
+        with capture_cost() as cost:
+            score = scorer.single_turn_score(
+                SingleTurnSample(
+                    user_input=entry.input,
+                    response=entry.output,
+                    retrieved_contexts=contexts,
+                )
             )
-        else:
-            claims = ", ".join([f'"{claim}"' for claim in ragas_statements])
-            result.details = f"Claims Found: {claims}"
 
-        return result
+            if len(ragas_statements) == 0 or math.isnan(score):
+                return EvaluationResultSkipped(
+                    details="No claims found in the output to measure faitfhulness against context, skipping entry."
+                )
+
+            details = "\n\n".join(
+                [
+                    f'Claim: "{verdict.statement}"\nVerdict: {verdict.reason}\nScore: {verdict.verdict}'
+                    for verdict in ragas_verdicts
+                ]
+            )
+
+            if len(details) == 0:
+                details = "\n\n".join(
+                    [f'Claim: "{statement}"' for statement in ragas_statements]
+                )
+
+            if self.settings.autodetect_dont_know and score < 0.1:
+                llm.langchain_llm.temperature = 0  # type: ignore
+                is_dont_know = llm.langchain_llm.invoke(
+                    input=StringPromptValue(
+                        text=f"""
+                        You are an LLM evaluator. You are given an output generated by another LLM and you need to determine if it is a 'I don't know', 'I don't have the information', 'I couldn't find anything' or 'I can't help you' statement. If it is, return True, otherwise return False. Return nothing else, only True or False.
+
+                        Generated output:
+                        > {entry.output}
+                        """
+                    ),
+                )
+                if "true" in is_dont_know.content.lower():  # type: ignore
+                    return EvaluationResultSkipped(
+                        details="The output seems correctly to be an 'I don't know' statement given the provided contexts, ignoring faithfulness score."
+                    )
+
+        return RagasResult(
+            score=score,
+            cost=cost,
+            details=details,
+        )

@@ -41,8 +41,8 @@ class RagasContextUtilizationEvaluator(
         return evaluate_ragas(
             evaluator=self,
             metric="context_utilization",
-            question=entry.input,
-            answer=entry.output,
-            contexts=entry.contexts,
+            user_input=entry.input,
+            response=entry.output,
+            retrieved_contexts=entry.contexts,
             settings=self.settings,
         )

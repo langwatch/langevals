@@ -1265,7 +1265,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
       "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
     isGuardrail: false,
     requiredFields: ["output", "contexts"],
-    optionalFields: [],
+    optionalFields: ["input"],
     settings: {
       model: {
         description: "The model to use for evaluation.",

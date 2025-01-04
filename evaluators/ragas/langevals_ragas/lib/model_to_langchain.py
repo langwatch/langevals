@@ -21,18 +21,22 @@ class LitellmCompletion:
             raise e
 
 
-def model_to_langchain(model: str) -> tuple[BaseChatModel, LitellmCompletion]:
+class AsyncLitellmCompletion(LitellmCompletion):
+    async def create(self, *args, **kwargs):
+        return super().create(*args, **kwargs)
+
+
+def model_to_langchain(
+    model: str,
+) -> BaseChatModel:
     if model.startswith("claude-"):
         model = model.replace("claude-", "anthropic/claude-")
 
-    client = LitellmCompletion()
-    return (
-        ChatOpenAI(
-            model=model,
-            api_key="dummy",  # type: ignore
-            client=client,
-        ),
-        client,
+    return ChatOpenAI(
+        model=model,
+        api_key="dummy",  # type: ignore
+        client=LitellmCompletion(),
+        async_client=AsyncLitellmCompletion(),
     )
 
 
@@ -46,6 +50,7 @@ class LitellmEmbeddings:
         except Exception as e:
             self.exception = e
             raise e
+
 
 class LitellmEmbeddingsWrapper(OpenAIEmbeddings):
     def embed_query(self, question: str):
@@ -68,16 +73,13 @@ class LitellmEmbeddingsWrapper(OpenAIEmbeddings):
 
         return _iter, decoded_tokens, indices
 
+    async def aembed_query(self, question: str):
+        return self.embed_query(question)
 
-# TODO: adapt to use litellm.embedding instead of langchain
+
 def embeddings_model_to_langchain(embeddings_model: str):
-    client = LitellmEmbeddings()
-
-    return (
-        LitellmEmbeddingsWrapper(
-            model=embeddings_model,
-            api_key="dummy",  # type: ignore
-            client=client,
-        ),
-        client,
+    return LitellmEmbeddingsWrapper(
+        model=embeddings_model,
+        api_key="dummy",  # type: ignore
+        client=LitellmEmbeddings(),
     )

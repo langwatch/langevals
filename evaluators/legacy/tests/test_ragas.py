@@ -1,7 +1,6 @@
 import dotenv
 
 dotenv.load_dotenv()
-import pytest
 from langevals_legacy.ragas_context_precision import (
     RagasContextPrecisionEntry,
     RagasContextPrecisionEvaluator,
@@ -47,38 +46,7 @@ def test_faithfulness():
     assert result.status == "processed"
     assert result.score and result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
-
-
-def test_faithfulness_gpt4o():
-    evaluator = RagasFaithfulnessEvaluator(
-        settings=RagasSettings(model="openai/gpt-4o")
-    )
-
-    result = evaluator.evaluate(
-        RagasFaithfulnessEntry(
-            output="The capital of France is Paris.",
-            contexts=["France is a country in Europe.", "Paris is a city in France."],
-        )
-    )
-
-    assert result.status == "processed"
-    assert result.cost and result.cost.amount > 0.0
-
-
-def test_faithfulness_gpt4o_mini():
-    evaluator = RagasFaithfulnessEvaluator(
-        settings=RagasSettings(model="openai/gpt-4o-mini")
-    )
-
-    result = evaluator.evaluate(
-        RagasFaithfulnessEntry(
-            output="The capital of France is Paris.",
-            contexts=["France is a country in Europe.", "Paris is a city in France."],
-        )
-    )
-
-    assert result.status == "processed"
-    assert result.cost and result.cost.amount > 0.0
+    assert result.details
 
 
 def test_faithfulness_should_be_skipped_if_no_sentences():

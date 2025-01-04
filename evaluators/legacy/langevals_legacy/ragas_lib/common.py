@@ -10,15 +10,20 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
 )
 from pydantic import Field
-from ragas import RunConfig, evaluate
-from ragas.metrics.base import Metric
-from ragas.llms import LangchainLLMWrapper
-from ragas.metrics import (
+
+from langevals_legacy.lib.setup_legacy_packages import setup_legacy_packages
+
+setup_legacy_packages()
+
+from langevals_legacy.vendor.legacy_ragas import evaluate
+from langevals_legacy.vendor.legacy_ragas.metrics.base import Metric
+from langevals_legacy.vendor.legacy_ragas.llms import LangchainLLMWrapper
+from langevals_legacy.vendor.legacy_ragas.metrics import (
     answer_relevancy,
     faithfulness,
     context_precision,
     context_recall,
-    context_relevancy,
+    context_relevancy,  # type: ignore
     context_utilization,
     answer_correctness,
 )
@@ -32,13 +37,13 @@ from langevals_legacy.ragas_lib.model_to_langchain import (
 
 from typing import List, Optional
 from datasets import Dataset
-from ragas import evaluate
-from ragas.metrics import faithfulness, Faithfulness
-from ragas.llms import LangchainLLMWrapper
+from langevals_legacy.vendor.legacy_ragas import evaluate
+from langevals_legacy.vendor.legacy_ragas.metrics import faithfulness, Faithfulness
+from langevals_legacy.vendor.legacy_ragas.llms import LangchainLLMWrapper
 from pydantic import Field
 from langevals_core.utils import calculate_total_tokens
-from ragas.exceptions import ExceptionInRunner
-from ragas.embeddings import LangchainEmbeddingsWrapper
+from langevals_legacy.vendor.legacy_ragas.exceptions import ExceptionInRunner
+from langevals_legacy.vendor.legacy_ragas.embeddings import LangchainEmbeddingsWrapper
 
 env_vars = []
 

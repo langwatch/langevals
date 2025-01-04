@@ -40,7 +40,7 @@ class RagasContextRelevancyEvaluator(
         return evaluate_ragas(
             evaluator=self,
             metric="context_relevancy",
-            answer=entry.output,
-            contexts=entry.contexts,
+            response=entry.output,
+            retrieved_contexts=entry.contexts,
             settings=self.settings,
         )

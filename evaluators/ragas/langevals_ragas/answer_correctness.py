@@ -45,8 +45,8 @@ class RagasAnswerCorrectnessEvaluator(
         return evaluate_ragas(
             evaluator=self,
             metric="answer_correctness",
-            question=input,
-            answer=entry.output,
-            ground_truth=entry.expected_output,
+            user_input=input,
+            response=entry.output,
+            reference=entry.expected_output,
             settings=self.settings,
         )

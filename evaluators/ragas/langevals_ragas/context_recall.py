@@ -40,8 +40,8 @@ class RagasContextRecallEvaluator(
         return evaluate_ragas(
             evaluator=self,
             metric="context_recall",
-            question=input,
-            contexts=entry.contexts,
-            ground_truth=entry.expected_output,
+            user_input=input,
+            retrieved_contexts=entry.contexts,
+            reference=entry.expected_output,
             settings=self.settings,
         )
