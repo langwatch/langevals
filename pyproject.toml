@@ -52,13 +52,10 @@ azure = [ "langevals-azure",]
 openai = [ "langevals-openai",]
 example = [ "langevals-example",]
 ragas = [ "langevals-ragas",]
-google_cloud = [ "langevals-google_cloud",]
 lingua = [ "langevals-lingua",]
-aws = [ "langevals-aws",]
 huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
-all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-google_cloud", "langevals-haystack", "langevals-presidio", "langevals-aws", "langevals-huggingface", "langevals-openai",]
-haystack = [ "langevals-haystack",]
+all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-presidio", "langevals-huggingface", "langevals-openai",]
 presidio = [ "langevals-presidio",]
 
 [tool.poetry.dependencies.langevals-core]
@@ -85,18 +82,8 @@ path = "evaluators/ragas"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.langevals-google_cloud]
-path = "evaluators/google_cloud"
-develop = true
-optional = true
-
 [tool.poetry.dependencies.langevals-lingua]
 path = "evaluators/lingua"
-develop = true
-optional = true
-
-[tool.poetry.dependencies.langevals-aws]
-path = "evaluators/aws"
 develop = true
 optional = true
 
@@ -107,11 +94,6 @@ optional = true
 
 [tool.poetry.dependencies.langevals-langevals]
 path = "evaluators/langevals"
-develop = true
-optional = true
-
-[tool.poetry.dependencies.langevals-haystack]
-path = "evaluators/haystack"
 develop = true
 optional = true
 
