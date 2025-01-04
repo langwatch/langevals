@@ -2214,6 +2214,27 @@ type = "directory"
 url = "evaluators/langevals"
 
 [[package]]
+name = "langevals-legacy"
+version = "0.1.9"
+description = "LangEvals Legacy evaluator"
+optional = true
+python-versions = "^3.11"
+files = []
+develop = true
+
+[package.dependencies]
+datasets = "2.14.6"
+langchain_community = ">=0.2.16"
+langchain-openai = ">=0.1.23"
+langevals-core = {path = "../../langevals_core", develop = true}
+litellm = "^1.52.14"
+ragas = "0.1.7"
+
+[package.source]
+type = "directory"
+url = "evaluators/legacy"
+
+[[package]]
 name = "langevals-lingua"
 version = "0.1.7"
 description = "LangEvals lingua evaluator for language detection."
@@ -6040,11 +6061,12 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-itertools", "pytest (>=6,!=8.1.*)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy", "pytest-ruff (>=0.2.1)"]
 
 [extras]
-all = ["langevals-azure", "langevals-example", "langevals-huggingface", "langevals-langevals", "langevals-lingua", "langevals-openai", "langevals-presidio", "langevals-ragas"]
+all = ["langevals-azure", "langevals-example", "langevals-huggingface", "langevals-langevals", "langevals-legacy", "langevals-lingua", "langevals-openai", "langevals-presidio", "langevals-ragas"]
 azure = ["langevals-azure"]
 example = ["langevals-example"]
 huggingface = ["langevals-huggingface"]
 langevals = ["langevals-langevals"]
+legacy = ["langevals-legacy"]
 lingua = ["langevals-lingua"]
 openai = ["langevals-openai"]
 presidio = ["langevals-presidio"]
@@ -6053,4 +6075,4 @@ ragas = ["langevals-ragas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "63c431b62a5f543700a4ae18cb8d08d3c50340a187c35ee0f4c3cf47a66dc35d"
+content-hash = "41fce155fc122577723a1d813154c80c7dedbff46c4a4434b82e5110bc868aff"

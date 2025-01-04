@@ -55,8 +55,9 @@ ragas = [ "langevals-ragas",]
 lingua = [ "langevals-lingua",]
 huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
-all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-lingua", "langevals-ragas", "langevals-presidio", "langevals-huggingface", "langevals-openai",]
+all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-legacy", "langevals-lingua", "langevals-ragas", "langevals-presidio", "langevals-huggingface", "langevals-openai",]
 presidio = [ "langevals-presidio",]
+legacy = [ "langevals-legacy",]
 
 [tool.poetry.dependencies.langevals-core]
 path = "langevals_core"
@@ -99,6 +100,11 @@ optional = true
 
 [tool.poetry.dependencies.langevals-presidio]
 path = "evaluators/presidio"
+develop = true
+optional = true
+
+[tool.poetry.dependencies.langevals-legacy]
+path = "evaluators/legacy"
 develop = true
 optional = true
 
