@@ -39,7 +39,7 @@ class RagasFaithfulnessResult(EvaluationResult):
 class RagasFaithfulnessSettings(RagasSettings):
     use_hhem: bool = Field(
         default=False,
-        description="Whether to use Vectara's HHEM-2.1-Open for improving faithfulness calculation.",
+        description="Whether to use Vectara's HHEM-2.1-Open for faithfulness scoring.",
     )
     autodetect_dont_know: bool = Field(
         default=True,

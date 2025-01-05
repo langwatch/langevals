@@ -49,7 +49,7 @@ class RagasResponseRelevancyEvaluator(
     """
 
     name = "Ragas Response Relevancy"
-    category = "rag"
+    category = "quality"
     env_vars = env_vars
     default_settings = RagasResponseRelevancySettings()
     docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/answer_relevance/"

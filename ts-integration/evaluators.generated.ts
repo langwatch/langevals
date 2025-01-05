@@ -16,6 +16,7 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
     | "output"
     | "contexts"
     | "expected_output"
+    | "expected_contexts"
     | "conversation"
   )[];
   optionalFields: (
@@ -23,6 +24,7 @@ export type EvaluatorDefinition<T extends EvaluatorTypes> = {
     | "output"
     | "contexts"
     | "expected_output"
+    | "expected_contexts"
     | "conversation"
   )[];
   settings: {
@@ -185,83 +187,34 @@ export type Evaluators = {
       };
     };
   };
-  "ragas/answer_correctness": {
-    settings: {
-      /**
-       * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
-       */
-      model: string;
-      /**
-       * @description The model to use for embeddings.
-       * @default "openai/text-embedding-ada-002"
-       */
-      embeddings_model: string;
-      /**
-       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
-       * @default 2048
-       */
-      max_tokens: number;
-    };
+  "ragas/bleu_score": {
+    settings: Record<string, never>;
   };
-  "ragas/answer_relevancy": {
+  "ragas/context_f1": {
     settings: {
       /**
-       * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "levenshtein"
        */
-      model: string;
-      /**
-       * @description The model to use for embeddings.
-       * @default "openai/text-embedding-ada-002"
-       */
-      embeddings_model: string;
-      /**
-       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
-       * @default 2048
-       */
-      max_tokens: number;
+      distance_measure: "levenshtein" | "hamming" | "jaro" | "jaro_winkler";
     };
   };
   "ragas/context_precision": {
     settings: {
       /**
-       * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "levenshtein"
        */
-      model: string;
-      /**
-       * @description The model to use for embeddings.
-       * @default "openai/text-embedding-ada-002"
-       */
-      embeddings_model: string;
-      /**
-       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
-       * @default 2048
-       */
-      max_tokens: number;
+      distance_measure: "levenshtein" | "hamming" | "jaro" | "jaro_winkler";
     };
   };
   "ragas/context_recall": {
     settings: {
       /**
-       * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "levenshtein"
        */
-      model: string;
-      /**
-       * @description The model to use for embeddings.
-       * @default "openai/text-embedding-ada-002"
-       */
-      embeddings_model: string;
-      /**
-       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
-       * @default 2048
-       */
-      max_tokens: number;
+      distance_measure: "levenshtein" | "hamming" | "jaro" | "jaro_winkler";
     };
   };
-  "ragas/context_relevancy": {
+  "ragas/factual_correctness": {
     settings: {
       /**
        * @description The model to use for evaluation.
@@ -269,34 +222,25 @@ export type Evaluators = {
        */
       model: string;
       /**
-       * @description The model to use for embeddings.
-       * @default "openai/text-embedding-ada-002"
-       */
-      embeddings_model: string;
-      /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
        */
       max_tokens: number;
-    };
-  };
-  "ragas/context_utilization": {
-    settings: {
       /**
-       * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @description The mode to use for the factual correctness metric.
+       * @default "f1"
        */
-      model: string;
+      mode: "f1" | "precision" | "recall";
       /**
-       * @description The model to use for embeddings.
-       * @default "openai/text-embedding-ada-002"
+       * @description The level of atomicity for claim decomposition.
+       * @default "low"
        */
-      embeddings_model: string;
+      atomicity: "low" | "high";
       /**
-       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
-       * @default 2048
+       * @description The level of coverage for claim decomposition.
+       * @default "low"
        */
-      max_tokens: number;
+      coverage: "low" | "high";
     };
   };
   "ragas/faithfulness": {
@@ -307,10 +251,124 @@ export type Evaluators = {
        */
       model: string;
       /**
+       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
+       * @default 2048
+       */
+      max_tokens: number;
+      /**
+       * @description Whether to use Vectara's HHEM-2.1-Open for faithfulness scoring.
+       * @default false
+       */
+      use_hhem: boolean;
+      /**
+       * @description Whether to autodetect 'I don't know' in the output to avoid failing the evaluation.
+       * @default true
+       */
+      autodetect_dont_know: boolean;
+    };
+  };
+  "ragas/response_context_precision": {
+    settings: {
+      /**
+       * @description The model to use for evaluation.
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
+      /**
+       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
+       * @default 2048
+       */
+      max_tokens: number;
+    };
+  };
+  "ragas/response_context_recall": {
+    settings: {
+      /**
+       * @description The model to use for evaluation.
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
+      /**
+       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
+       * @default 2048
+       */
+      max_tokens: number;
+    };
+  };
+  "ragas/response_relevancy": {
+    settings: {
+      /**
+       * @description The model to use for evaluation.
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
+      /**
+       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
+       * @default 2048
+       */
+      max_tokens: number;
+      /**
        * @description The model to use for embeddings.
        * @default "openai/text-embedding-ada-002"
        */
       embeddings_model: string;
+    };
+  };
+  "ragas/rouge_score": {
+    settings: {
+      /**
+       * @description ROUGE type
+       * @default "rouge1"
+       */
+      rouge_type: "rouge1" | "rougeL";
+      /**
+       * @description ROUGE measure type
+       * @default "fmeasure"
+       */
+      measure_type: "fmeasure" | "precision" | "recall";
+    };
+  };
+  "ragas/rubrics_based_scoring": {
+    settings: {
+      /**
+       * @description The model to use for evaluation.
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
+      /**
+       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
+       * @default 2048
+       */
+      max_tokens: number;
+      /**
+       * @default [{"description": "The response is incorrect, irrelevant."}, {"description": "The response partially answers the question but includes significant errors, omissions, or irrelevant information."}, {"description": "The response partially answers the question but includes minor errors, omissions, or irrelevant information."}, {"description": "The response fully answers the question and includes minor errors, omissions, or irrelevant information."}, {"description": "The response fully answers the question and includes no errors, omissions, or irrelevant information."}]
+       */
+      rubrics: {
+        description: string;
+      }[];
+    };
+  };
+  "ragas/sql_query_equivalence": {
+    settings: {
+      /**
+       * @description The model to use for evaluation.
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
+      /**
+       * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
+       * @default 2048
+       */
+      max_tokens: number;
+    };
+  };
+  "ragas/summarization_score": {
+    settings: {
+      /**
+       * @description The model to use for evaluation.
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
       /**
        * @description The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.
        * @default 2048
@@ -1051,207 +1109,137 @@ including harassment, hate speech, self-harm, sexual content, and violence.
       },
     },
   },
-  "ragas/answer_correctness": {
-    name: `Ragas Answer Correctness`,
+  "ragas/bleu_score": {
+    name: `BLEU Score`,
     description: `
-Computes with an LLM a weighted combination of factual as well as semantic similarity between the generated answer and the expected output.
+Traditional NLP metric. BLEU score for evaluating the similarity between two strings.
 `,
-    category: "rag",
+    category: "quality",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html",
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/traditional/#bleu-score",
     isGuardrail: false,
     requiredFields: ["output", "expected_output"],
-    optionalFields: ["input"],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
+    optionalFields: [],
+    settings: {},
     envVars: [],
     result: {
       score: {
-        description:
-          "A score between 0.0 and 1.0 indicating the correctness of the answer.",
+        description: "BLEU similarity score",
       },
     },
   },
-  "ragas/answer_relevancy": {
-    name: `Ragas Answer Relevancy`,
+  "ragas/context_f1": {
+    name: `Context F1`,
     description: `
-Evaluates how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
+Balances between precision and recall for context retrieval, increasing it means a better signal-to-noise ratio. Uses traditional string distance metrics.
 `,
     category: "rag",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html",
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_F1/#non-llm-based-context-F1",
     isGuardrail: false,
-    requiredFields: ["input", "output"],
+    requiredFields: ["contexts", "expected_contexts"],
     optionalFields: [],
     settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
+      distance_measure: {
+        description: undefined,
+        default: "levenshtein",
       },
     },
     envVars: [],
     result: {
       score: {
-        description:
-          "A score between 0.0 and 1.0 indicating the relevance of the answer.",
+        description: "A score between 0.0 and 1.0 indicating the F1 score.",
       },
     },
   },
   "ragas/context_precision": {
-    name: `Ragas Context Precision`,
+    name: `Context Precision`,
     description: `
-This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
+Measures how accurate is the retrieval compared to expected contexts, increasing it means less noise in the retrieval. Uses traditional string distance metrics.
 `,
     category: "rag",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/#non-llm-based-context-precision",
     isGuardrail: false,
-    requiredFields: ["input", "contexts", "expected_output"],
+    requiredFields: ["contexts", "expected_contexts"],
     optionalFields: [],
     settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
+      distance_measure: {
+        description: undefined,
+        default: "levenshtein",
       },
     },
     envVars: [],
     result: {
       score: {
         description:
-          "A score between 0.0 and 1.0 indicating the precision of the context.",
+          "A score between 0.0 and 1.0 indicating the precision score.",
       },
     },
   },
   "ragas/context_recall": {
-    name: `Ragas Context Recall`,
+    name: `Context Recall`,
     description: `
-This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
+Measures how many relevant contexts were retrieved compared to expected contexts, increasing it means more signal in the retrieval. Uses traditional string distance metrics.
 `,
     category: "rag",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html",
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/#non-llm-based-context-recall",
     isGuardrail: false,
-    requiredFields: ["input", "contexts", "expected_output"],
+    requiredFields: ["contexts", "expected_contexts"],
     optionalFields: [],
     settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
+      distance_measure: {
+        description: undefined,
+        default: "levenshtein",
       },
     },
     envVars: [],
     result: {
       score: {
-        description:
-          "A score between 0.0 and 1.0 indicating the recall of the context.",
+        description: "A score between 0.0 and 1.0 indicating the Recall score.",
       },
     },
   },
-  "ragas/context_relevancy": {
-    name: `Ragas Context Relevancy`,
+  "ragas/factual_correctness": {
+    name: `Factual Correctness`,
     description: `
-This metric gauges the relevancy of the retrieved context, calculated based on both the question and contexts. The values fall within the range of (0, 1), with higher values indicating better relevancy.
+Computes with an LLM how factually similar the generated answer is to the expected output.
 `,
-    category: "rag",
+    category: "quality",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_relevancy.html",
+      "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html",
     isGuardrail: false,
-    requiredFields: ["output", "contexts"],
+    requiredFields: ["output", "expected_output"],
     optionalFields: [],
     settings: {
       model: {
         description: "The model to use for evaluation.",
         default: "openai/gpt-4o-mini",
       },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
       max_tokens: {
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
+      },
+      mode: {
+        description: "The mode to use for the factual correctness metric.",
+        default: "f1",
+      },
+      atomicity: {
+        description: "The level of atomicity for claim decomposition.",
+        default: "low",
+      },
+      coverage: {
+        description: "The level of coverage for claim decomposition.",
+        default: "low",
       },
     },
     envVars: [],
     result: {
       score: {
         description:
-          "A score between 0.0 and 1.0 indicating the relevancy of the context.",
-      },
-    },
-  },
-  "ragas/context_utilization": {
-    name: `Ragas Context Utilization`,
-    description: `
-This metric evaluates whether all of the output relevant items present in the contexts are ranked higher or not. Higher scores indicate better utilization.
-`,
-    category: "rag",
-    docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html",
-    isGuardrail: false,
-    requiredFields: ["input", "output", "contexts"],
-    optionalFields: [],
-    settings: {
-      model: {
-        description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
-      },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
-      },
-      max_tokens: {
-        description:
-          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
-        default: 2048,
-      },
-    },
-    envVars: [],
-    result: {
-      score: {
-        description:
-          "A score between 0.0 and 1.0 indicating the utilization of the context.",
+          "A score between 0.0 and 1.0 indicating how factually similar the generated answer is to the expected output.",
       },
     },
   },
@@ -1262,7 +1250,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
 `,
     category: "rag",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html",
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/",
     isGuardrail: false,
     requiredFields: ["output", "contexts"],
     optionalFields: ["input"],
@@ -1271,9 +1259,45 @@ This evaluator assesses the extent to which the generated answer is consistent w
         description: "The model to use for evaluation.",
         default: "openai/gpt-4o-mini",
       },
-      embeddings_model: {
-        description: "The model to use for embeddings.",
-        default: "openai/text-embedding-ada-002",
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+      use_hhem: {
+        description:
+          "Whether to use Vectara's HHEM-2.1-Open for faithfulness scoring.",
+        default: false,
+      },
+      autodetect_dont_know: {
+        description:
+          "Whether to autodetect 'I don't know' in the output to avoid failing the evaluation.",
+        default: true,
+      },
+    },
+    envVars: [],
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the faithfulness of the answer.",
+      },
+    },
+  },
+  "ragas/response_context_precision": {
+    name: `Ragas Response Context Precision`,
+    description: `
+Uses an LLM to measure the proportion of chunks in the retrieved context that were relevant to generate the output or the expected output.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/#context-precision-without-reference",
+    isGuardrail: false,
+    requiredFields: ["input", "contexts"],
+    optionalFields: ["output", "expected_output"],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-4o-mini",
       },
       max_tokens: {
         description:
@@ -1285,7 +1309,212 @@ This evaluator assesses the extent to which the generated answer is consistent w
     result: {
       score: {
         description:
-          "A score between 0.0 and 1.0 indicating the faithfulness of the answer.",
+          "A score between 0.0 and 1.0 indicating the precision of the retrieved context.",
+      },
+    },
+  },
+  "ragas/response_context_recall": {
+    name: `Ragas Response Context Recall`,
+    description: `
+Uses an LLM to measure how many of relevant documents attributable the claims in the output were successfully retrieved in order to generate an expected output.
+`,
+    category: "rag",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/#llm-based-context-recall",
+    isGuardrail: false,
+    requiredFields: ["input", "output", "contexts", "expected_output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    envVars: [],
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the recall of the retrieved context.",
+      },
+    },
+  },
+  "ragas/response_relevancy": {
+    name: `Ragas Response Relevancy`,
+    description: `
+Evaluates how pertinent the generated answer is to the given prompt. Higher scores indicate better relevancy.
+`,
+    category: "quality",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/answer_relevance/",
+    isGuardrail: false,
+    requiredFields: ["input", "output"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+      embeddings_model: {
+        description: "The model to use for embeddings.",
+        default: "openai/text-embedding-ada-002",
+      },
+    },
+    envVars: [],
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the relevance of the answer.",
+      },
+    },
+  },
+  "ragas/rouge_score": {
+    name: `ROUGE Score`,
+    description: `
+Traditional NLP metric. ROUGE score for evaluating the similarity between two strings.
+`,
+    category: "quality",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/traditional/#rouge-score",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output"],
+    optionalFields: [],
+    settings: {
+      rouge_type: {
+        description: "ROUGE type",
+        default: "rouge1",
+      },
+      measure_type: {
+        description: "ROUGE measure type",
+        default: "fmeasure",
+      },
+    },
+    envVars: [],
+    result: {
+      score: {
+        description: "ROUGE similarity score",
+      },
+    },
+  },
+  "ragas/rubrics_based_scoring": {
+    name: `Rubrics Based Scoring`,
+    description: `
+Rubric-based evaluation metric that is used to evaluate responses. The rubric consists of descriptions for each score, typically ranging from 1 to 5
+`,
+    category: "quality",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/general_purpose/#rubrics-based-criteria-scoring",
+    isGuardrail: false,
+    requiredFields: ["input", "output"],
+    optionalFields: ["expected_output"],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+      rubrics: {
+        description: undefined,
+        default: [
+          {
+            description: "The response is incorrect, irrelevant.",
+          },
+          {
+            description:
+              "The response partially answers the question but includes significant errors, omissions, or irrelevant information.",
+          },
+          {
+            description:
+              "The response partially answers the question but includes minor errors, omissions, or irrelevant information.",
+          },
+          {
+            description:
+              "The response fully answers the question and includes minor errors, omissions, or irrelevant information.",
+          },
+          {
+            description:
+              "The response fully answers the question and includes no errors, omissions, or irrelevant information.",
+          },
+        ],
+      },
+    },
+    envVars: [],
+    result: {
+      score: {
+        description:
+          "A score according to the rubrics, typically between 1 and 5.",
+      },
+    },
+  },
+  "ragas/sql_query_equivalence": {
+    name: `SQL Query Equivalence`,
+    description: `
+Checks if the SQL query is equivalent to a reference one by using an LLM to infer if it would generate the same results given the table schemas.
+`,
+    category: "quality",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/sql/#sql-query-semantic-equivalence",
+    isGuardrail: false,
+    requiredFields: ["output", "expected_output", "expected_contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    envVars: [],
+    result: {
+      passed: {
+        description: "Whether the SQL query is equivalent to the expected one.",
+      },
+    },
+  },
+  "ragas/summarization_score": {
+    name: `Summarization Score`,
+    description: `
+Measures how well the summary captures important information from the retrieved contexts.
+`,
+    category: "quality",
+    docsUrl:
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/summarization_score/",
+    isGuardrail: false,
+    requiredFields: ["output", "contexts"],
+    optionalFields: [],
+    settings: {
+      model: {
+        description: "The model to use for evaluation.",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description:
+          "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
+        default: 2048,
+      },
+    },
+    envVars: [],
+    result: {
+      score: {
+        description:
+          "A score between 0.0 and 1.0 indicating the summarization quality.",
       },
     },
   },
