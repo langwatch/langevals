@@ -57,12 +57,12 @@ class RagasFactualCorrectnessEvaluator(
     Computes with an LLM how factually similar the generated answer is to the expected output.
     """
 
-    name = "Factual Correctness"
+    name = "LLM Factual Match"
     category = "quality"
     env_vars = env_vars
     default_settings = RagasFactualCorrectnessSettings()
     docs_url = (
-        "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html"
+        "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/factual_correctness/"
     )
     is_guardrail = False
 

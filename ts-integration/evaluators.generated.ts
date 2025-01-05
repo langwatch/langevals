@@ -1202,13 +1202,13 @@ Measures how many relevant contexts were retrieved compared to expected contexts
     },
   },
   "ragas/factual_correctness": {
-    name: `Factual Correctness`,
+    name: `LLM Factual Match`,
     description: `
 Computes with an LLM how factually similar the generated answer is to the expected output.
 `,
     category: "quality",
     docsUrl:
-      "https://docs.ragas.io/en/latest/concepts/metrics/answer_correctness.html",
+      "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/factual_correctness/",
     isGuardrail: false,
     requiredFields: ["output", "expected_output"],
     optionalFields: [],
