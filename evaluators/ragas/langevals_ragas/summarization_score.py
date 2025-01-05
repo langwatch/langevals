@@ -24,9 +24,9 @@ class RagasSummarizationScoreEntry(EvaluatorEntry):
 
 
 class RagasSummarizationScoreResult(EvaluationResult):
-    passed: bool = Field(
-        default=False,
-        description="Whether the SQL query is equivalent to the expected one.",
+    score: float = Field(
+        default=0.0,
+        description="A score between 0.0 and 1.0 indicating the summarization quality.",
     )
 
 

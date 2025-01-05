@@ -13,6 +13,12 @@ from langevals_ragas.response_context_recall import (
     RagasResponseContextRecallEntry,
     RagasResponseContextRecallEvaluator,
 )
+from langevals_ragas.rubrics_based_scoring import (
+    RagasRubricsBasedScoringEntry,
+    RagasRubricsBasedScoringEvaluator,
+    RagasRubricsBasedScoringRubric,
+    RagasRubricsBasedScoringSettings,
+)
 from langevals_ragas.sql_query_equivalence import (
     RagasSQLQueryEquivalenceEntry,
     RagasSQLQueryEquivalenceEvaluator,
@@ -325,5 +331,72 @@ def test_summarization_score():
 
     assert result.status == "processed"
     assert result.score and result.score > 0.7
+    assert result.cost and result.cost.amount > 0.0
+    assert result.details
+
+
+def test_rubrics_based_scoring_with_reference():
+    evaluator = RagasRubricsBasedScoringEvaluator(
+        settings=RagasRubricsBasedScoringSettings()
+    )
+
+    result = evaluator.evaluate(
+        RagasRubricsBasedScoringEntry(
+            input="What is the capital of France?",
+            output="Paris is the capital of France.",
+            expected_output="Paris is the capital of France.",
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score and result.score == 5
+    assert result.cost and result.cost.amount > 0.0
+    assert result.details
+
+
+def test_rubrics_based_scoring_without_reference():
+    evaluator = RagasRubricsBasedScoringEvaluator(
+        settings=RagasRubricsBasedScoringSettings()
+    )
+
+    result = evaluator.evaluate(
+        RagasRubricsBasedScoringEntry(
+            input="What is the capital of France?",
+            output="Paris is the capital of France.",
+        )
+    )
+
+    print("\n\nresult", result, "\n\n")
+
+    assert result.status == "processed"
+    assert result.score and result.score == 5
+    assert result.cost and result.cost.amount > 0.0
+    assert result.details
+
+
+def test_rubrics_based_scoring_with_custom_rubrics():
+    evaluator = RagasRubricsBasedScoringEvaluator(
+        settings=RagasRubricsBasedScoringSettings(
+            rubrics=[
+                RagasRubricsBasedScoringRubric(
+                    description="The response is incorrect, irrelevant."
+                ),
+                RagasRubricsBasedScoringRubric(
+                    description="The response fully answers the question and includes no errors, omissions, or irrelevant information."
+                ),
+            ]
+        )
+    )
+
+    result = evaluator.evaluate(
+        RagasRubricsBasedScoringEntry(
+            input="What is the capital of France?",
+            output="Paris is the capital of France.",
+            expected_output="Paris is the capital of France.",
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score and result.score == 2
     assert result.cost and result.cost.amount > 0.0
     assert result.details

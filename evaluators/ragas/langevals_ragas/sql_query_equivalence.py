@@ -64,12 +64,12 @@ class RagasSQLQueryEquivalenceEvaluator(
 
         _original_generate = scorer.equivalence_prompt.generate
 
-        equivalence_result = None
+        breakdown = None
 
         async def generate(*args, **kwargs):
-            nonlocal equivalence_result
+            nonlocal breakdown
             result = await _original_generate(*args, **kwargs)
-            equivalence_result = result
+            breakdown = result
             return result
 
         scorer.equivalence_prompt.generate = generate
@@ -87,8 +87,8 @@ class RagasSQLQueryEquivalenceEvaluator(
             passed=score >= 0.5,
             cost=cost,
             details=(
-                f"Response query explaination: {equivalence_result.response_query_explaination}\nReference query explaination: {equivalence_result.reference_query_explaination}\nEquivalence: {equivalence_result.equivalence}"
-                if equivalence_result
+                f"Response query explaination: {breakdown.response_query_explaination}\nReference query explaination: {breakdown.reference_query_explaination}\nEquivalence: {breakdown.equivalence}"
+                if breakdown
                 else None
             ),
         )
