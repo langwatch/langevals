@@ -1,47 +1,77 @@
+from typing import Literal
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings
+from ragas import SingleTurnSample
+from .lib.common import (
+    RagasResult,
+    env_vars,
+    RagasSettings,
+)
 from pydantic import Field
+from ragas.metrics import (
+    NonLLMContextRecall,
+    DistanceMeasure,
+)
 
 
 class RagasContextRecallEntry(EvaluatorEntry):
-    input: str
     contexts: list[str]
-    expected_output: str
+    expected_contexts: list[str]
 
 
 class RagasContextRecallResult(EvaluationResult):
     score: float = Field(
         default=0.0,
-        description="A score between 0.0 and 1.0 indicating the recall of the context.",
+        description="A score between 0.0 and 1.0 indicating the Recall score.",
+    )
+
+
+class RagasContextRecallSettings(RagasSettings):
+    distance_measure: Literal["levenshtein", "hamming", "jaro", "jaro_winkler"] = (
+        "levenshtein"
     )
 
 
 class RagasContextRecallEvaluator(
-    BaseEvaluator[RagasContextRecallEntry, RagasSettings, RagasContextRecallResult]
+    BaseEvaluator[
+        RagasContextRecallEntry,
+        RagasContextRecallSettings,
+        RagasContextRecallResult,
+    ]
 ):
     """
-    This evaluator measures the extent to which the retrieved context aligns with the annotated answer, treated as the ground truth. Higher values indicate better performance.
+    Measures how many relevant contexts were retrieved compared to expected contexts, increasing it means more signal in the retrieval. Uses traditional string distance metrics.
     """
 
-    name = "Ragas Context Recall"
+    name = "Context Recall"
     category = "rag"
     env_vars = env_vars
-    default_settings = RagasSettings()
-    docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_recall.html"
+    default_settings = RagasContextRecallSettings()
+    docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/#non-llm-based-context-recall"
     is_guardrail = False
 
     def evaluate(self, entry: RagasContextRecallEntry) -> SingleEvaluationResult:
-        input = entry.input or ""
-        return evaluate_ragas(
-            evaluator=self,
-            metric="context_recall",
-            user_input=input,
-            retrieved_contexts=entry.contexts,
-            reference=entry.expected_output,
-            settings=self.settings,
+        scorer = NonLLMContextRecall()
+        scorer.distance_measure = {
+            "levenshtein": DistanceMeasure.LEVENSHTEIN,
+            "hamming": DistanceMeasure.HAMMING,
+            "jaro": DistanceMeasure.JARO,
+            "jaro_winkler": DistanceMeasure.JARO_WINKLER,
+        }[self.settings.distance_measure]
+
+        score = scorer.single_turn_score(
+            SingleTurnSample(
+                retrieved_contexts=entry.contexts,
+                reference_contexts=entry.expected_contexts,
+            )
+        )
+
+        return RagasResult(
+            score=score,
+            cost=None,
+            details=None,
         )

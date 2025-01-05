@@ -30,9 +30,18 @@ class RagasResponseRelevancyResult(EvaluationResult):
     )
 
 
+class RagasResponseRelevancySettings(RagasSettings):
+    embeddings_model: str = Field(
+        default="openai/text-embedding-ada-002",
+        description="The model to use for embeddings.",
+    )
+
+
 class RagasResponseRelevancyEvaluator(
     BaseEvaluator[
-        RagasResponseRelevancyEntry, RagasSettings, RagasResponseRelevancyResult
+        RagasResponseRelevancyEntry,
+        RagasResponseRelevancySettings,
+        RagasResponseRelevancyResult,
     ]
 ):
     """
@@ -42,7 +51,7 @@ class RagasResponseRelevancyEvaluator(
     name = "Ragas Response Relevancy"
     category = "rag"
     env_vars = env_vars
-    default_settings = RagasSettings()
+    default_settings = RagasResponseRelevancySettings()
     docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/answer_relevance/"
     is_guardrail = False
 
@@ -72,7 +81,7 @@ class RagasResponseRelevancyEvaluator(
 
         scorer.calculate_similarity = calculate_similarity
 
-        with capture_cost() as cost:
+        with capture_cost(llm) as cost:
             score = scorer.single_turn_score(
                 SingleTurnSample(
                     user_input=entry.input,

@@ -20,6 +20,7 @@ langchain-openai = ">=0.1.23"
 langchain_community = ">=0.2.16"
 litellm = "^1.52.14"
 transformers = "^4.47.1"
+rapidfuzz = "^3.11.0"
 [[tool.poetry.dependencies.torch]]
 version = "^2.2.2+cpu"
 source = "pytorch_cpu"

@@ -1,48 +1,81 @@
+from typing import Literal
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
 )
-from .lib.common import env_vars, evaluate_ragas, RagasSettings
+from ragas import SingleTurnSample
+from .lib.common import (
+    RagasResult,
+    env_vars,
+    RagasSettings,
+)
 from pydantic import Field
+from ragas.metrics import (
+    NonLLMContextPrecisionWithReference,
+    NonLLMStringSimilarity,
+    DistanceMeasure,
+)
 
 
 class RagasContextPrecisionEntry(EvaluatorEntry):
-    input: str
     contexts: list[str]
-    expected_output: str
+    expected_contexts: list[str]
 
 
 class RagasContextPrecisionResult(EvaluationResult):
     score: float = Field(
         default=0.0,
-        description="A score between 0.0 and 1.0 indicating the precision of the context."
+        description="A score between 0.0 and 1.0 indicating the precision score.",
+    )
+
+
+class RagasContextPrecisionSettings(RagasSettings):
+    distance_measure: Literal["levenshtein", "hamming", "jaro", "jaro_winkler"] = (
+        "levenshtein"
     )
 
 
 class RagasContextPrecisionEvaluator(
     BaseEvaluator[
-        RagasContextPrecisionEntry, RagasSettings, RagasContextPrecisionResult
+        RagasContextPrecisionEntry,
+        RagasContextPrecisionSettings,
+        RagasContextPrecisionResult,
     ]
 ):
     """
-    This metric evaluates whether all of the ground-truth relevant items present in the contexts are ranked higher or not. Higher scores indicate better precision.
+    Measures how accurate is the retrieval compared to expected contexts, increasing it means less noise in the retrieval. Uses traditional string distance metrics.
     """
 
-    name = "Ragas Context Precision"
+    name = "Context Precision"
     category = "rag"
     env_vars = env_vars
-    default_settings = RagasSettings()
-    docs_url = "https://docs.ragas.io/en/latest/concepts/metrics/context_precision.html"
+    default_settings = RagasContextPrecisionSettings()
+    docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/#non-llm-based-context-precision"
     is_guardrail = False
 
     def evaluate(self, entry: RagasContextPrecisionEntry) -> SingleEvaluationResult:
-        return evaluate_ragas(
-            evaluator=self,
-            metric="context_precision",
-            user_input=entry.input,
-            retrieved_contexts=entry.contexts,
-            reference=entry.expected_output,
-            settings=self.settings,
+        scorer = NonLLMContextPrecisionWithReference(
+            distance_measure=NonLLMStringSimilarity(
+                distance_measure={
+                    "levenshtein": DistanceMeasure.LEVENSHTEIN,
+                    "hamming": DistanceMeasure.HAMMING,
+                    "jaro": DistanceMeasure.JARO,
+                    "jaro_winkler": DistanceMeasure.JARO_WINKLER,
+                }[self.settings.distance_measure]
+            )
+        )
+
+        score = scorer.single_turn_score(
+            SingleTurnSample(
+                retrieved_contexts=entry.contexts,
+                reference_contexts=entry.expected_contexts,
+            )
+        )
+
+        return RagasResult(
+            score=score,
+            cost=None,
+            details=None,
         )

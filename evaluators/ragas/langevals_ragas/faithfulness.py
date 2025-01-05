@@ -106,7 +106,7 @@ class RagasFaithfulnessEvaluator(
 
         scorer._create_verdicts = _create_verdicts.__get__(scorer)
 
-        with capture_cost() as cost:
+        with capture_cost(llm) as cost:
             score = scorer.single_turn_score(
                 SingleTurnSample(
                     user_input=entry.input,

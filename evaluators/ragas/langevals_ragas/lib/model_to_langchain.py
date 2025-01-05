@@ -37,6 +37,7 @@ def model_to_langchain(
         api_key="dummy",  # type: ignore
         client=LitellmCompletion(),
         async_client=AsyncLitellmCompletion(),
+        temperature=0,
     )
 
 

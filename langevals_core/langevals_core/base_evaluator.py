@@ -87,6 +87,12 @@ class EvaluatorEntry(BaseModel):
                 Optional[list[str]],
             ],
             "expected_output": [str, Optional[str]],
+            "expected_contexts": [
+                List[str],
+                list[str],
+                Optional[List[str]],
+                Optional[list[str]],
+            ],
         }
 
         subclass_fields_types = get_type_hints(cls)
