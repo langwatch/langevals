@@ -16,6 +16,7 @@ from .lib.common import (
 from pydantic import Field
 
 from ragas.metrics import LLMContextRecall
+from ragas.metrics._context_recall import ContextRecallClassification
 
 
 class RagasResponseContextRecallEntry(EvaluatorEntry):
@@ -65,6 +66,17 @@ class RagasResponseContextRecallEvaluator(
 
         scorer = LLMContextRecall(llm=llm)
 
+        _original_compute_score = scorer._compute_score
+
+        breakdown = []
+
+        def _compute_score(responses: list[ContextRecallClassification]) -> float:
+            nonlocal breakdown
+            breakdown += responses
+            return _original_compute_score(responses)
+
+        scorer._compute_score = _compute_score
+
         with capture_cost(llm) as cost:
             score = scorer.single_turn_score(
                 SingleTurnSample(
@@ -75,8 +87,17 @@ class RagasResponseContextRecallEvaluator(
                 )
             )
 
+        details = None
+        if len(breakdown) > 0:
+            details = "\n\n".join(
+                [
+                    f"Statement: {r.statement}\nReason: {r.reason}\nAttributed: {r.attributed}"
+                    for r in breakdown
+                ]
+            )
+
         return RagasResult(
             score=score,
             cost=cost,
-            details=None,
+            details=details,
         )

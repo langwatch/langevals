@@ -269,10 +269,10 @@ def test_response_context_recall():
 
     result = evaluator.evaluate(
         RagasResponseContextRecallEntry(
-            input="What is the capital of France?",
-            output="Paris is the capital of France.",
-            contexts=["France is a country in Europe.", "Paris is a city in France."],
-            expected_output="Paris is the capital of France.",
+            input="Where is the Eiffel Tower located?",
+            output="The Eiffel Tower is located in Paris.",
+            expected_output="The Eiffel Tower is located in Paris.",
+            contexts=["Paris is the capital of France."],
         )
     )
 

@@ -36,6 +36,7 @@ markers = "sys_platform != 'linux'"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
 python-dotenv = "^1.0.1"
+flaky = "^3.8.1"
 
 
 [tool.poetry.group.dev.dependencies]
