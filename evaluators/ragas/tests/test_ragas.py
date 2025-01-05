@@ -1,5 +1,7 @@
 import dotenv
 
+from langevals_core.base_evaluator import EvaluatorSettings
+from langevals_ragas.bleu_score import RagasBLEUScoreEntry, RagasBLEUScoreEvaluator
 from langevals_ragas.context_f1 import (
     RagasContextF1Entry,
     RagasContextF1Evaluator,
@@ -12,6 +14,11 @@ from langevals_ragas.response_context_precision import (
 from langevals_ragas.response_context_recall import (
     RagasResponseContextRecallEntry,
     RagasResponseContextRecallEvaluator,
+)
+from langevals_ragas.rouge_score import (
+    RagasROUGEScoreEntry,
+    RagasROUGEScoreEvaluator,
+    RagasROUGEScoreSettings,
 )
 from langevals_ragas.rubrics_based_scoring import (
     RagasRubricsBasedScoringEntry,
@@ -400,3 +407,31 @@ def test_rubrics_based_scoring_with_custom_rubrics():
     assert result.score and result.score == 2
     assert result.cost and result.cost.amount > 0.0
     assert result.details
+
+
+def test_bleu_score():
+    evaluator = RagasBLEUScoreEvaluator(settings=EvaluatorSettings())
+
+    result = evaluator.evaluate(
+        RagasBLEUScoreEntry(
+            output="Paris is the capital of France.",
+            expected_output="Paris is the capital of France.",
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score and result.score >= 1.0
+
+
+def test_rouge_score():
+    evaluator = RagasROUGEScoreEvaluator(settings=RagasROUGEScoreSettings())
+
+    result = evaluator.evaluate(
+        RagasROUGEScoreEntry(
+            output="Paris is the capital of France.",
+            expected_output="Paris is the capital of France, Europe.",
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score and result.score > 0.9

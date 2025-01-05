@@ -83,7 +83,7 @@ class RagasSQLQueryEquivalenceEvaluator(
                 )
             )
 
-        return RagasResult(
+        return RagasSQLQueryEquivalenceResult(
             passed=score >= 0.5,
             cost=cost,
             details=(

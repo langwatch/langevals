@@ -4,6 +4,7 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
+    EvaluatorSettings,
 )
 from ragas import SingleTurnSample
 from .lib.common import (
@@ -32,7 +33,7 @@ class RagasContextF1Result(EvaluationResult):
     )
 
 
-class RagasContextF1Settings(RagasSettings):
+class RagasContextF1Settings(EvaluatorSettings):
     distance_measure: Literal["levenshtein", "hamming", "jaro", "jaro_winkler"] = (
         "levenshtein"
     )

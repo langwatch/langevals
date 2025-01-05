@@ -4,12 +4,12 @@ from langevals_core.base_evaluator import (
     EvaluationResult,
     EvaluatorEntry,
     SingleEvaluationResult,
+    EvaluatorSettings,
 )
 from ragas import SingleTurnSample
 from .lib.common import (
     RagasResult,
     env_vars,
-    RagasSettings,
 )
 from pydantic import Field
 from ragas.metrics import (
@@ -31,7 +31,7 @@ class RagasContextPrecisionResult(EvaluationResult):
     )
 
 
-class RagasContextPrecisionSettings(RagasSettings):
+class RagasContextPrecisionSettings(EvaluatorSettings):
     distance_measure: Literal["levenshtein", "hamming", "jaro", "jaro_winkler"] = (
         "levenshtein"
     )
