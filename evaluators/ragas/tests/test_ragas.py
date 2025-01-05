@@ -13,6 +13,14 @@ from langevals_ragas.response_context_recall import (
     RagasResponseContextRecallEntry,
     RagasResponseContextRecallEvaluator,
 )
+from langevals_ragas.sql_query_equivalence import (
+    RagasSQLQueryEquivalenceEntry,
+    RagasSQLQueryEquivalenceEvaluator,
+)
+from langevals_ragas.summarization_score import (
+    RagasSummarizationScoreEntry,
+    RagasSummarizationScoreEvaluator,
+)
 
 dotenv.load_dotenv()
 import pytest
@@ -211,21 +219,6 @@ def test_context_f1():
     assert result.details
 
 
-# def test_context_relevancy():
-#     evaluator = RagasContextRelevancyEvaluator(settings=RagasSettings())
-
-#     result = evaluator.evaluate(
-#         RagasContextRelevancyEntry(
-#             output="The capital of France is Paris.",
-#             contexts=["France is a country in Europe.", "Paris is a city in France."],
-#         )
-#     )
-
-#     assert result.status == "processed"
-#     assert result.score and result.score > 0.3
-#     assert result.cost and result.cost.amount > 0.0
-
-
 def test_response_context_precision_with_reference():
     evaluator = RagasResponseContextPrecisionEvaluator(settings=RagasSettings())
 
@@ -292,3 +285,45 @@ def test_with_anthropic_models():
     assert result.status == "processed"
     assert result.score and result.score > 0.9
     assert result.cost and result.cost.amount > 0.0
+
+
+def test_sql_query_equivalence():
+    evaluator = RagasSQLQueryEquivalenceEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasSQLQueryEquivalenceEntry(
+            output="SELECT id, name FROM users WHERE active = 1;",
+            expected_output="SELECT id, name FROM users WHERE active = true;",
+            expected_contexts=[
+                """
+                    Table users:
+                    - id: INT
+                    - name: VARCHAR
+                    - active: BOOLEAN
+                """
+            ],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.passed
+    assert result.cost and result.cost.amount > 0.0
+    assert result.details
+
+
+def test_summarization_score():
+    evaluator = RagasSummarizationScoreEvaluator(settings=RagasSettings())
+
+    result = evaluator.evaluate(
+        RagasSummarizationScoreEntry(
+            output="A company is launching a fitness tracking app that helps users set exercise goals, log meals, and track water intake, with personalized workout suggestions and motivational reminders.",
+            contexts=[
+                "A company is launching a new product, a smartphone app designed to help users track their fitness goals. The app allows users to set daily exercise targets, log their meals, and track their water intake. It also provides personalized workout recommendations and sends motivational reminders throughout the day."
+            ],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score and result.score > 0.7
+    assert result.cost and result.cost.amount > 0.0
+    assert result.details
