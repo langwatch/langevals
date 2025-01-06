@@ -19,7 +19,7 @@ from .lib.common import (
     prepare_llm,
 )
 from pydantic import Field
-from ragas.metrics import Faithfulness, FaithfulnesswithHHEM
+from ragas.metrics import Faithfulness
 from langchain_core.prompt_values import StringPromptValue
 
 
@@ -37,10 +37,6 @@ class RagasFaithfulnessResult(EvaluationResult):
 
 
 class RagasFaithfulnessSettings(RagasSettings):
-    use_hhem: bool = Field(
-        default=False,
-        description="Whether to use Vectara's HHEM-2.1-Open for faithfulness scoring.",
-    )
     autodetect_dont_know: bool = Field(
         default=True,
         description="Whether to autodetect 'I don't know' in the output to avoid failing the evaluation.",
@@ -63,11 +59,6 @@ class RagasFaithfulnessEvaluator(
     docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/"
     is_guardrail = False
 
-    @classmethod
-    def preload(cls):
-        cls.faithfulnessHHEM = FaithfulnesswithHHEM()
-        super().preload()
-
     def evaluate(self, entry: RagasFaithfulnessEntry) -> SingleEvaluationResult:
         llm, _ = prepare_llm(self, self.settings)
 
@@ -81,7 +72,7 @@ class RagasFaithfulnessEvaluator(
         if skip:
             return skip
 
-        scorer = self.faithfulnessHHEM if self.settings.use_hhem else Faithfulness()
+        scorer = Faithfulness()
         scorer.llm = llm
 
         _original_create_statements = scorer._create_statements

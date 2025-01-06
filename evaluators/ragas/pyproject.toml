@@ -7,10 +7,6 @@ authors = [
   "Yevhenii Budnyk <y.budnyk789@gmail.com>",
 ]
 license = "MIT"
-[[tool.poetry.source]]
-name = "pytorch_cpu"
-url = "https://download.pytorch.org/whl/cpu"
-priority = "explicit"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -23,15 +19,6 @@ transformers = "^4.47.1"
 rapidfuzz = "^3.11.0"
 sacrebleu = "^2.5.1"
 rouge-score = "^0.1.2"
-[[tool.poetry.dependencies.torch]]
-version = "^2.2.2+cpu"
-source = "pytorch_cpu"
-markers = "sys_platform == 'linux'"
-
-[[tool.poetry.dependencies.torch]]
-version = "^2.2.2"
-source = "pypi"
-markers = "sys_platform != 'linux'"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

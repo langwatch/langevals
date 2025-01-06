@@ -2329,10 +2329,6 @@ ragas = "0.2.9"
 rapidfuzz = "^3.11.0"
 rouge-score = "^0.1.2"
 sacrebleu = "^2.5.1"
-torch = [
-    {version = ">=2.2.2+cpu,<3.0.0", markers = "sys_platform == \"linux\""},
-    {version = ">=2.2.2,<3.0.0", markers = "sys_platform != \"linux\""},
-]
 transformers = "^4.47.1"
 
 [package.source]

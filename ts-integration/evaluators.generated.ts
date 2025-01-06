@@ -256,11 +256,6 @@ export type Evaluators = {
        */
       max_tokens: number;
       /**
-       * @description Whether to use Vectara's HHEM-2.1-Open for faithfulness scoring.
-       * @default false
-       */
-      use_hhem: boolean;
-      /**
        * @description Whether to autodetect 'I don't know' in the output to avoid failing the evaluation.
        * @default true
        */
@@ -1263,11 +1258,6 @@ This evaluator assesses the extent to which the generated answer is consistent w
         description:
           "The maximum number of tokens allowed for evaluation, a too high number can be costly. Entries above this amount will be skipped.",
         default: 2048,
-      },
-      use_hhem: {
-        description:
-          "Whether to use Vectara's HHEM-2.1-Open for faithfulness scoring.",
-        default: false,
       },
       autodetect_dont_know: {
         description:
