@@ -2245,11 +2245,13 @@ files = []
 develop = true
 
 [package.dependencies]
+appdirs = "^1.4.4"
 datasets = "2.14.6"
 langchain_community = ">=0.2.16"
 langchain-openai = ">=0.1.23"
 langevals-core = {path = "../../langevals_core", develop = true}
 litellm = "^1.52.14"
+pysbd = "^0.3.4"
 
 [package.source]
 type = "directory"
