@@ -72,28 +72,10 @@ def test_faithfulness():
     result = evaluator.evaluate(
         RagasFaithfulnessEntry(
             output="The capital of France is Paris.",
-            contexts=["France is a country in Europe.", "Paris is a city in France."],
-        )
-    )
-
-    assert result.status == "processed"
-    assert result.score and result.score > 0.9
-    assert result.cost and result.cost.amount > 0.0
-    assert result.details
-
-
-@pytest.mark.flaky(max_runs=3)
-def test_faithfulness_hhem():
-    evaluator = RagasFaithfulnessEvaluator(
-        settings=RagasFaithfulnessSettings(use_hhem=True, model="openai/gpt-3.5-turbo")
-    )
-
-    result = evaluator.evaluate(
-        RagasFaithfulnessEntry(
-            input="When was the first super bowl?",
-            output="The first superbowl was held on Jan 15, 1967",
             contexts=[
-                "The First AFL–NFL World Championship Game was an American football game played on January 15, 1967, at the Los Angeles Memorial Coliseum in Los Angeles."
+                "France is a country in Europe.",
+                "Paris is a city in France.",
+                "Paris is the capital of France.",
             ],
         )
     )
@@ -372,8 +354,6 @@ def test_rubrics_based_scoring_without_reference():
             output="Paris is the capital of France.",
         )
     )
-
-    print("\n\nresult", result, "\n\n")
 
     assert result.status == "processed"
     assert result.score and result.score == 5

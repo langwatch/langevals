@@ -61,9 +61,7 @@ class RagasFactualCorrectnessEvaluator(
     category = "quality"
     env_vars = env_vars
     default_settings = RagasFactualCorrectnessSettings()
-    docs_url = (
-        "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/factual_correctness/"
-    )
+    docs_url = "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/factual_correctness/"
     is_guardrail = False
 
     def evaluate(self, entry: RagasFactualCorrectnessEntry) -> SingleEvaluationResult:
@@ -121,16 +119,16 @@ class RagasFactualCorrectnessEvaluator(
             details += (
                 f"# Precision\nPremise: {breakdown['premise']}\nHypothesis list:\n"
             )
-            for i, score in enumerate(breakdown["scores"]):
-                details += f"- \"{breakdown['hypothesis_list'][i]}\": {score}\n"
+            for i, score_ in enumerate(breakdown["scores"]):
+                details += f"- \"{breakdown['hypothesis_list'][i]}\": {score_}\n"
 
         if len(breakdowns) > 1:
             breakdown = breakdowns[1]
             details += (
                 f"\n# Recall\nPremise: {breakdown['premise']}\nHypothesis list:\n"
             )
-            for i, score in enumerate(breakdown["scores"]):
-                details += f"- \"{breakdown['hypothesis_list'][i]}\": {score}\n"
+            for i, score_ in enumerate(breakdown["scores"]):
+                details += f"- \"{breakdown['hypothesis_list'][i]}\": {score_}\n"
 
         return RagasResult(
             score=score,
