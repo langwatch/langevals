@@ -23,6 +23,11 @@ from langevals_core.base_evaluator import (
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from mangum import Mangum
 
+import nest_asyncio
+
+nest_asyncio_apply = nest_asyncio.apply
+nest_asyncio.apply = lambda: None
+
 
 def handle_sigterm(signum, frame):
     print("Received SIGTERM")
@@ -80,6 +85,8 @@ def create_evaluator_routes(evaluator_cls):
     async def evaluate(
         req: Request,
     ) -> List[result_type | EvaluationResultSkipped | EvaluationResultError]:  # type: ignore
+        if module_name == "ragas":
+            nest_asyncio_apply()
         os.environ.clear()
         os.environ.update(
             original_env
@@ -135,6 +142,10 @@ def main():
         return
     import gunicorn.app.base
 
+    host = "0.0.0.0"
+    port = int(os.getenv("PORT", 8000))
+    workers = get_cpu_count()
+
     class StandaloneApplication(gunicorn.app.base.BaseApplication):
         def __init__(self, app, options=None):
             self.options = options or {}
@@ -151,11 +162,8 @@ def main():
                 self.cfg.set(key.lower(), value)  # type: ignore
 
         def load(self):
+            print(f"LangEvals listening at http://{host}:{port}")
             return self.application
-
-    host = "0.0.0.0"
-    port = int(os.getenv("PORT", 8000))
-    workers = get_cpu_count()
 
     print(f"Starting server with {workers} workers")
 
@@ -165,6 +173,7 @@ def main():
         "worker_class": "uvicorn.workers.UvicornWorker",
         "preload_app": True,
         "forwarded_allow_ips": "*",
+        "loglevel": "warning",
     }
 
     StandaloneApplication(app, options).run()
