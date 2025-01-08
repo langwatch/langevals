@@ -24,7 +24,7 @@ Then right away you can start LangEvals as a server with:
 langevals-server
 ```
 
-And navigate to `http://localhost:8000/` to try out the evaluators.
+And navigate to `http://localhost:5562/` to try out the evaluators.
 
 Alternatively, you can use it as a library as the examples below show.
 

@@ -143,7 +143,7 @@ def main():
     import gunicorn.app.base
 
     host = "0.0.0.0"
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT", 5562))
     workers = get_cpu_count()
 
     class StandaloneApplication(gunicorn.app.base.BaseApplication):
