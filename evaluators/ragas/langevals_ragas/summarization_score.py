@@ -84,9 +84,9 @@ class RagasSummarizationScoreEvaluator(
                 )
             )
 
-        details = f"QA Score: {breakdown['qa_score']}"
+        details = f"QA Score: {breakdown['qa_score']:.2f}"
         if "conciseness_score" in breakdown:
-            details += f"\nConciseness Score: {breakdown['conciseness_score']}"
+            details += f"\nConciseness Score: {breakdown['conciseness_score']:.2f}"
 
         return RagasResult(
             score=score,
