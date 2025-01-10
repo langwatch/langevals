@@ -12,9 +12,15 @@ import litellm
 
 class LitellmCompletion:
     exception: Optional[Exception] = None
+    temperature: float = 0
+
+    def __init__(self, temperature: float = 0):
+        self.temperature = temperature
 
     def create(self, *args, **kwargs):
         try:
+            if self.temperature:
+                kwargs["temperature"] = self.temperature
             return litellm.completion(*args, **kwargs)
         except Exception as e:
             self.exception = e
@@ -28,6 +34,7 @@ class AsyncLitellmCompletion(LitellmCompletion):
 
 def model_to_langchain(
     model: str,
+    temperature: float = 0,
 ) -> BaseChatModel:
     if model.startswith("claude-"):
         model = model.replace("claude-", "anthropic/claude-")
@@ -35,9 +42,9 @@ def model_to_langchain(
     return ChatOpenAI(
         model=model,
         api_key="dummy",  # type: ignore
-        client=LitellmCompletion(),
-        async_client=AsyncLitellmCompletion(),
-        temperature=0,
+        temperature=temperature or 0,
+        client=LitellmCompletion(temperature=temperature),
+        async_client=AsyncLitellmCompletion(temperature=temperature),
     )
 
 

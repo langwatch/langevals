@@ -1,3 +1,4 @@
+from typing import Sequence
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,
@@ -16,6 +17,7 @@ from .lib.common import (
 )
 from pydantic import Field
 from ragas.metrics import ResponseRelevancy
+from ragas.metrics._answer_relevance import ResponseRelevanceOutput
 
 
 class RagasResponseRelevancyEntry(EvaluatorEntry):
@@ -56,7 +58,7 @@ class RagasResponseRelevancyEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: RagasResponseRelevancyEntry) -> SingleEvaluationResult:
-        llm, embeddings = prepare_llm(self, self.settings)
+        llm, embeddings = prepare_llm(self, self.settings, temperature=0.7)
 
         skip = check_max_tokens(
             input=entry.input,
@@ -69,17 +71,23 @@ class RagasResponseRelevancyEvaluator(
         scorer = ResponseRelevancy(llm=llm, embeddings=embeddings)
 
         _original_calculate_similarity = scorer.calculate_similarity
+        _original_calculate_score = scorer._calculate_score
 
-        breakdown = {"similarity": 0, "generated_questions": []}
+        breakdown = {"similarity": 0, "answers": []}
 
         def calculate_similarity(question: str, generated_questions):
             nonlocal breakdown
-            breakdown["generated_questions"] += generated_questions
             similarity = _original_calculate_similarity(question, generated_questions)
             breakdown["similarity"] += similarity
             return similarity
 
+        def _calculate_score(answers: Sequence[ResponseRelevanceOutput], row: dict):
+            nonlocal breakdown
+            breakdown["answers"] += answers
+            return _original_calculate_score(answers, row)
+
         scorer.calculate_similarity = calculate_similarity
+        scorer._calculate_score = _calculate_score
 
         with capture_cost(llm) as cost:
             score = scorer.single_turn_score(
@@ -89,15 +97,19 @@ class RagasResponseRelevancyEvaluator(
                 )
             )
 
-        generated_questions = "\n- ".join(breakdown["generated_questions"])
+        generated_questions = "\n".join(
+            [f"- {answer.question}" for answer in breakdown["answers"]]
+        )
 
-        if len(breakdown["generated_questions"]) == 0:
+        if len([answer for answer in breakdown["answers"] if answer.question]) == 0:
             return EvaluationResultSkipped(
                 details="No questions could be generated from output.",
             )
 
+        any_noncommittal = any([answer.noncommittal for answer in breakdown["answers"]])
+
         return RagasResult(
             score=score,
             cost=cost,
-            details=f"Questions generated from output:\n{generated_questions}\nSimilarity to original question: {breakdown['similarity']}",
+            details=f"Questions generated from output:\n\n{generated_questions}\n\nSimilarity to original question: {breakdown['similarity']}\nEvasive answer: {any_noncommittal}",
         )

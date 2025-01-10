@@ -50,13 +50,17 @@ class _GenericEvaluatorEntry(EvaluatorEntry):
     expected_output: Optional[str]
 
 
-def prepare_llm(evaluator: BaseEvaluator, settings: RagasSettings = RagasSettings()):
+def prepare_llm(
+    evaluator: BaseEvaluator,
+    settings: RagasSettings = RagasSettings(),
+    temperature: float = 0,
+):
     os.environ["AZURE_API_VERSION"] = "2023-07-01-preview"
     if evaluator.env:
         for key, env in evaluator.env.items():
             os.environ[key] = env
 
-    gpt = model_to_langchain(settings.model)
+    gpt = model_to_langchain(settings.model, temperature=temperature)
     llm = LangchainLLMWrapper(langchain_llm=gpt)
 
     if hasattr(settings, "embeddings_model"):
