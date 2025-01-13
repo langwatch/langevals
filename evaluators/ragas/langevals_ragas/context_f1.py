@@ -69,27 +69,39 @@ class RagasContextF1Evaluator(
             )
         )
 
-        precision_score = precision_scorer.single_turn_score(
-            SingleTurnSample(
-                retrieved_contexts=entry.contexts,
-                reference_contexts=entry.expected_contexts,
+        if len(entry.expected_contexts) == 0 and len(entry.contexts) == 0:
+            precision_score = 1.0
+        elif len(entry.expected_contexts) == 0 or len(entry.contexts) == 0:
+            precision_score = 0.0
+        else:
+            precision_score = precision_scorer.single_turn_score(
+                SingleTurnSample(
+                    retrieved_contexts=entry.contexts,
+                    reference_contexts=entry.expected_contexts,
+                )
             )
-        )
 
-        recall_scorer = NonLLMContextRecall()
-        recall_scorer.distance_measure = {
-            "levenshtein": DistanceMeasure.LEVENSHTEIN,
-            "hamming": DistanceMeasure.HAMMING,
-            "jaro": DistanceMeasure.JARO,
-            "jaro_winkler": DistanceMeasure.JARO_WINKLER,
-        }[self.settings.distance_measure]
+        if len(entry.expected_contexts) == 0 and len(entry.contexts) == 0:
+            recall_score = 1.0
+        elif len(entry.expected_contexts) == 0:
+            recall_score = 1.0
+        elif len(entry.contexts) == 0:
+            recall_score = 0.0
+        else:
+            recall_scorer = NonLLMContextRecall()
+            recall_scorer.distance_measure = {
+                "levenshtein": DistanceMeasure.LEVENSHTEIN,
+                "hamming": DistanceMeasure.HAMMING,
+                "jaro": DistanceMeasure.JARO,
+                "jaro_winkler": DistanceMeasure.JARO_WINKLER,
+            }[self.settings.distance_measure]
 
-        recall_score = recall_scorer.single_turn_score(
-            SingleTurnSample(
-                retrieved_contexts=entry.contexts,
-                reference_contexts=entry.expected_contexts,
+            recall_score = recall_scorer.single_turn_score(
+                SingleTurnSample(
+                    retrieved_contexts=entry.contexts,
+                    reference_contexts=entry.expected_contexts,
+                )
             )
-        )
 
         f1_score = (
             2 * (precision_score * recall_score) / (precision_score + recall_score)

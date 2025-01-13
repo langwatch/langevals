@@ -5,6 +5,7 @@ from langevals_core.base_evaluator import (
     EvaluatorEntry,
     SingleEvaluationResult,
     EvaluatorSettings,
+    EvaluationResultSkipped,
 )
 from ragas import SingleTurnSample
 from .lib.common import (
@@ -55,6 +56,25 @@ class RagasContextRecallEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: RagasContextRecallEntry) -> SingleEvaluationResult:
+        if len(entry.expected_contexts) == 0 and len(entry.contexts) == 0:
+            return RagasResult(
+                score=1.0,
+                cost=None,
+                details="No contexts retrieved, but also no contexts expected, so that's a perfect recall of 1",
+            )
+        if len(entry.expected_contexts) == 0:
+            return RagasResult(
+                score=1.0,
+                cost=None,
+                details="No contexts expected, meaning nothing was missing, so that's a perfect recall of 1",
+            )
+        if len(entry.contexts) == 0:
+            return RagasResult(
+                score=0.0,
+                cost=None,
+                details="No contexts retrieved, recall is 0",
+            )
+
         scorer = NonLLMContextRecall()
         scorer.distance_measure = {
             "levenshtein": DistanceMeasure.LEVENSHTEIN,

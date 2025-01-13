@@ -56,6 +56,24 @@ class RagasContextPrecisionEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: RagasContextPrecisionEntry) -> SingleEvaluationResult:
+        if len(entry.expected_contexts) == 0 and len(entry.contexts) == 0:
+            return RagasResult(
+                score=1.0,
+                cost=None,
+                details="No contexts retrieved, but also no contexts expected, so that's a perfect precision of 1",
+            )
+        if len(entry.expected_contexts) == 0:
+            return RagasResult(
+                score=0.0,
+                cost=None,
+                details="No contexts expected, yet some were retrieved, precision is 0",
+            )
+        if len(entry.contexts) == 0:
+            return RagasResult(
+                score=0.0,
+                cost=None,
+                details="No contexts retrieved, precision is 0",
+            )
         scorer = NonLLMContextPrecisionWithReference(
             distance_measure=NonLLMStringSimilarity(
                 distance_measure={

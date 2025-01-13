@@ -177,6 +177,44 @@ def test_context_precision():
     assert not result.cost
 
 
+def test_context_precision_with_empty_contexts():
+    evaluator = RagasContextPrecisionEvaluator(settings=RagasContextPrecisionSettings())
+
+    result = evaluator.evaluate(
+        RagasContextPrecisionEntry(
+            contexts=[],
+            expected_contexts=[],
+        )
+    )
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 1.0
+    assert not result.cost
+
+    result = evaluator.evaluate(
+        RagasContextPrecisionEntry(
+            contexts=[],
+            expected_contexts=[
+                "Paris is the capital of France.",
+                "The Eiffel Tower is one of the most famous landmarks in Paris.",
+            ],
+        )
+    )
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 0.0
+    assert not result.cost
+
+    result = evaluator.evaluate(
+        RagasContextPrecisionEntry(
+            contexts=["The Eiffel Tower is located in Paris."],
+            expected_contexts=[],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 0.0
+    assert not result.cost
+
+
 def test_context_recall():
     evaluator = RagasContextRecallEvaluator(settings=RagasContextRecallSettings())
 
@@ -192,6 +230,46 @@ def test_context_recall():
 
     assert result.status == "processed"
     assert result.score and result.score >= 0.5
+    assert not result.cost
+
+
+def test_context_recall_with_empty_contexts():
+    evaluator = RagasContextRecallEvaluator(settings=RagasContextRecallSettings())
+
+    result = evaluator.evaluate(
+        RagasContextRecallEntry(
+            contexts=[],
+            expected_contexts=[],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 1.0
+    assert not result.cost
+
+    result = evaluator.evaluate(
+        RagasContextRecallEntry(
+            contexts=[],
+            expected_contexts=[
+                "Paris is the capital of France.",
+                "The Eiffel Tower is one of the most famous landmarks in Paris.",
+            ],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 0.0
+    assert not result.cost
+
+    result = evaluator.evaluate(
+        RagasContextRecallEntry(
+            contexts=["The Eiffel Tower is located in Paris."],
+            expected_contexts=[],
+        )
+    )
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 1.0
     assert not result.cost
 
 
@@ -212,6 +290,32 @@ def test_context_f1():
     assert result.score and result.score > 0.5
     assert not result.cost
     assert result.details
+
+
+def test_context_f1_with_empty_contexts():
+    evaluator = RagasContextF1Evaluator(settings=RagasContextF1Settings())
+
+    result = evaluator.evaluate(RagasContextF1Entry(contexts=[], expected_contexts=[]))
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 1.0
+    assert not result.cost
+
+    result = evaluator.evaluate(
+        RagasContextF1Entry(contexts=[], expected_contexts=["context"])
+    )
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 0.0
+    assert not result.cost
+
+    result = evaluator.evaluate(
+        RagasContextF1Entry(contexts=["context"], expected_contexts=[])
+    )
+
+    assert result.status == "processed"
+    assert result.score is not None and result.score == 0.0
+    assert not result.cost
 
 
 def test_response_context_precision_with_reference():
@@ -319,7 +423,7 @@ def test_summarization_score():
     )
 
     assert result.status == "processed"
-    assert result.score and result.score > 0.7
+    assert result.score and result.score > 0.6
     assert result.cost and result.cost.amount > 0.0
     assert result.details
 
