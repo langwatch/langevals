@@ -174,7 +174,7 @@ def main():
         "preload_app": True,
         "forwarded_allow_ips": "*",
         "loglevel": "warning",
-        "timeout": 120,
+        "timeout": 900,
     }
 
     StandaloneApplication(app, options).run()

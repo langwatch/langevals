@@ -137,7 +137,7 @@ class RagasFaithfulnessEvaluator(
                 )
                 if "true" in is_dont_know.content.lower():  # type: ignore
                     return EvaluationResultSkipped(
-                        details="The output seems correctly to be an 'I don't know' statement given the provided contexts, ignoring faithfulness score."
+                        details="The output seems correctly to be an 'I don't know' statement given the provided contexts. Skipping faithfulness score."
                     )
 
         return RagasResult(
