@@ -453,6 +453,20 @@ export type Evaluators = {
       competitors: string[];
     };
   };
+  "langevals/llm_answer_match": {
+    settings: {
+      /**
+       * @description The model to use for evaluation
+       * @default "openai/gpt-4o-mini"
+       */
+      model: string;
+      /**
+       * @description Max tokens allowed for evaluation
+       * @default 8192
+       */
+      max_tokens: number;
+    };
+  };
   "langevals/llm_boolean": {
     settings: {
       /**
@@ -1645,6 +1659,29 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
         description: "Is the message related to the competitors",
       },
     },
+  },
+  "langevals/llm_answer_match": {
+    name: `LLM Answer Match`,
+    description: `
+Uses an LLM to check if the generated output answers a question correctly the same way as the expected output, even if their style is different.
+`,
+    category: "quality",
+    docsUrl: "",
+    isGuardrail: false,
+    requiredFields: [],
+    optionalFields: ["input", "output", "expected_output"],
+    settings: {
+      model: {
+        description: "The model to use for evaluation",
+        default: "openai/gpt-4o-mini",
+      },
+      max_tokens: {
+        description: "Max tokens allowed for evaluation",
+        default: 8192,
+      },
+    },
+    envVars: [],
+    result: {},
   },
   "langevals/llm_boolean": {
     name: `LLM-as-a-Judge Boolean Evaluator`,

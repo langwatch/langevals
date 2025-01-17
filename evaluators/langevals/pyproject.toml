@@ -7,11 +7,11 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-litellm = "^1.52.14"
+litellm = "^1.53.7"
 langevals-core = { path = "../../langevals_core", develop = true }
-openai = ">=1.27.0"
+openai = ">=1.59.7"
 numpy = "^1.26.4"
-dspy-ai = "^2.4.9"
+dspy = "^2.5.43"
 markdown = "^3.7"
 jsonschema = "^4.23.0"
 sqlglot = {extras = ["rs"], version = "^25.32.0"}

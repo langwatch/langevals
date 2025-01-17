@@ -1,9 +1,12 @@
 import os
+from tempfile import mkdtemp
 import warnings
 import litellm
 import litellm.cost_calculator
 
-# from litellm.cost_calculator import completion_cost
+# Necessary for running DSPy on AWS lambdas
+os.environ["DSP_CACHEDIR"] = mkdtemp()
+os.environ["DSPY_CACHEDIR"] = mkdtemp()
 
 
 # Patch litellm completion for mapping AZURE_DEPLOYMENT_NAME into the model name
@@ -12,6 +15,8 @@ def patch_litellm():
 
     def patched_completion(*args, **kwargs):
         kwargs["drop_params"] = True
+        # Caching on disk is timing out for some reason, disable it
+        kwargs["cache"] = {"no-cache": True, "no-store": True}
         if (
             os.environ.get("AZURE_DEPLOYMENT_NAME") is not None
             and "model" in kwargs
@@ -27,6 +32,7 @@ def patch_litellm():
                 key.startswith("LITELLM_")
                 and not key.startswith("LITELLM_EMBEDDINGS_")
                 and key != "LITELLM_LOG"
+                and key != "LITELLM_LOCAL_MODEL_COST_MAP"
             ):
                 kwargs[key.replace("LITELLM_", "")] = value
 
