@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-example"
-version = "0.1.8"
+version = "0.1.9"
 description = "LangEvals boilerplate example evaluator for LLMs."
 authors = ["Your Name <your.email@example.com>"]
 license = "MIT"

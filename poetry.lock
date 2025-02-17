@@ -2414,7 +2414,7 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.9"
+version = "0.1.10"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -2432,7 +2432,7 @@ url = "evaluators/azure"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.12"
+version = "0.1.13"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -2454,7 +2454,7 @@ url = "langevals_core"
 
 [[package]]
 name = "langevals-example"
-version = "0.1.8"
+version = "0.1.9"
 description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
@@ -2470,7 +2470,7 @@ url = "evaluators/example"
 
 [[package]]
 name = "langevals-huggingface"
-version = "0.1.7"
+version = "0.1.8"
 description = "Evaluators based on models available on huggingface."
 optional = true
 python-versions = "^3.11"
@@ -2488,7 +2488,7 @@ url = "evaluators/huggingface"
 
 [[package]]
 name = "langevals-langevals"
-version = "0.1.8"
+version = "0.1.9"
 description = "LangEvals core evaluators."
 optional = true
 python-versions = "^3.11"
@@ -2511,7 +2511,7 @@ url = "evaluators/langevals"
 
 [[package]]
 name = "langevals-legacy"
-version = "0.1.9"
+version = "0.1.10"
 description = "LangEvals Legacy evaluator"
 optional = true
 python-versions = "^3.11"
@@ -2533,7 +2533,7 @@ url = "evaluators/legacy"
 
 [[package]]
 name = "langevals-lingua"
-version = "0.1.7"
+version = "0.1.8"
 description = "LangEvals lingua evaluator for language detection."
 optional = true
 python-versions = "^3.11"
@@ -2550,7 +2550,7 @@ url = "evaluators/lingua"
 
 [[package]]
 name = "langevals-openai"
-version = "0.1.8"
+version = "0.1.9"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -2568,7 +2568,7 @@ url = "evaluators/openai"
 
 [[package]]
 name = "langevals-presidio"
-version = "0.1.2"
+version = "0.1.3"
 description = "LangEvals integration for Presidio"
 optional = true
 python-versions = "^3.11"
@@ -2587,7 +2587,7 @@ url = "evaluators/presidio"
 
 [[package]]
 name = "langevals-ragas"
-version = "0.1.9"
+version = "0.1.10"
 description = "LangEvals Ragas evaluator"
 optional = true
 python-versions = "^3.11"
