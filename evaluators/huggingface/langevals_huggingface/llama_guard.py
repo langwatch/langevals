@@ -163,6 +163,7 @@ Provide your safety assessment for User in the above conversation:
                 f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/@hf/thebloke/llamaguard-7b-awq",
                 headers={"Authorization": f"Bearer {api_key}"},
                 json={"prompt": prompt},
+                timeout=600,
             )
             response.raise_for_status()
             result = response.json()
