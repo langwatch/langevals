@@ -1856,7 +1856,7 @@ develop = true
 
 [package.dependencies]
 boto3 = "^1.35.92"
-litellm = "^1.53.7"
+litellm = "^1.61.20"
 pandas = "^2.2.2"
 pydantic = "^2.4.0"
 tenacity = "^8.4.0"
@@ -4507,4 +4507,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "f160e25417a94518311789322c3e4c2941a48aa93ca5df2088879dd99c24df96"
+content-hash = "ef03fdc403ef1b41b94719c6c5e146999ced0472ec98d7c195e19e49a72b6964"
