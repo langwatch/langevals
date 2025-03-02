@@ -263,9 +263,6 @@ export type Evaluators = {
       }[];
     };
   };
-  "langevals/product_sentiment_polarity": {
-    settings: Record<string, never>;
-  };
   "langevals/query_resolution": {
     settings: {
       /**
@@ -1292,32 +1289,6 @@ This evaluator checks if the user message is concerning one of the allowed topic
       label: {
         description:
           "The detected intent or 'other' if the intent is not in the allowed topics",
-      },
-    },
-  },
-  "langevals/product_sentiment_polarity": {
-    name: `Product Sentiment Polarity`,
-    description: `
-For messages about products, this evaluator checks for the nuanced sentiment direction of the LLM output, either very positive, subtly positive, subtly negative, or very negative.
-`,
-    category: "policy",
-    docsUrl: "",
-    isGuardrail: true,
-    requiredFields: ["output"],
-    optionalFields: [],
-    settings: {},
-    envVars: [],
-    result: {
-      score: {
-        description:
-          "0 - very negative, 1 - subtly negative, 2 - subtly positive, 3 - very positive",
-      },
-      passed: {
-        description: "Fails if subtly or very negative",
-      },
-      label: {
-        description:
-          "The detected sentiment polarity, one of: very_negative, subtly_negative, subtly_positive, very_positive",
       },
     },
   },

@@ -14,7 +14,7 @@ langevals-core = { path = "../../langevals_core", develop = true }
 ragas = "0.2.9"
 langchain-openai = ">=0.1.23"
 langchain_community = ">=0.2.16"
-litellm = "^1.53.7"
+litellm = "^1.61.20"
 rapidfuzz = "^3.11.0"
 sacrebleu = "^2.5.1"
 rouge-score = "^0.1.2"

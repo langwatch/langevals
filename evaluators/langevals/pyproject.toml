@@ -6,12 +6,12 @@ authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk78
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-litellm = "^1.53.7"
+python = ">=3.11,<3.13"
+litellm = "^1.61.20"
 langevals-core = { path = "../../langevals_core", develop = true }
 openai = ">=1.59.7"
 numpy = "^1.26.4"
-dspy = "^2.5.43"
+dspy = "^2.6.8"
 markdown = "^3.7"
 jsonschema = "^4.23.0"
 sqlglot = {extras = ["rs"], version = "^25.32.0"}

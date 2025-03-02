@@ -15,12 +15,12 @@ url = "https://download.pytorch.org/whl/cpu"
 priority = "explicit"
 
 [tool.poetry.dependencies]
+python = ">=3.11,<3.13"
 pytest = "^8.1.2"
-python = "^3.11"
+fastapi = "^0.115.11"
 arize-phoenix = {version = "^4.9.0", python = ">=3.11,<3.13"}
 openinference-instrumentation-dspy = {version = "^0.1.9", python = ">=3.11,<3.13"}
 opentelemetry-exporter-otlp = "^1.25.0"
-fastapi = "^0.110.0"
 hypercorn = "^0.16.0"
 pydantic = "^2.4.0"
 python-dotenv = "1.0.1"
@@ -53,7 +53,7 @@ langevals-server = "langevals.server:main"
 [tool.poetry.dev-dependencies]
 toml = "^0.10.2"
 grevillea = "^0.0.1"
-litellm = "^1.53.7"
+litellm = "^1.61.20"
 instructor = "^1.2.2"
 pytest-xdist = "^3.5.0"
 flaky = "^3.8.1"
@@ -82,18 +82,8 @@ path = "../evaluators/ragas"
 develop = true
 optional = false
 
-[tool.poetry.dependencies.langevals-google_cloud]
-path = "../evaluators/google_cloud"
-develop = true
-optional = false
-
 [tool.poetry.dependencies.langevals-lingua]
 path = "../evaluators/lingua"
-develop = true
-optional = false
-
-[tool.poetry.dependencies.langevals-aws]
-path = "../evaluators/aws"
 develop = true
 optional = false
 

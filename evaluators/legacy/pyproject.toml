@@ -14,7 +14,7 @@ langevals-core = { path = "../../langevals_core", develop = true }
 langchain-openai = ">=0.1.23"
 langchain_community = ">=0.2.16"
 datasets = "2.14.6"
-litellm = "^1.53.7"
+litellm = "^1.61.20"
 pysbd = "^0.3.4"
 appdirs = "^1.4.4"
 
