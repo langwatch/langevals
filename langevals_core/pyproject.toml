@@ -2,7 +2,10 @@
 name = "langevals-core"
 version = "0.1.13"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
-authors = ["Rogerio Chaves <rogerio@langwatch.ai>", "Yevhenii Budnyk <y.budnyk789@gmail.com>"]
+authors = [
+  "Rogerio Chaves <rogerio@langwatch.ai>",
+  "Yevhenii Budnyk <y.budnyk789@gmail.com>",
+]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -14,6 +17,9 @@ litellm = "^1.53.7"
 tenacity = "^8.4.0"
 vertexai = "^1.71.1"
 boto3 = "^1.35.92"
+
+# Enforce versions due to security issues
+transformers = "^4.49.0"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"
