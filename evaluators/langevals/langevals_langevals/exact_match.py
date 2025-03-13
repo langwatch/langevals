@@ -51,11 +51,9 @@ class ExactMatchEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: ExactMatchEntry) -> SingleEvaluationResult:
-        # Get input and output
         input_text = entry.input or ""
         output_text = entry.output or ""
 
-        # Apply settings
         if self.settings.trim_whitespace:
             input_text = input_text.strip()
             output_text = output_text.strip()
@@ -68,8 +66,6 @@ class ExactMatchEvaluator(
             input_text = input_text.lower()
             output_text = output_text.lower()
 
-        # Perform comparison
         passed = input_text == output_text
 
-        # Return result
         return ExactMatchResult(passed=passed)
