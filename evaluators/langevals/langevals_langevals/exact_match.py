@@ -1,22 +1,28 @@
-import ast
-import json
-from typing import Literal, Optional, Dict, Any
+from typing import Optional
 from langevals_core.base_evaluator import (
     BaseEvaluator,
-    EvaluationResultSkipped,
     EvaluatorEntry,
     EvaluationResult,
     EvaluatorSettings,
     SingleEvaluationResult,
-    EvaluationResultError,
 )
-import markdown
 from pydantic import Field
-import sqlglot
 
 
 class ExactMatchSettings(EvaluatorSettings):
-    pass
+    case_sensitive: bool = Field(
+        default=False,
+        description="True if the comparison should be case-sensitive, False otherwise",
+    )
+    trim_whitespace: bool = Field(
+        default=True,
+        description="True if the comparison should trim whitespace, False otherwise",
+    )
+    remove_punctuation: bool = Field(
+        default=True,
+        description="True if the comparison should remove punctuation, False otherwise",
+    )
+
 
 
 class ExactMatchResult(EvaluationResult):
@@ -35,7 +41,8 @@ class ExactMatchEvaluator(
     BaseEvaluator[ExactMatchEntry, ExactMatchSettings, ExactMatchResult]
 ):
     """
-    A simple evaluator that checks if the output matches the input exactly.
+    A simple evaluator that checks if the output matches the input exactly, with some 
+    extra bells and whistles to help with whitespace related shenanigans.
     """
 
     name = "Exact Match Evaluator"
@@ -44,7 +51,26 @@ class ExactMatchEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: ExactMatchEntry) -> SingleEvaluationResult:
-        if entry.input == entry.output:
-            return ExactMatchResult(passed=True)
+        # Get input and output
+        input_text = entry.input or ""
+        output_text = entry.output or ""
 
-        return ExactMatchResult(passed=False)
+        # Apply settings
+        if self.settings.trim_whitespace:
+            input_text = input_text.strip()
+            output_text = output_text.strip()
+
+        if self.settings.remove_punctuation:
+            input_text = ''.join(char for char in input_text if char.isalnum() or char.isspace())
+            output_text = ''.join(char for char in output_text if char.isalnum() or char.isspace())
+
+        if not self.settings.case_sensitive:
+            input_text = input_text.lower()
+            output_text = output_text.lower()
+
+        # Perform comparison
+        passed = input_text == output_text
+
+        # Return result
+        return ExactMatchResult(passed=passed)
+        
