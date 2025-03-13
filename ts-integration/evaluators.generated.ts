@@ -165,6 +165,25 @@ export type Evaluators = {
       competitors: string[];
     };
   };
+  "langevals/exact_match": {
+    settings: {
+      /**
+       * @description True if the comparison should be case-sensitive, False otherwise
+       * @default false
+       */
+      case_sensitive: boolean;
+      /**
+       * @description True if the comparison should trim whitespace, False otherwise
+       * @default true
+       */
+      trim_whitespace: boolean;
+      /**
+       * @description True if the comparison should remove punctuation, False otherwise
+       * @default true
+       */
+      remove_punctuation: boolean;
+    };
+  };
   "langevals/llm_answer_match": {
     settings: {
       /**
@@ -1106,6 +1125,42 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
       },
       passed: {
         description: "Is the message related to the competitors",
+      },
+    },
+  },
+  "langevals/exact_match": {
+    name: `Exact Match Evaluator`,
+    description: `
+A simple evaluator that checks if the output matches the input exactly, with some 
+extra bells and whistles to help with whitespace related shenanigans.
+`,
+    category: "quality",
+    docsUrl: "",
+    isGuardrail: false,
+    requiredFields: [],
+    optionalFields: ["input", "output"],
+    settings: {
+      case_sensitive: {
+        description:
+          "True if the comparison should be case-sensitive, False otherwise",
+        default: false,
+      },
+      trim_whitespace: {
+        description:
+          "True if the comparison should trim whitespace, False otherwise",
+        default: true,
+      },
+      remove_punctuation: {
+        description:
+          "True if the comparison should remove punctuation, False otherwise",
+        default: true,
+      },
+    },
+    envVars: [],
+    result: {
+      passed: {
+        description:
+          "True if the output matched the input exactly, False otherwise",
       },
     },
   },
