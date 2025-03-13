@@ -73,4 +73,3 @@ class ExactMatchEvaluator(
 
         # Return result
         return ExactMatchResult(passed=passed)
-        
