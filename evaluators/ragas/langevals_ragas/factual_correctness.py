@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluationResult,

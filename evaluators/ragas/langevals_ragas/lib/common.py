@@ -18,7 +18,6 @@ from langevals_ragas.lib.model_to_langchain import (
     model_to_langchain,
 )
 
-from typing import List, Optional
 from ragas.llms import LangchainLLMWrapper
 from pydantic import Field
 from langevals_core.utils import calculate_total_tokens
@@ -113,11 +112,19 @@ def capture_cost(llm: LangchainLLMWrapper):
         prompt_tokens = cb.prompt_tokens
         completion_tokens = cb.completion_tokens
         model = llm.langchain_llm.model_name  # type: ignore
-        prompt_cost, completion_cost = cost_per_token(
-            model=model,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-        )
-        money.amount = prompt_cost + completion_cost
+        try:
+            prompt_cost, completion_cost = cost_per_token(
+                model=model,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+            )
+            money.amount = prompt_cost + completion_cost
+        except Exception as e:
+            if "This model isn't mapped yet" in str(e):
+                # TODO: we need to pass in user cost mapping here
+                # TODO: actually yield None somehow here, because we don't want to store this value as 0
+                return None
+            else:
+                raise e
 
         return money

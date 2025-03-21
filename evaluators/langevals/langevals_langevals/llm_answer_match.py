@@ -84,14 +84,22 @@ class LLMAnswerMatchEvaluator(
         last_response = lm.history[-1]
         cost = None
         if last_response:
-            input_cost, output_cost = cost_per_token(
-                model=self.settings.model,
-                prompt_tokens=last_response.get("usage", {}).get("prompt_tokens", 0),
-                completion_tokens=last_response.get("usage", {}).get(
-                    "completion_tokens", 0
-                ),
-            )
-            cost = input_cost + output_cost
+            try:
+                input_cost, output_cost = cost_per_token(
+                    model=self.settings.model,
+                    prompt_tokens=last_response.get("usage", {}).get(
+                        "prompt_tokens", 0
+                    ),
+                    completion_tokens=last_response.get("usage", {}).get(
+                        "completion_tokens", 0
+                    ),
+                )
+                cost = input_cost + output_cost
+            except Exception as e:
+                if "This model isn't mapped yet" in str(e):
+                    pass
+                else:
+                    raise e
 
         return LLMAnswerMatchResult(
             passed="true" in str(result.is_correct).lower(),
