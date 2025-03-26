@@ -7,8 +7,8 @@ from langevals_langevals.exact_match import (
 
 def test_langeval_exact_match_evaluator():
     entry = ExactMatchEntry(
-        input="What is the capital of France?",
         output="What is the capital of France?",
+        expected_output="What is the capital of France?",
     )
     settings = ExactMatchSettings()
 
@@ -20,8 +20,8 @@ def test_langeval_exact_match_evaluator():
 
 def test_langeval_exact_match_evaluator_defaults():
     entry = ExactMatchEntry(
-        input="What is the capital of France?",
-        output="What is the capital of the Netherlands?",
+        output="What is the capital of France?",
+        expected_output="What is the capital of the Netherlands?",
     )
     settings = ExactMatchSettings()
 
@@ -33,8 +33,8 @@ def test_langeval_exact_match_evaluator_defaults():
 
 def test_langeval_exact_match_case_sensitive_true():
     entry = ExactMatchEntry(
-        input="Hello World",
-        output="hello world",
+        output="Hello World",
+        expected_output="hello world",
     )
     settings = ExactMatchSettings(case_sensitive=True)
 
@@ -46,8 +46,8 @@ def test_langeval_exact_match_case_sensitive_true():
 
 def test_langeval_exact_match_case_sensitive_false():
     entry = ExactMatchEntry(
-        input="Hello World",
-        output="hello world",
+        output="Hello World",
+        expected_output="hello world",
     )
     settings = ExactMatchSettings(case_sensitive=False)
 
@@ -59,8 +59,8 @@ def test_langeval_exact_match_case_sensitive_false():
 
 def test_langeval_exact_match_trim_whitespace_true():
     entry = ExactMatchEntry(
-        input="  Hello World  ",
-        output="Hello World",
+        output="  Hello World  ",
+        expected_output="Hello World",
     )
     settings = ExactMatchSettings(trim_whitespace=True)
 
@@ -72,8 +72,8 @@ def test_langeval_exact_match_trim_whitespace_true():
 
 def test_langeval_exact_match_trim_whitespace_false():
     entry = ExactMatchEntry(
-        input="  Hello World  ",
-        output="Hello World",
+        output="  Hello World  ",
+        expected_output="Hello World",
     )
     settings = ExactMatchSettings(trim_whitespace=False)
 
@@ -85,8 +85,8 @@ def test_langeval_exact_match_trim_whitespace_false():
 
 def test_langeval_exact_match_remove_punctuation_true():
     entry = ExactMatchEntry(
-        input="Hello, World!",
-        output="Hello World",
+        output="Hello, World!",
+        expected_output="Hello World",
     )
     settings = ExactMatchSettings(remove_punctuation=True)
 
@@ -98,8 +98,8 @@ def test_langeval_exact_match_remove_punctuation_true():
 
 def test_langeval_exact_match_remove_punctuation_false():
     entry = ExactMatchEntry(
-        input="Hello, World!",
-        output="Hello World",
+        output="Hello, World!",
+        expected_output="Hello World",
     )
     settings = ExactMatchSettings(remove_punctuation=False)
 
@@ -111,8 +111,8 @@ def test_langeval_exact_match_remove_punctuation_false():
 
 def test_langeval_exact_match_combined_settings():
     entry = ExactMatchEntry(
-        input="  Hello, World!  ",
-        output="hello world",
+        output="  Hello, World!  ",
+        expected_output="hello world",
     )
     settings = ExactMatchSettings(
         case_sensitive=False,

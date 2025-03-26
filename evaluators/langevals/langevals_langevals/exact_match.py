@@ -28,21 +28,20 @@ class ExactMatchSettings(EvaluatorSettings):
 class ExactMatchResult(EvaluationResult):
     passed: Optional[bool] = Field(
         default=True,
-        description="True if the output matched the input exactly, False otherwise",
+        description="True if the output matched the expected_output exactly, False otherwise",
     )
 
 
 class ExactMatchEntry(EvaluatorEntry):
-    input: Optional[str] = None
     output: Optional[str] = None
+    expected_output: Optional[str] = None
 
 
 class ExactMatchEvaluator(
     BaseEvaluator[ExactMatchEntry, ExactMatchSettings, ExactMatchResult]
 ):
     """
-    A simple evaluator that checks if the output matches the input exactly, with some 
-    extra bells and whistles to help with whitespace related shenanigans.
+    A simple evaluator that checks if the output matches the expected_output exactly.
     """
 
     name = "Exact Match Evaluator"
@@ -51,21 +50,21 @@ class ExactMatchEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: ExactMatchEntry) -> SingleEvaluationResult:
-        input_text = entry.input or ""
         output_text = entry.output or ""
+        expected_output_text = entry.expected_output or ""
 
         if self.settings.trim_whitespace:
-            input_text = input_text.strip()
             output_text = output_text.strip()
+            expected_output_text = expected_output_text.strip()
 
         if self.settings.remove_punctuation:
-            input_text = ''.join(char for char in input_text if char.isalnum() or char.isspace())
             output_text = ''.join(char for char in output_text if char.isalnum() or char.isspace())
+            expected_output_text = ''.join(char for char in expected_output_text if char.isalnum() or char.isspace())
 
         if not self.settings.case_sensitive:
-            input_text = input_text.lower()
             output_text = output_text.lower()
+            expected_output_text = expected_output_text.lower()
 
-        passed = input_text == output_text
+        passed = output_text == expected_output_text
 
         return ExactMatchResult(passed=passed)
