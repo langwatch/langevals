@@ -1131,14 +1131,13 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
   "langevals/exact_match": {
     name: `Exact Match Evaluator`,
     description: `
-A simple evaluator that checks if the output matches the input exactly, with some 
-extra bells and whistles to help with whitespace related shenanigans.
+A simple evaluator that checks if the output matches the expected_output exactly.
 `,
     category: "quality",
     docsUrl: "",
     isGuardrail: false,
     requiredFields: [],
-    optionalFields: ["input", "output"],
+    optionalFields: ["output", "expected_output"],
     settings: {
       case_sensitive: {
         description:
@@ -1160,7 +1159,7 @@ extra bells and whistles to help with whitespace related shenanigans.
     result: {
       passed: {
         description:
-          "True if the output matched the input exactly, False otherwise",
+          "True if the output matched the expected_output exactly, False otherwise",
       },
     },
   },
