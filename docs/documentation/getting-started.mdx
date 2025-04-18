@@ -1,33 +1,6 @@
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-[![Discord](https://img.shields.io/badge/LangWatch-Discord-%235865F2.svg)](https://discord.gg/kT4PhDS2gH)
-[![LangEvals Python version](https://img.shields.io/pypi/v/langevals?color=007EC6)](https://pypi.org/project/langevals/)
-
-# LangEvals
-
-LangEvals is the all-in-one library for LLM testing and evaluating in Python, it can be used in notebooks for exploration, in pytest for writting unit tests or as a server API for live-evaluations and guardrails. LangEvals is modular, including 20+ evaluators such as Ragas for RAG quality, OpenAI Moderation and Azure Jailbreak detection for safety and many others under the same interface.
-
-LangEvals is the backend that powers [LangWatch](https://github.com/langwatch/langwatch) evaluations.
-
-## Getting Started
-
-To use LangEvals locally, install it as a dependency, together with the evaluators you are interested on:
-
-```bash
-pip install "langevals[all]"
-# or select only the ones you are interested on, e.g.:
-pip install "langevals[azure,ragas,lingua]"
-```
-
-Then right away you can start LangEvals as a server with:
-
-```
-langevals-server
-```
-
-And navigate to `http://localhost:5562/` to try out the evaluators.
-
-Alternatively, you can use it as a library as the examples below show.
-
+---
+title: "Getting Started"
+---
 ### Running Batch Evaluations on Notebooks
 
 When exploring, it is usual to generate a number of outputs from your LLM, and then evaluate them all for performance score, for example on a Jupyter Notebook. You can use LangEvals `evaluate()` to score the results in batch using diverse evaluators:
@@ -252,14 +225,13 @@ In this example we are now not only validating a boolean assertion, but also mak
 
 # Contributing
 
-LangEvals is a monorepo and has many subpackages with different dependencies for each evaluator library or provider. We use poetry to install all dependencies and create a virtual env for each sub-package to make sure they are fully isolated. Given this complexity, to make it easier to contribute to LangEvals we recommend using VS Code for the development. Before opening up on VS Code though, you need to make sure to install all dependencies, generating thus the .venv for each package:
+LangEvals is a monorepo and has many subpackages with different dependencies for each evaluator library or provider. We use poetry to install all dependencies and create a virtual env for each sub-package to make sure they are fully isolated. Given this complexity, to make it easier to contribute to LangEvals we recomend using VS Code for the development. Before opening up on VS Code though, you need to make sure to install all dependencies, generating thus the .venv for each package:
 
 ```
 make install
 ```
 
 This will also generate the `langevals.code-workspace` file, creating a different workspace per evaluator and telling VS Code which venv to use for each. Then, open this file on vscode and click the "Open Workspace" button
-
 
 ## Adding New Evaluators
 
