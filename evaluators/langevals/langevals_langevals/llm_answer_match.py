@@ -58,7 +58,7 @@ class LLMAnswerMatchEvaluator(
 
     def evaluate(self, entry: LLMAnswerMatchEntry) -> SingleEvaluationResult:
         total_tokens = len(
-            litellm.encode(
+            litellm.encode( # type: ignore
                 model=self.settings.model,
                 text=f"{entry.input} {entry.output} {entry.expected_output}",
             )

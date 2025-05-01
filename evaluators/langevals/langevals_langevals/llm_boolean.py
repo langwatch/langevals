@@ -16,6 +16,7 @@ import litellm
 from litellm import Choices, Message
 from litellm.files.main import ModelResponse
 from litellm.cost_calculator import completion_cost
+import dspy
 
 
 class CustomLLMBooleanEntry(EvaluatorEntry):
@@ -33,7 +34,7 @@ class CustomLLMBooleanSettings(LLMEvaluatorSettings):
 
 
 class CustomLLMBooleanResult(EvaluationResult):
-    score: float
+    score: float = Field(default=0.0)
     passed: Optional[bool] = Field(
         description="The veredict given by the LLM", default=True
     )
@@ -74,7 +75,7 @@ class CustomLLMBooleanEvaluator(
         content += f"# Task\n{self.settings.prompt}"
 
         total_tokens = len(
-            litellm.encode(
+            litellm.encode(  # type: ignore
                 model=self.settings.model, text=f"{self.settings.prompt} {content}"
             )
         )
@@ -86,55 +87,67 @@ class CustomLLMBooleanEvaluator(
 
         cost = None
 
-        response = litellm.completion(
-            model=self.settings.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": self.settings.prompt
-                    + ". Always output a valid json for the function call",
-                },
-                {
-                    "role": "user",
-                    "content": content,
-                },
-            ],
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "evaluation",
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "scratchpad": {
-                                    "type": "string",
-                                    "description": "use this field to ponder and write a short reasoning behind the decision written before a result is actually given",
-                                },
-                                "passed": {
-                                    "type": "boolean",
-                                    "description": "your final veredict, reply true or false if the content passes the test or not",
-                                },
-                            },
-                            "required": ["scratchpad", "passed"],
-                        },
-                        "description": "use this function to write your thoughts on the scratchpad, then decide if it passed or not with this json structure",
-                    },
-                },
-            ],
-            tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
-        )
+        if "atla-selene" in self.settings.model:
 
-        response = cast(ModelResponse, response)
-        choice = cast(Choices, response.choices[0])
-        arguments = json.loads(
-            cast(Message, choice.message).tool_calls[0].function.arguments
-        )
-        cost = completion_cost(completion_response=response)
+            class LLMJudge(dspy.Signature):
+                content: str = dspy.InputField()
+                reasoning: str = dspy.OutputField()
+                passed: bool = dspy.OutputField()
+
+            judge = dspy.Predict(LLMJudge.with_instructions(self.settings.prompt))
+            judge.set_lm(lm=dspy.LM(model=self.settings.model))
+            arguments = judge(content=content)
+
+        else:
+            response = litellm.completion(
+                model=self.settings.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": self.settings.prompt
+                        + ". Always output a valid json for the function call",
+                    },
+                    {
+                        "role": "user",
+                        "content": content,
+                    },
+                ],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "evaluation",
+                            "parameters": {
+                                "type": "object",
+                                "properties": {
+                                    "reasoning": {
+                                        "type": "string",
+                                        "description": "use this field to ponder and write a short reasoning behind the decision written before a result is actually given",
+                                    },
+                                    "passed": {
+                                        "type": "boolean",
+                                        "description": "your final veredict, reply true or false if the content passes the test or not",
+                                    },
+                                },
+                                "required": ["reasoning", "passed"],
+                            },
+                            "description": "use this function to write your thoughts on the reasoning, then decide if it passed or not with this json structure",
+                        },
+                    },
+                ],
+                tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
+            )
+
+            response = cast(ModelResponse, response)
+            choice = cast(Choices, response.choices[0])
+            arguments = json.loads(
+                cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
+            )
+            cost = completion_cost(completion_response=response)
 
         return CustomLLMBooleanResult(
             score=1 if arguments["passed"] else 0,
             passed=arguments["passed"],
-            details=arguments["scratchpad"],
+            details=arguments["reasoning"],
             cost=Money(amount=cost, currency="USD") if cost else None,
         )

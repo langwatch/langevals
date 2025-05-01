@@ -17,6 +17,7 @@ from litellm import Choices, Message
 from litellm.types.utils import ModelResponse
 from litellm.cost_calculator import completion_cost
 from litellm.utils import encode
+import dspy
 
 
 class CustomLLMCategoryEntry(EvaluatorEntry):
@@ -109,58 +110,77 @@ class CustomLLMCategoryEvaluator(
 
         cost = None
 
-        response = litellm.completion(
-            model=self.settings.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": self.settings.prompt
-                    + ". Always output a valid json for the function call",
-                },
-                {
-                    "role": "user",
-                    "content": content,
-                },
-            ],
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "evaluation",
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "scratchpad": {
-                                    "type": "string",
-                                    "description": "use this field to ponder and write a short reasoning behind the decision written before a result is actually given",
-                                },
-                                "label": {
-                                    "type": "string",
-                                    "description": "the final decision of the category for the message",
-                                    "enum": [
-                                        category.name
-                                        for category in self.settings.categories
-                                    ],
-                                },
-                            },
-                            "required": ["scratchpad", "label"],
-                        },
-                        "description": "use this function to write your thoughts on the scratchpad, then decide if it passed or not with this json structure",
-                    },
-                },
-            ],
-            tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
-        )
+        if "atla-selene" in self.settings.model:
+            # Workaround to get the Literal type for the categories at runtime
+            category_names = [
+                f'"{category.name}"' for category in self.settings.categories
+            ]
+            type_str = f"Literal[{', '.join(category_names)}]"
+            locals_dict = {"Literal": Literal}
+            type_ = eval(type_str, globals(), locals_dict)
 
-        response = cast(ModelResponse, response)
-        choice = cast(Choices, response.choices[0])
-        arguments = json.loads(
-            cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
-        )
-        cost = completion_cost(completion_response=response)
+            class LLMJudge(dspy.Signature):
+                content: str = dspy.InputField()
+                reasoning: str = dspy.OutputField()
+                label: type_ = dspy.OutputField()  # type: ignore
+
+            judge = dspy.Predict(LLMJudge.with_instructions(self.settings.prompt))
+            judge.set_lm(lm=dspy.LM(model=self.settings.model))
+            arguments = judge(content=content)
+
+        else:
+            response = litellm.completion(
+                model=self.settings.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": self.settings.prompt
+                        + ". Always output a valid json for the function call",
+                    },
+                    {
+                        "role": "user",
+                        "content": content,
+                    },
+                ],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "evaluation",
+                            "parameters": {
+                                "type": "object",
+                                "properties": {
+                                    "reasoning": {
+                                        "type": "string",
+                                        "description": "use this field to ponder and write a short reasoning behind the decision written before a result is actually given",
+                                    },
+                                    "label": {
+                                        "type": "string",
+                                        "description": "the final decision of the category for the message",
+                                        "enum": [
+                                            category.name
+                                            for category in self.settings.categories
+                                        ],
+                                    },
+                                },
+                                "required": ["reasoning", "label"],
+                            },
+                            "description": "use this function to write your thoughts on the reasoning, then decide if it passed or not with this json structure",
+                        },
+                    },
+                ],
+                tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
+            )
+
+            response = cast(ModelResponse, response)
+            choice = cast(Choices, response.choices[0])
+            arguments = json.loads(
+                cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
+            )
+            cost = completion_cost(completion_response=response)
 
         return CustomLLMCategoryResult(
             label=arguments["label"],
-            details=arguments["scratchpad"],
+            details=arguments["reasoning"],
             cost=Money(amount=cost, currency="USD") if cost else None,
         )

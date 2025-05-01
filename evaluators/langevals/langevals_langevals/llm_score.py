@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Literal, Optional, cast
+from typing import Optional, cast
 from langevals_core.base_evaluator import (
     BaseEvaluator,
     EvaluatorEntry,
@@ -9,14 +9,13 @@ from langevals_core.base_evaluator import (
     SingleEvaluationResult,
     EvaluationResultSkipped,
     Money,
-    EvaluatorSettings
 )
 from pydantic import Field
 import litellm
 from litellm import Choices, Message
 from litellm.files.main import ModelResponse
 from litellm.cost_calculator import completion_cost
-
+import dspy
 
 
 class CustomLLMScoreEntry(EvaluatorEntry):
@@ -35,7 +34,7 @@ class CustomLLMScoreSettings(LLMEvaluatorSettings):
 
 class CustomLLMScoreResult(EvaluationResult):
     score: float = Field(
-        description="The score given by the LLM, according to the prompt"
+        default=0.0, description="The score given by the LLM, according to the prompt"
     )
 
 
@@ -53,8 +52,6 @@ class CustomLLMScoreEvaluator(
     is_guardrail = False
 
     def evaluate(self, entry: CustomLLMScoreEntry) -> SingleEvaluationResult:
-        vendor, model = self.settings.model.split("/")
-
         if self.env:
             for key, env in self.env.items():
                 os.environ[key] = env
@@ -72,11 +69,9 @@ class CustomLLMScoreEvaluator(
 
         content += f"# Task\n{self.settings.prompt}"
 
-        litellm_model = model if vendor == "openai" and model != "gpt-4o" else f"{vendor}/{model}"
-
         total_tokens = len(
-            litellm.encode(
-                model=litellm_model, text=f"{self.settings.prompt} {content}"
+            litellm.encode(  # type: ignore
+                model=self.settings.model, text=f"{self.settings.prompt} {content}"
             )
         )
         max_tokens = min(self.settings.max_tokens, 32768)
@@ -85,53 +80,68 @@ class CustomLLMScoreEvaluator(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
             )
 
-        response = litellm.completion(
-            model=litellm_model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": self.settings.prompt + ". Always output a valid json for the function call",
-                },
-                {
-                    "role": "user",
-                    "content": content,
-                },
-            ],
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "evaluation",
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "scratchpad": {
-                                    "type": "string",
-                                    "description": "use this field to break down the task and explain your reasoning in multiple sub-scores, using it to combine into a final score",
-                                },
-                                "final_score": {
-                                    "type": "number",
-                                    "description": "your final score for the task",
-                                },
-                            },
-                            "required": ["scratchpad", "final_score"],
-                        },
-                        "description": "use this function to write your thoughts on the scratchpad, then decide on the final score with this json structure",
-                    },
-                },
-            ],
-            tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
-        )
+        cost = None
 
-        response = cast(ModelResponse, response)
-        choice = cast(Choices, response.choices[0])
-        arguments = json.loads(
-            cast(Message, choice.message).tool_calls[0].function.arguments
-        )
-        cost = completion_cost(completion_response=response)
+        if "atla-selene" in self.settings.model:
+
+            class LLMJudge(dspy.Signature):
+                content: str = dspy.InputField()
+                reasoning: str = dspy.OutputField()
+                final_score: float = dspy.OutputField()
+
+            judge = dspy.Predict(LLMJudge.with_instructions(self.settings.prompt))
+            judge.set_lm(lm=dspy.LM(model=self.settings.model))
+            arguments = judge(content=content)
+
+        else:
+            response = litellm.completion(
+                model=self.settings.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": self.settings.prompt
+                        + ". Always output a valid json for the function call",
+                    },
+                    {
+                        "role": "user",
+                        "content": content,
+                    },
+                ],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "evaluation",
+                            "parameters": {
+                                "type": "object",
+                                "properties": {
+                                    "reasoning": {
+                                        "type": "string",
+                                        "description": "use this field to break down the task and explain your reasoning in multiple sub-scores, using it to combine into a final score",
+                                    },
+                                    "final_score": {
+                                        "type": "number",
+                                        "description": "your final score for the task",
+                                    },
+                                },
+                                "required": ["reasoning", "final_score"],
+                            },
+                            "description": "use this function to write your thoughts on the reasoning, then decide on the final score with this json structure",
+                        },
+                    },
+                ],
+                tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
+            )
+
+            response = cast(ModelResponse, response)
+            choice = cast(Choices, response.choices[0])
+            arguments = json.loads(
+                cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
+            )
+            cost = completion_cost(completion_response=response)
 
         return CustomLLMScoreResult(
             score=arguments["final_score"],
-            details=arguments["scratchpad"],
+            details=arguments["reasoning"],
             cost=Money(amount=cost, currency="USD") if cost else None,
         )

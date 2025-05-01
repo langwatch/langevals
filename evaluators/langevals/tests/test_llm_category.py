@@ -1,3 +1,4 @@
+import os
 import dotenv
 
 dotenv.load_dotenv()
@@ -69,3 +70,33 @@ def test_custom_llm_category_evaluator_skips_if_context_is_too_large():
     assert result.status == "skipped"
     assert result.details
     assert "Total tokens exceed the maximum of 2048" in result.details
+
+
+def test_llm_as_judge_atla_ai():
+    vegetarian_checker = CustomLLMCategoryEvaluator(
+        settings=CustomLLMCategorySettings(
+            model="openai/atla-selene",
+            prompt="Is the recipe vegetarian?",
+            categories=[
+                CustomLLMCategoryDefinition(
+                    name="vegetarian",
+                    description="The recipe is vegetarian",
+                ),
+                CustomLLMCategoryDefinition(
+                    name="non-vegetarian",
+                    description="The recipe is not vegetarian",
+                ),
+            ],
+        ),
+        env={
+            "LITELLM_api_key": os.getenv("ATLA_API_KEY", ""),
+            "LITELLM_api_base": "https://api.atla-ai.com/v1",
+        },
+    )
+
+    result = vegetarian_checker.evaluate(
+        CustomLLMCategoryEntry(input="Vegetables", output="Broccoli")
+    )
+
+    assert result.status == "processed"
+    assert result.label == "vegetarian"

@@ -1,3 +1,4 @@
+import os
 import dotenv
 
 dotenv.load_dotenv()
@@ -70,3 +71,24 @@ def test_groq_models():
     assert result.passed == False
     assert result.cost
     assert result.cost.amount > 0
+
+
+def test_llm_as_judge_atla_ai():
+    vegetarian_checker = CustomLLMBooleanEvaluator(
+        settings=CustomLLMBooleanSettings(
+            model="openai/atla-selene",
+            prompt="Is the recipe vegetarian?",
+        ),
+        env={
+            "LITELLM_api_key": os.getenv("ATLA_API_KEY", ""),
+            "LITELLM_api_base": "https://api.atla-ai.com/v1",
+        },
+    )
+
+    result = vegetarian_checker.evaluate(
+        CustomLLMBooleanEntry(input="Vegetables", output="Broccoli")
+    )
+
+    assert result.status == "processed"
+    assert result.score == 1
+    assert result.passed == True
