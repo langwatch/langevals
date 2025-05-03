@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-lingua"
-version = "0.1.8"
+version = "0.1.9"
 description = "LangEvals lingua evaluator for language detection."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"

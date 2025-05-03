@@ -1847,7 +1847,7 @@ langchain-core = ">=0.3.34,<1.0.0"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.13"
+version = "0.1.14"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -1856,7 +1856,7 @@ develop = true
 
 [package.dependencies]
 anyio = "^4.8.0"
-boto3 = "^1.35.92"
+boto3 = "^1.34.34"
 litellm = "^1.61.20"
 pandas = "^2.2.2"
 pydantic = "^2.4.0"
