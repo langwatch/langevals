@@ -26,7 +26,9 @@ class LLMAnswerMatchSettings(LLMEvaluatorSettings):
 
 
 class LLMAnswerMatchResult(EvaluationResult):
-    passed: bool = Field(default=True)
+    passed: bool = Field(
+        description="Whether the predicted answer matches the gold answer", default=True
+    )
     details: Optional[str] = Field(default=None)
 
 
@@ -58,7 +60,7 @@ class LLMAnswerMatchEvaluator(
 
     def evaluate(self, entry: LLMAnswerMatchEntry) -> SingleEvaluationResult:
         total_tokens = len(
-            litellm.encode( # type: ignore
+            litellm.encode(  # type: ignore
                 model=self.settings.model,
                 text=f"{entry.input} {entry.output} {entry.expected_output}",
             )

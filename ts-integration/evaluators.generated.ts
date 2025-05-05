@@ -1225,7 +1225,11 @@ Uses an LLM to check if the generated output answers a question correctly the sa
       },
     },
     envVars: [],
-    result: {},
+    result: {
+      passed: {
+        description: "Whether the predicted answer matches the gold answer",
+      },
+    },
   },
   "langevals/llm_boolean": {
     name: `LLM-as-a-Judge Boolean Evaluator`,
