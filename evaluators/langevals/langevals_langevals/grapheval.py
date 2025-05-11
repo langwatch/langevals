@@ -1,3 +1,5 @@
+# DISCLAIMER: some prompts are taken from the research paper https://arxiv.org/pdf/2407.10793.
+# Creation of this module was inspired by that paper, so cheers to authors!
 import json
 from typing import Optional
 from langevals_core.base_evaluator import (
@@ -8,27 +10,15 @@ from langevals_core.base_evaluator import (
     LLMEvaluatorSettings,
     Money,
 )
-from pydantic import BaseModel, Field
+from pydantic import Field
 import litellm
 from litellm import Choices, Message, cast
 from litellm.types.utils import ModelResponse
 from litellm.cost_calculator import completion_cost
-from litellm.utils import encode
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
-
-
-class Triple(BaseModel):
-    entity_1: str = Field(description="First entity in the relationship")
-    relationship: str = Field(description="Relationship between entities")
-    entity_2: str = Field(description="Second entity in the relationship")
-
-
-class KnowledgeGraph(BaseModel):
-    triples: list[Triple] = Field(
-        description="List of entity-relatinships triples that construct a knowledge graph"
-    )
 
 
 class GraphEvalEntry(EvaluatorEntry):
@@ -67,10 +57,6 @@ class GraphEvalSettings(LLMEvaluatorSettings):
         default="claude-3-5-sonnet-20240620",
         description="The model to use for evaluation",
     )
-    response_format: type[KnowledgeGraph] = Field(
-        description="Response format in which llm should respond",
-        default=KnowledgeGraph,
-    )
 
 
 class GraphEvalResult(EvaluationResult):
@@ -94,39 +80,39 @@ class GraphEvalEvaluator(
 
     def evaluate(self, entry: GraphEvalEntry) -> SingleEvaluationResult:
         details = None
+        passed = None
         try:
             knowledge_graph_response = self._construct_knowledge_graph(entry.output)
-            cost = completion_cost(knowledge_graph_response)
+            cost = completion_cost(knowledge_graph_response) or 0.0
             knowledge_graph = self._get_arguments(
                 knowledge_graph_response, value="triples"
             )
         except Exception as e:
-            print("Caught an exception while creating a knowledge graph: ", e)
+            logging.error("Caught an exception while creating a knowledge graph: ", e)
 
         try:
             if isinstance(knowledge_graph, list):
                 passed_response = self._compare_knowledge_graph_with_contexts(
                     knowledge_graph=knowledge_graph, contexts=entry.contexts
                 )
-                cost += completion_cost(passed_response)
+                cost += completion_cost(passed_response) or 0.0
                 passed = self._get_arguments(passed_response, value="result")
         except Exception as e:
-            print(
+            logging.error(
                 "Caught an exception while comparing knowledge graph with contexts: ", e
             )
 
         if isinstance(passed, bool):
             return GraphEvalResult(
                 passed=passed,
-                details=details,
+                details=f"The following entity_1-relationship->entity_2 triples were found in the output: {knowledge_graph}",
                 cost=Money(amount=cost, currency="USD") if cost else None,
             )
-        else:
-            return GraphEvalResult(
-                passed=False,
-                details="We could not evaluate faithfulness of the output",
-                cost=Money(amount=cost, currency="USD") if cost else None,
-            )
+        return GraphEvalResult(
+            passed=False,
+            details="We could not evaluate faithfulness of the output",
+            cost=Money(amount=cost, currency="USD") if cost else None,
+        )
 
     def _construct_knowledge_graph(self, output: str) -> ModelResponse:
         tools = [
@@ -274,8 +260,6 @@ Important Tips
                 "type": "function",
                 "function": {"name": "create_knowledge_graph"},
             },
-            # TODO check how to implement the same functionality but without tool calling, rather with response_format
-            # response_format=self.settings.response_format,
         )
         response = cast(ModelResponse, response)
         return response
@@ -326,13 +310,11 @@ Important Tips
                 "type": "function",
                 "function": {"name": "compare_knowledge_graph_with_contexts"},
             },
-            # TODO check how to implement the same functionality but without tool calling, rather with response_format
-            # response_format=self.settings.response_format,
         )
         response = cast(ModelResponse, response)
         return response
 
-    def _get_arguments(self, response: ModelResponse, value: str) -> list[str] | bool:
+    def _get_arguments(self, response: ModelResponse, value: str) -> str | bool:
         choice = cast(Choices, response.choices[0])
         arguments = json.loads(
             cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
