@@ -71,10 +71,14 @@ class ValidFormatEvaluator(
                         )
                     except ValidationError as e:
                         return ValidFormatResult(
-                            passed=False, details=f"JSON Schema validation failed: {e}"
+                            score=0,
+                            passed=False,
+                            details=f"JSON Schema validation failed: {e}",
                         )
             except json.JSONDecodeError as e:
-                return ValidFormatResult(passed=False, details=f"Invalid JSON: {e}")
+                return ValidFormatResult(
+                    score=0, passed=False, details=f"Invalid JSON: {e}"
+                )
         elif self.settings.format == "markdown":
             try:
                 html_result = markdown.markdown(entry.output)
@@ -93,12 +97,16 @@ class ValidFormatEvaluator(
                         details="No markdown elements found. Text should contain markdown formatting like headers (#), bold (**), lists, etc.",
                     )
             except Exception as e:
-                return ValidFormatResult(passed=False, details=f"Invalid Markdown: {e}")
+                return ValidFormatResult(
+                    score=0, passed=False, details=f"Invalid Markdown: {e}"
+                )
         elif self.settings.format == "python":
             try:
                 ast.parse(entry.output)
             except Exception as e:
-                return ValidFormatResult(passed=False, details=f"Invalid Python: {e}")
+                return ValidFormatResult(
+                    score=0, passed=False, details=f"Invalid Python: {e}"
+                )
         elif self.settings.format == "sql":
             try:
                 try:
@@ -110,6 +118,8 @@ class ValidFormatEvaluator(
                 except Exception:
                     sqlglot.parse(entry.output)
             except Exception as e:
-                return ValidFormatResult(passed=False, details=f"Invalid SQL: {e}")
+                return ValidFormatResult(
+                    score=0, passed=False, details=f"Invalid SQL: {e}"
+                )
 
-        return ValidFormatResult(passed=True)
+        return ValidFormatResult(score=1, passed=True)

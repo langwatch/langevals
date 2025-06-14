@@ -24,7 +24,6 @@ class ExactMatchSettings(EvaluatorSettings):
     )
 
 
-
 class ExactMatchResult(EvaluationResult):
     passed: Optional[bool] = Field(
         default=True,
@@ -58,8 +57,14 @@ class ExactMatchEvaluator(
             expected_output_text = expected_output_text.strip()
 
         if self.settings.remove_punctuation:
-            output_text = ''.join(char for char in output_text if char.isalnum() or char.isspace())
-            expected_output_text = ''.join(char for char in expected_output_text if char.isalnum() or char.isspace())
+            output_text = "".join(
+                char for char in output_text if char.isalnum() or char.isspace()
+            )
+            expected_output_text = "".join(
+                char
+                for char in expected_output_text
+                if char.isalnum() or char.isspace()
+            )
 
         if not self.settings.case_sensitive:
             output_text = output_text.lower()
@@ -67,4 +72,4 @@ class ExactMatchEvaluator(
 
         passed = output_text == expected_output_text
 
-        return ExactMatchResult(passed=passed)
+        return ExactMatchResult(score=1 if passed else 0, passed=passed)
