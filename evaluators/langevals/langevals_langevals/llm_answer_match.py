@@ -22,7 +22,10 @@ class LLMAnswerMatchEntry(EvaluatorEntry):
 
 
 class LLMAnswerMatchSettings(LLMEvaluatorSettings):
-    pass
+    prompt: str = Field(
+        default="Verify that the predicted answer matches the gold answer for the question. Style does not matter, for example the gold answer may be more direct while the predicted answer more verbose and still be correct.",
+        description="Prompt for the comparison",
+    )
 
 
 class LLMAnswerMatchResult(EvaluationResult):
@@ -33,8 +36,6 @@ class LLMAnswerMatchResult(EvaluationResult):
 
 
 class LLMAnswerMatchSignature(dspy.Signature):
-    """Verify that the predicted answer matches the gold answer for the question. Style does not matter, for example the gold answer may be more direct while the predicted answer more verbose and still be correct."""
-
     question = dspy.InputField()
     gold_answer = dspy.InputField(desc="correct answer for question")
     predicted_answer = dspy.InputField(desc="predicted answer for question")
@@ -74,7 +75,9 @@ class LLMAnswerMatchEvaluator(
         lm = model_to_dspy_lm(self.settings.model)
         dspy.settings.configure(experimental=True)
 
-        answer_match = dspy.Predict(LLMAnswerMatchSignature)
+        answer_match = dspy.Predict(
+            LLMAnswerMatchSignature.with_instructions(self.settings.prompt)
+        )
         answer_match.set_lm(lm)
 
         result = answer_match(

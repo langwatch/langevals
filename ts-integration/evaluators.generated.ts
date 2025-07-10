@@ -215,6 +215,11 @@ export type Evaluators = {
        * @default 8192
        */
       max_tokens: number;
+      /**
+       * @description Prompt for the comparison
+       * @default "Verify that the predicted answer matches the gold answer for the question. Style does not matter, for example the gold answer may be more direct while the predicted answer more verbose and still be correct."
+       */
+      prompt: string;
     };
   };
   "langevals/llm_boolean": {
@@ -1222,6 +1227,11 @@ Uses an LLM to check if the generated output answers a question correctly the sa
       max_tokens: {
         description: "Max tokens allowed for evaluation",
         default: 8192,
+      },
+      prompt: {
+        description: "Prompt for the comparison",
+        default:
+          "Verify that the predicted answer matches the gold answer for the question. Style does not matter, for example the gold answer may be more direct while the predicted answer more verbose and still be correct.",
       },
     },
     envVars: [],
