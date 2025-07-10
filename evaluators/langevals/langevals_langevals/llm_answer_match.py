@@ -103,8 +103,11 @@ class LLMAnswerMatchEvaluator(
                 else:
                     raise e
 
+        passed = "true" in str(result.is_correct).lower()
+
         return LLMAnswerMatchResult(
-            passed="true" in str(result.is_correct).lower(),
+            passed=passed,
+            score=1 if passed else 0,
             details=result.reasoning,
             cost=Money(amount=cost, currency="USD") if cost is not None else None,
         )
