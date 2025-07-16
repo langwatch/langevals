@@ -19,12 +19,38 @@ def parse_typescript_evaluators(file_path: str) -> Dict[str, Any]:
 
     evaluators = {}
 
+    # Find the AVAILABLE_EVALUATORS object using a more robust approach
+    # First find the start of the object
+    start_pattern = r"export const AVAILABLE_EVALUATORS:\s*{[^}]*}\s*=\s*{"
+    start_match = re.search(start_pattern, content)
+
+    if not start_match:
+        print("Could not find AVAILABLE_EVALUATORS object")
+        return evaluators
+
+    start_pos = start_match.end() - 1  # Position of the opening brace
+
+    # Find the matching closing brace
+    brace_count = 0
+    end_pos = start_pos
+
+    for j, char in enumerate(content[start_pos:], start_pos):
+        if char == "{":
+            brace_count += 1
+        elif char == "}":
+            brace_count -= 1
+            if brace_count == 0:
+                end_pos = j + 1
+                break
+
+    evaluators_content = content[start_pos:end_pos]
+
     # Find all evaluator definitions using regex
     # Look for patterns like "evaluator/id": { ... }
     evaluator_pattern = r'"([^"]+)":\s*{'
 
     # Find all matches
-    matches = list(re.finditer(evaluator_pattern, content))
+    matches = list(re.finditer(evaluator_pattern, evaluators_content))
     print(f"Found {len(matches)} evaluator matches")
 
     for i, match in enumerate(matches):
@@ -35,7 +61,7 @@ def parse_typescript_evaluators(file_path: str) -> Dict[str, Any]:
         brace_count = 0
         end_pos = start_pos
 
-        for j, char in enumerate(content[start_pos:], start_pos):
+        for j, char in enumerate(evaluators_content[start_pos:], start_pos):
             if char == "{":
                 brace_count += 1
             elif char == "}":
@@ -44,13 +70,17 @@ def parse_typescript_evaluators(file_path: str) -> Dict[str, Any]:
                     end_pos = j + 1
                     break
 
-        evaluator_content = content[start_pos:end_pos]
+        evaluator_content = evaluators_content[start_pos:end_pos]
 
         # Parse the evaluator content
         evaluator = parse_evaluator_content(evaluator_id, evaluator_content)
         evaluators[evaluator_id] = evaluator
 
         print(f"Processing evaluator: {evaluator_id}")
+
+        # Debug: Print content for competitor_blocklist
+        if evaluator_id == "langevals/competitor_blocklist":
+            print(f"DEBUG: Content for {evaluator_id}: {evaluator_content[:500]}")
 
     return evaluators
 
@@ -104,13 +134,31 @@ def parse_evaluator_content(evaluator_id: str, content: str) -> Dict[str, Any]:
             field.strip().strip('"') for field in re.findall(r'"([^"]+)"', opt_content)
         ]
 
-    # Extract settings
-    settings_match = re.search(
-        r"settings:\s*{([^}]+(?:{[^}]*}[^}]*)*)}", content, re.DOTALL
-    )
-    if settings_match:
-        settings_content = settings_match.group(1)
-        evaluator["settings"] = parse_settings(settings_content)
+    # Extract settings using a more robust approach
+    settings_start = content.find("settings:")
+    if settings_start != -1:
+        # Find the opening brace after settings:
+        brace_start = content.find("{", settings_start)
+        if brace_start != -1:
+            # Find the matching closing brace
+            brace_count = 0
+            settings_end = brace_start
+
+            for i, char in enumerate(content[brace_start:], brace_start):
+                if char == "{":
+                    brace_count += 1
+                elif char == "}":
+                    brace_count -= 1
+                    if brace_count == 0:
+                        settings_end = i + 1
+                        break
+
+            settings_content = content[brace_start + 1 : settings_end - 1]
+            evaluator["settings"] = parse_settings(settings_content)
+        else:
+            print(f"DEBUG: No opening brace found for settings in {evaluator_id}")
+    else:
+        print(f"DEBUG: No settings found for {evaluator_id}")
 
     return evaluator
 
@@ -119,12 +167,28 @@ def parse_settings(settings_content: str) -> Dict[str, Any]:
     """Parse settings object."""
     settings = {}
 
-    # Find all setting definitions
-    setting_pattern = r"(\w+):\s*{([^}]+(?:{[^}]*}[^}]*)*)}"
+    # Find all setting definitions using a more robust approach
+    # Look for patterns like "setting_name: { ... }" with proper brace matching
+    setting_pattern = r"(\w+):\s*{"
 
     for setting_match in re.finditer(setting_pattern, settings_content, re.DOTALL):
         setting_name = setting_match.group(1)
-        setting_content = setting_match.group(2)
+        start_pos = setting_match.end() - 1  # Position of the opening brace
+
+        # Find the matching closing brace
+        brace_count = 0
+        end_pos = start_pos
+
+        for i, char in enumerate(settings_content[start_pos:], start_pos):
+            if char == "{":
+                brace_count += 1
+            elif char == "}":
+                brace_count -= 1
+                if brace_count == 0:
+                    end_pos = i + 1
+                    break
+
+        setting_content = settings_content[start_pos + 1 : end_pos - 1]
 
         # Extract description
         desc_match = re.search(r'description:\s*"([^"]+)"', setting_content)
@@ -132,6 +196,15 @@ def parse_settings(settings_content: str) -> Dict[str, Any]:
 
         # Extract default value
         default_value = extract_default_value(setting_content)
+
+        # Debug output for competitor_blocklist
+        if setting_name == "competitors":
+            print(f"DEBUG: Setting content for competitors: {setting_content}")
+            print(f"DEBUG: Extracted default value: {default_value}")
+            print(f"DEBUG: Type of default value: {type(default_value)}")
+            print(
+                f"DEBUG: Content contains 'competitors': {'competitors' in setting_content}"
+            )
 
         settings[setting_name] = {"description": description, "default": default_value}
 
@@ -141,12 +214,57 @@ def parse_settings(settings_content: str) -> Dict[str, Any]:
 def extract_default_value(content: str) -> Any:
     """Extract default value from setting content."""
 
+    # Debug output (only for competitors field)
+    if "competitors" in content:
+        print(f"DEBUG: extract_default_value called with content: {content}")
+
     # Look for default: followed by various value types
+    # Use a more robust pattern that handles arrays and objects
     default_match = re.search(r"default:\s*(.+?)(?:,|$)", content, re.DOTALL)
     if not default_match:
         return None
 
     value_str = default_match.group(1).strip()
+
+    # Debug output (only for competitors field)
+    if "competitors" in content:
+        print(f"DEBUG: Raw regex match: {default_match.group(0)}")
+        print(f"DEBUG: Captured value: {value_str}")
+
+        # If it's an array or object, try to find the complete value
+    if value_str.startswith("[") or value_str.startswith("{"):
+        # Find the complete array/object by looking in the original content
+        # Find the position of the opening bracket in the original content
+        default_start = content.find("default:")
+        if default_start != -1:
+            # Find the opening bracket after "default:"
+            bracket_start = content.find("[", default_start)
+            if bracket_start != -1:
+                # Find the matching closing bracket
+                bracket_count = 0
+                complete_value = ""
+
+                for i, char in enumerate(content[bracket_start:], bracket_start):
+                    complete_value += char
+                    if char == "[":
+                        bracket_count += 1
+                    elif char == "]":
+                        bracket_count -= 1
+                        if bracket_count == 0:
+                            break
+
+                value_str = complete_value
+
+        # Debug output (only for competitors field)
+        if "competitors" in content:
+            print(f"DEBUG: Original value_str: {default_match.group(1).strip()}")
+            print(f"DEBUG: Complete value_str: {value_str}")
+    else:
+        # Debug output (only for competitors field)
+        if "competitors" in content:
+            print(f"DEBUG: Not an array/object, value_str: {value_str}")
+            print(f"DEBUG: value_str starts with '[': {value_str.startswith('[')}")
+            print(f"DEBUG: value_str starts with '{{': {value_str.startswith('{')}")
 
     # Handle different value types
     if value_str.startswith('"') and value_str.endswith('"'):
@@ -164,11 +282,17 @@ def extract_default_value(content: str) -> Any:
     elif value_str.replace(".", "").isdigit():
         return float(value_str)
     elif value_str.startswith("[") and value_str.endswith("]"):
-        # Array value - simplified parsing
-        return []
+        # Array value - try to parse as JSON
+        try:
+            return json.loads(value_str)
+        except:
+            return []
     elif value_str.startswith("{") and value_str.endswith("}"):
-        # Object value - simplified parsing
-        return {}
+        # Object value - try to parse as JSON
+        try:
+            return json.loads(value_str)
+        except:
+            return {}
     else:
         return value_str
 
@@ -413,11 +537,23 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
         request_schema_name = (
             f"{evaluator_id.replace('.', '_').replace('/', '_')}Request"
         )
-        schema["components"]["schemas"][request_schema_name] = {
+        request_schema = {
             "type": "object",
             "properties": {"data": data_schema},
             "required": ["data"],
         }
+
+        # Add settings property to request schema if evaluator has settings
+        if evaluator.get("settings"):
+            print(f"Adding settings to {evaluator_id}")
+            request_schema["properties"]["settings"] = {
+                "type": "object",
+                "description": "Evaluator settings",
+            }
+        else:
+            print(f"No settings found for {evaluator_id}")
+
+        schema["components"]["schemas"][request_schema_name] = request_schema
 
         # Create settings schema for this evaluator
         settings_schema = {"type": "object", "properties": {}}
@@ -441,10 +577,21 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                     property_def["default"] = default_value
                 elif isinstance(default_value, list):
                     property_def["type"] = "array"
-                    if default_value and isinstance(default_value[0], str):
-                        property_def["items"] = {"type": "string"}
+                    # Infer item type for arrays
+                    if default_value:
+                        first_item = default_value[0]
+                        if isinstance(first_item, str):
+                            property_def["items"] = {"type": "string"}
+                        elif isinstance(first_item, bool):
+                            property_def["items"] = {"type": "boolean"}
+                        elif isinstance(first_item, (int, float)):
+                            property_def["items"] = {"type": "number"}
+                        elif isinstance(first_item, dict):
+                            property_def["items"] = {"type": "object"}
+                        else:
+                            property_def["items"] = {"type": "string"}
                     else:
-                        property_def["items"] = {"type": "object"}
+                        property_def["items"] = {"type": "string"}
                     property_def["default"] = default_value
                 elif isinstance(default_value, dict):
                     property_def["type"] = "object"
