@@ -78,10 +78,6 @@ def parse_typescript_evaluators(file_path: str) -> Dict[str, Any]:
 
         print(f"Processing evaluator: {evaluator_id}")
 
-        # Debug: Print content for competitor_blocklist
-        if evaluator_id == "langevals/competitor_blocklist":
-            print(f"DEBUG: Content for {evaluator_id}: {evaluator_content[:500]}")
-
     return evaluators
 
 
@@ -197,15 +193,6 @@ def parse_settings(settings_content: str) -> Dict[str, Any]:
         # Extract default value
         default_value = extract_default_value(setting_content)
 
-        # Debug output for competitor_blocklist
-        if setting_name == "competitors":
-            print(f"DEBUG: Setting content for competitors: {setting_content}")
-            print(f"DEBUG: Extracted default value: {default_value}")
-            print(f"DEBUG: Type of default value: {type(default_value)}")
-            print(
-                f"DEBUG: Content contains 'competitors': {'competitors' in setting_content}"
-            )
-
         settings[setting_name] = {"description": description, "default": default_value}
 
     return settings
@@ -229,16 +216,6 @@ def typescript_to_json(ts_str: str) -> str:
 def extract_default_value(content: str) -> Any:
     """Extract default value from setting content."""
 
-    # Debug output (only for competitors field)
-    if "competitors" in content:
-        print(f"DEBUG: extract_default_value called with content: {content}")
-
-    # Debug output for categories field
-    if "categories" in content:
-        print(
-            f"DEBUG: extract_default_value called with content for categories: {content}"
-        )
-
     # Look for default: followed by various value types
     # Use a more robust pattern that handles arrays and objects
     default_match = re.search(r"default:\s*(.+?)(?:,|$)", content, re.DOTALL)
@@ -247,12 +224,7 @@ def extract_default_value(content: str) -> Any:
 
     value_str = default_match.group(1).strip()
 
-    # Debug output (only for competitors field)
-    if "competitors" in content:
-        print(f"DEBUG: Raw regex match: {default_match.group(0)}")
-        print(f"DEBUG: Captured value: {value_str}")
-
-        # If it's an array or object, try to find the complete value
+    # If it's an array or object, try to find the complete value
     if value_str.startswith("[") or value_str.startswith("{"):
         # Find the complete array/object by looking in the original content
         # Find the position of the opening bracket in the original content
@@ -281,30 +253,6 @@ def extract_default_value(content: str) -> Any:
                             break
 
                 value_str = complete_value
-
-        # Debug output (only for competitors field)
-        if "competitors" in content:
-            print(f"DEBUG: Original value_str: {default_match.group(1).strip()}")
-            print(f"DEBUG: Complete value_str: {value_str}")
-
-        # Debug output for categories field
-        if "categories" in content:
-            print(
-                f"DEBUG: Original value_str for categories: {default_match.group(1).strip()}"
-            )
-            print(f"DEBUG: Complete value_str for categories: {value_str}")
-    else:
-        # Debug output (only for competitors field)
-        if "competitors" in content:
-            print(f"DEBUG: Not an array/object, value_str: {value_str}")
-            print(f"DEBUG: value_str starts with '[': {value_str.startswith('[')}")
-            print(f"DEBUG: value_str starts with '{{': {value_str.startswith('{')}")
-
-        # Debug output for categories field
-        if "categories" in content:
-            print(f"DEBUG: Not an array/object, value_str for categories: {value_str}")
-            print(f"DEBUG: value_str starts with '[': {value_str.startswith('[')}")
-            print(f"DEBUG: value_str starts with '{{': {value_str.startswith('{')}")
 
     # Handle different value types
     if value_str.startswith('"') and value_str.endswith('"'):
