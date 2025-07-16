@@ -211,12 +211,33 @@ def parse_settings(settings_content: str) -> Dict[str, Any]:
     return settings
 
 
+def typescript_to_json(ts_str: str) -> str:
+    """Convert a TypeScript-style object/array string to valid JSON."""
+    # Remove newlines and excessive spaces for easier regex
+    s = ts_str.strip()
+    # Remove trailing commas before closing brackets/braces
+    s = re.sub(r",\s*([}\]])", r"\1", s)
+    # Quote property names (unquoted keys)
+    s = re.sub(r"([,{]\s*)([A-Za-z0-9_]+)\s*:", r'\1"\2":', s)
+    # Quote string values (only those not already quoted)
+    s = re.sub(r":\s*([A-Za-z0-9_\-/\.]+)", r': "\1"', s)
+    # Replace single quotes with double quotes
+    s = s.replace("'", '"')
+    return s
+
+
 def extract_default_value(content: str) -> Any:
     """Extract default value from setting content."""
 
     # Debug output (only for competitors field)
     if "competitors" in content:
         print(f"DEBUG: extract_default_value called with content: {content}")
+
+    # Debug output for categories field
+    if "categories" in content:
+        print(
+            f"DEBUG: extract_default_value called with content for categories: {content}"
+        )
 
     # Look for default: followed by various value types
     # Use a more robust pattern that handles arrays and objects
@@ -237,18 +258,24 @@ def extract_default_value(content: str) -> Any:
         # Find the position of the opening bracket in the original content
         default_start = content.find("default:")
         if default_start != -1:
-            # Find the opening bracket after "default:"
-            bracket_start = content.find("[", default_start)
+            bracket_start = -1
+            if value_str.startswith("["):
+                bracket_start = content.find("[", default_start)
+            elif value_str.startswith("{"):
+                bracket_start = content.find("{", default_start)
+
             if bracket_start != -1:
                 # Find the matching closing bracket
                 bracket_count = 0
                 complete_value = ""
+                open_char = content[bracket_start]
+                close_char = "]" if open_char == "[" else "}"
 
                 for i, char in enumerate(content[bracket_start:], bracket_start):
                     complete_value += char
-                    if char == "[":
+                    if char == open_char:
                         bracket_count += 1
-                    elif char == "]":
+                    elif char == close_char:
                         bracket_count -= 1
                         if bracket_count == 0:
                             break
@@ -259,10 +286,23 @@ def extract_default_value(content: str) -> Any:
         if "competitors" in content:
             print(f"DEBUG: Original value_str: {default_match.group(1).strip()}")
             print(f"DEBUG: Complete value_str: {value_str}")
+
+        # Debug output for categories field
+        if "categories" in content:
+            print(
+                f"DEBUG: Original value_str for categories: {default_match.group(1).strip()}"
+            )
+            print(f"DEBUG: Complete value_str for categories: {value_str}")
     else:
         # Debug output (only for competitors field)
         if "competitors" in content:
             print(f"DEBUG: Not an array/object, value_str: {value_str}")
+            print(f"DEBUG: value_str starts with '[': {value_str.startswith('[')}")
+            print(f"DEBUG: value_str starts with '{{': {value_str.startswith('{')}")
+
+        # Debug output for categories field
+        if "categories" in content:
+            print(f"DEBUG: Not an array/object, value_str for categories: {value_str}")
             print(f"DEBUG: value_str starts with '[': {value_str.startswith('[')}")
             print(f"DEBUG: value_str starts with '{{': {value_str.startswith('{')}")
 
@@ -286,13 +326,23 @@ def extract_default_value(content: str) -> Any:
         try:
             return json.loads(value_str)
         except:
-            return []
+            # Try to convert TypeScript array to JSON
+            try:
+                json_str = typescript_to_json(value_str)
+                return json.loads(json_str)
+            except:
+                return []
     elif value_str.startswith("{") and value_str.endswith("}"):
         # Object value - try to parse as JSON
         try:
             return json.loads(value_str)
         except:
-            return {}
+            # Try to convert TypeScript object to JSON
+            try:
+                json_str = typescript_to_json(value_str)
+                return json.loads(json_str)
+            except:
+                return {}
     else:
         return value_str
 
@@ -566,14 +616,14 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                 }
 
                 default_value = setting.get("default")
-                if isinstance(default_value, str):
+                if isinstance(default_value, bool):
+                    property_def["type"] = "boolean"
+                    property_def["default"] = default_value
+                elif isinstance(default_value, str):
                     property_def["type"] = "string"
                     property_def["default"] = default_value
                 elif isinstance(default_value, (int, float)):
                     property_def["type"] = "number"
-                    property_def["default"] = default_value
-                elif isinstance(default_value, bool):
-                    property_def["type"] = "boolean"
                     property_def["default"] = default_value
                 elif isinstance(default_value, list):
                     property_def["type"] = "array"
