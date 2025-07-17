@@ -671,13 +671,13 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                     "x-codeSamples": [
                         {
                             "lang": "python",
-                            "label": "Python (offline)",
-                            "source": f'import langwatch\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n    def evaluate(index, row):\n        # Your evaluation logic here\n        \n        evaluation.run(\n            "{evaluator_id}",\n            index=index,\n            data={{\n{chr(10).join(f"                \"{field}\": {field}," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n            }},\n            settings={{\n                \n            }}\n        )\n\n    evaluation.submit(evaluate, index, row)',
+                            "label": "Offline Evaluation",
+                            "source": f'import langwatch\n\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n       \n        evaluation.run(\n            "{evaluator_id}",\n            index=index,\n            data={{\n{chr(10).join(f"                \"{field}\": {field}," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n            }},\n            settings={{}}\n        )\n',
                         },
                         {
                             "lang": "python",
-                            "label": "Python (online)",
-                            "source": f'import langwatch\n@langwatch.span()\ndef llm_step():\n    ... # your existing code\n    result = langwatch.get_current_span().evaluate(\n        "{evaluator_id}",\n{chr(10).join(f"        {field}=\"\", # required" for field in evaluator.get("requiredFields", []))}\n{chr(10).join(f"        {field}=\"\", # optional" for field in evaluator.get("optionalFields", []))}\n        settings={{}},\n    )\n    print(result)',
+                            "label": "Realtime Evaluation",
+                            "source": f'import langwatch\n\n@langwatch.span()\ndef llm_step():\n    ... # your existing code\n    result = langwatch.get_current_span().evaluate(\n        "{evaluator_id}",\n        data={{\n{chr(10).join([f"            \"{field}\": \"\"," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", [])])}\n        }},\n        settings={{}},\n    )\n    print(result)',
                         },
                         {
                             "lang": "typescript",
@@ -744,13 +744,13 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                     "x-codeSamples": [
                         {
                             "lang": "python",
-                            "label": "Python (offline)",
-                            "source": f'import langwatch\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n    def evaluate(index, row):\n        # Your evaluation logic here\n        \n        evaluation.run(\n            "{evaluator_id}",\n            index=index,\n            data={{\n{chr(10).join(f"                \"{field}\": {field}," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n            }},\n            settings={{\n                \n            }}\n        )\n\n    evaluation.submit(evaluate, index, row)',
+                            "label": "Offline Evaluation",
+                            "source": f'import langwatch\n\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n         \n        evaluation.run(\n            "{evaluator_id}",\n            index=index,\n            data={{\n{chr(10).join(f"                \"{field}\": {field}," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n            }},\n            settings={{}}\n        )\n',
                         },
                         {
                             "lang": "python",
-                            "label": "Python (online)",
-                            "source": f'import langwatch\n@langwatch.span()\ndef llm_step():\n    ... # your existing code\n    result = langwatch.get_current_span().evaluate(\n        "{evaluator_id}",\n{chr(10).join(f"        {field}=\"\", # required" for field in evaluator.get("requiredFields", []))}\n{chr(10).join(f"        {field}=\"\", # optional" for field in evaluator.get("optionalFields", []))}\n        settings={{}},\n    )\n    print(result)',
+                            "label": "Realtime Evaluation",
+                            "source": f'import langwatch\n\n@langwatch.span()\ndef llm_step():\n    ... # your existing code\n    result = langwatch.get_current_span().evaluate(\n        "{evaluator_id}",\n        data={{\n{chr(10).join([f"            \"{field}\": \"\"," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", [])])}\n        }},\n        settings={{}},\n    )\n    print(result)',
                         },
                         {
                             "lang": "typescript",
