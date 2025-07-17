@@ -226,7 +226,6 @@ def extract_default_value(content: str) -> Any:
 
     # If it's an array or object, try to find the complete value
     if value_str.startswith("[") or value_str.startswith("{"):
-        # Find the complete array/object by looking in the original content
         # Find the position of the opening bracket in the original content
         default_start = content.find("default:")
         if default_start != -1:
@@ -669,6 +668,18 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                             },
                         },
                     },
+                    "x-codeSamples": [
+                        {
+                            "lang": "python",
+                            "label": "Python",
+                            "source": f'import langwatch\n@langwatch.span()\ndef llm_step():\n    ... # your existing code\n    result = langwatch.get_current_span().evaluate(\n        "{evaluator_id}",\n{chr(10).join(f"        {field}=\"\", # required" for field in evaluator.get("requiredFields", []))}\n{chr(10).join(f"        {field}=\"\", # optional" for field in evaluator.get("optionalFields", []))}\n        settings={{}},\n    )\n    print(result)',
+                        },
+                        {
+                            "lang": "typescript",
+                            "label": "TypeScript",
+                            "source": f'import {{ type LangWatchTrace }} from "langwatch";\n\nasync function llmStep({{ message, trace }}: {{ message: string, trace: LangWatchTrace }}): Promise<string> {{\n    const span = trace.startLLMSpan({{ name: "llmStep" }});\n    \n    // ... your existing code\n\n    // call the evaluator either on a span or on a trace\n    const result = await span.evaluate({{\n        evaluator: "{evaluator_id}",\n        name: "",\n{chr(10).join(f"        {field}: \"\", // required" for field in evaluator.get("requiredFields", []))}\n{chr(10).join(f"        {field}: \"\", # optional" for field in evaluator.get("optionalFields", []))}        settings: {{}},\n    }})\n\n    console.log(result);',
+                        },
+                    ],
                 }
             }
         else:
@@ -725,6 +736,18 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                             },
                         },
                     },
+                    "x-codeSamples": [
+                        {
+                            "lang": "python",
+                            "label": "Python",
+                            "source": f'import langwatch\n@langwatch.span()\ndef llm_step():\n    ... # your existing code\n    result = langwatch.get_current_span().evaluate(\n        "{evaluator_id}",\n{chr(10).join(f"        {field}=\"\", # required" for field in evaluator.get("requiredFields", []))}\n{chr(10).join(f"        {field}=\"\", # optional" for field in evaluator.get("optionalFields", []))}\n        settings={{}},\n    )\n    print(result)',
+                        },
+                        {
+                            "lang": "typescript",
+                            "label": "TypeScript",
+                            "source": f'import {{ type LangWatchTrace }} from "langwatch";\n\nasync function llmStep({{ message, trace }}: {{ message: string, trace: LangWatchTrace }}): Promise<string> {{\n    const span = trace.startLLMSpan({{ name: "llmStep" }});\n    \n    // ... your existing code\n\n    // call the evaluator either on a span or on a trace\n    const result = await span.evaluate({{\n        evaluator: "{evaluator_id}",\n        name: "",\n{chr(10).join(f"        {field}: \"\", // required" for field in evaluator.get("requiredFields", []))}\n{chr(10).join(f"        {field}: \"\", # optional" for field in evaluator.get("optionalFields", []))}        settings: {{}},\n    }})\n\n    console.log(result);',
+                        },
+                    ],
                 }
             }
 
