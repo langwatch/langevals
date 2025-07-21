@@ -672,7 +672,7 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                         {
                             "lang": "python",
                             "label": "Offline Evaluation",
-                            "source": f'import langwatch\n\ndf = langwatch.dataset.get_dataset("dataset-id").to_pandas()\n\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n\n    # your execution code here\n       \n    evaluation.run(\n        "{evaluator_id}",\n        index=index,\n        data={{\n{chr(10).join(f"            \"{field}\": {field}," if field != "expected_output" else f"            \"{field}\": row[\"{field}\"]," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n        }},\n        settings={{}}\n    )\n',
+                            "source": f'import langwatch\n\ndf = langwatch.dataset.get_dataset("dataset-id").to_pandas()\n\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n    # your execution code here       \n    evaluation.run(\n        "{evaluator_id}",\n        index=index,\n        data={{\n{chr(10).join(f"            \"{field}\": row[\"{field}\"]," if field in ["input", "contexts", "expected_output"] else f"            \"{field}\": {field}," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n        }},\n        settings={{}}\n    )\n',
                         },
                         {
                             "lang": "python",
@@ -745,7 +745,7 @@ def generate_openapi_schema(evaluators: Dict[str, Any]) -> Dict[str, Any]:
                         {
                             "lang": "python",
                             "label": "Offline Evaluation",
-                            "source": f'import langwatch\n\ndf = langwatch.dataset.get_dataset("dataset-id").to_pandas()\n\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n\n    # your execution code here\n       \n    evaluation.run(\n        "{evaluator_id}",\n        index=index,\n        data={{\n{chr(10).join(f"            \"{field}\": {field}," if field != "expected_output" else f"            \"{field}\": row[\"{field}\"]," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n        }},\n        settings={{}}\n    )\n',
+                            "source": f'import langwatch\n\ndf = langwatch.dataset.get_dataset("dataset-id").to_pandas()\n\nevaluation = langwatch.evaluation.init("my-incredible-evaluation")\n\nfor index, row in evaluation.loop(df.iterrows()):\n    # your execution code here       \n    evaluation.run(\n        "{evaluator_id}",\n        index=index,\n        data={{\n{chr(10).join(f"            \"{field}\": row[\"{field}\"]," if field in ["input", "contexts", "expected_output"] else f"            \"{field}\": {field}," for field in evaluator.get("requiredFields", []) + evaluator.get("optionalFields", []))}\n        }},\n        settings={{}}\n    )\n',
                         },
                         {
                             "lang": "python",
