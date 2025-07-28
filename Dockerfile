@@ -1,4 +1,4 @@
-FROM python:3.11.6-slim
+FROM python:3.14.0rc1-slim
 
 RUN pip install poetry==1.8.2
 
