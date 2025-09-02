@@ -78,8 +78,8 @@ def test_llm_as_judge_atla_ai():
             prompt="You are an LLM evaluator. Please score from 0.0 to 1.0 how likely the user is to be satisfied with this answer, from 0.0 being not satisfied at all to 1.0 being completely satisfied.",
         ),
         env={
-            "LITELLM_api_key": os.getenv("ATLA_API_KEY", ""),
-            "LITELLM_api_base": "https://api.atla-ai.com/v1",
+            "X_LITELLM_api_key": os.getenv("ATLA_API_KEY", ""),
+            "X_LITELLM_api_base": "https://api.atla-ai.com/v1",
         },
     )
     result = evaluator.evaluate(

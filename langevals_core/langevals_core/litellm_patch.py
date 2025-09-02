@@ -29,12 +29,14 @@ def patch_litellm():
 
         for key, value in os.environ.items():
             if (
-                key.startswith("LITELLM_")
-                and not key.startswith("LITELLM_EMBEDDINGS_")
-                and key != "LITELLM_LOG"
-                and key != "LITELLM_LOCAL_MODEL_COST_MAP"
+                key.startswith("X_LITELLM_")
+                and not key.startswith("X_LITELLM_EMBEDDINGS_")
             ):
-                kwargs[key.replace("LITELLM_", "")] = value
+                replaced_key = key.replace("X_LITELLM_", "")
+                # check if key is all uppercase, likely not a litellm key and got here by accident
+                if replaced_key.isupper():
+                    continue
+                kwargs[replaced_key] = value
 
         return _original_completion(*args, **kwargs)
 
@@ -49,8 +51,12 @@ def patch_litellm():
         # if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None:
         #     kwargs["vertex_credentials"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
         for key, value in os.environ.items():
-            if key.startswith("LITELLM_EMBEDDINGS_"):
-                kwargs[key.replace("LITELLM_EMBEDDINGS_", "")] = value
+            if key.startswith("X_LITELLM_EMBEDDINGS_"):
+                replaced_key = key.replace("X_LITELLM_EMBEDDINGS_", "")
+                # check if key is all uppercase, likely not a litellm key and got here by accident
+                if replaced_key.isupper():
+                    continue
+                kwargs[replaced_key] = value
         return _original_embedding(*args, **kwargs)
 
     litellm.embedding = patched_embedding

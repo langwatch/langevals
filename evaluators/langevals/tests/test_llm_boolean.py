@@ -80,8 +80,8 @@ def test_llm_as_judge_atla_ai():
             prompt="Is the recipe vegetarian?",
         ),
         env={
-            "LITELLM_api_key": os.getenv("ATLA_API_KEY", ""),
-            "LITELLM_api_base": "https://api.atla-ai.com/v1",
+            "X_LITELLM_api_key": os.getenv("ATLA_API_KEY", ""),
+            "X_LITELLM_api_base": "https://api.atla-ai.com/v1",
         },
     )
 
