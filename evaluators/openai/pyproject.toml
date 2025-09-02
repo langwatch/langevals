@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-openai"
-version = "0.1.10"
+version = "0.1.11"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"
