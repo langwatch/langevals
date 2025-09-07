@@ -123,9 +123,10 @@ def model_to_dspy_lm(model: str) -> dspy.LM:
 
     lm = dspy.LM(
         model=model,
-        temperature=0,
+        temperature=1.0 if "gpt-5" in model else 0,
         drop_params=True,
         model_type="chat",
+        max_tokens=None,
         **llm_params,
     )
     return lm
