@@ -173,7 +173,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -202,7 +202,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -221,7 +221,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -235,7 +235,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -249,7 +249,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -282,7 +282,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -302,7 +302,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -316,7 +316,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -359,7 +359,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -383,7 +383,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -431,7 +431,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -450,7 +450,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -468,7 +468,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -494,7 +494,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -512,7 +512,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -534,7 +534,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -603,7 +603,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -622,7 +622,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -641,7 +641,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -660,7 +660,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -679,7 +679,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -698,7 +698,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -717,7 +717,7 @@ export type Evaluators = {
     settings: {
       /**
        * @description The model to use for evaluation.
-       * @default "openai/gpt-4o-mini"
+       * @default "openai/gpt-5"
        */
       model: string;
       /**
@@ -1146,7 +1146,7 @@ Computes with an LLM how factually similar the generated answer is to the expect
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1188,7 +1188,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1223,7 +1223,7 @@ Uses an LLM to measure the proportion of chunks in the retrieved context that we
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1253,7 +1253,7 @@ Uses an LLM to measure how many of relevant documents attributable the claims in
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1283,7 +1283,7 @@ Evaluates how pertinent the generated answer is to the given prompt. Higher scor
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1345,7 +1345,7 @@ Rubric-based evaluation metric that is used to evaluate responses. The rubric co
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1399,7 +1399,7 @@ Checks if the SQL query is equivalent to a reference one by using an LLM to infe
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1428,7 +1428,7 @@ Measures how well the summary captures important information from the retrieved 
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description:
@@ -1513,7 +1513,7 @@ This evaluator use an LLM-as-judge to check if the conversation is related to co
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
@@ -1552,7 +1552,7 @@ This evaluator implements LLM-as-a-judge with a function call approach to check 
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
@@ -1630,7 +1630,7 @@ Uses an LLM to check if the generated output answers a question correctly the sa
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
@@ -1662,7 +1662,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: undefined,
@@ -1695,7 +1695,7 @@ Use an LLM as a judge with a custom prompt to classify the message into custom d
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: undefined,
@@ -1741,7 +1741,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: undefined,
@@ -1774,7 +1774,7 @@ This evaluator checks if the user message is concerning one of the allowed topic
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
@@ -1822,7 +1822,7 @@ This evaluator checks if all the user queries in the conversation were resolved.
     settings: {
       model: {
         description: "The model to use for evaluation",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       max_tokens: {
         description: "Max tokens allowed for evaluation",
@@ -1962,7 +1962,7 @@ Computes with an LLM a weighted combination of factual as well as semantic simil
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -1996,7 +1996,7 @@ Evaluates how pertinent the generated answer is to the given prompt. Higher scor
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -2030,7 +2030,7 @@ This metric evaluates whether all of the ground-truth relevant items present in 
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -2064,7 +2064,7 @@ This evaluator measures the extent to which the retrieved context aligns with th
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -2098,7 +2098,7 @@ This metric gauges the relevancy of the retrieved context, calculated based on b
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -2132,7 +2132,7 @@ This metric evaluates whether all of the output relevant items present in the co
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",
@@ -2166,7 +2166,7 @@ This evaluator assesses the extent to which the generated answer is consistent w
     settings: {
       model: {
         description: "The model to use for evaluation.",
-        default: "openai/gpt-4o-mini",
+        default: "openai/gpt-5",
       },
       embeddings_model: {
         description: "The model to use for embeddings.",

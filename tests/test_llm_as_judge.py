@@ -27,7 +27,7 @@ entries = pd.DataFrame(
 @pytest.mark.pass_rate(0.5)
 def test_llm_as_judge(entry):
     response: ModelResponse = litellm.completion(
-        model="gpt-4o-mini",
+        model="gpt-5",
         messages=[
             {
                 "role": "system",
@@ -35,7 +35,7 @@ def test_llm_as_judge(entry):
             },
             {"role": "user", "content": entry.input},
         ],
-        temperature=0.0,
+        temperature=1.0,
     )  # type: ignore
     recipe = response.choices[0].message.content  # type: ignore
 

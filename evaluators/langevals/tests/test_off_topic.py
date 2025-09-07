@@ -18,7 +18,7 @@ def test_off_topic_evaluator():
             AllowedTopic(topic="email_delete", description="Delete an email"),
             AllowedTopic(topic="email_write", description="Write an email"),
         ],
-        model="openai/gpt-4o-mini"
+        model="openai/gpt-5"
     )
     evaluator = OffTopicEvaluator(settings=settings)
     result = evaluator.evaluate(entry)

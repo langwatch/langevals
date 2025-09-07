@@ -18,7 +18,7 @@ def test_custom_llm_category_evaluator():
         contexts=["London is the capital of France."],
     )
     settings = CustomLLMCategorySettings(
-        model="openai/gpt-4o-mini",
+        model="openai/gpt-5",
         prompt="You are an LLM category evaluator. Please categorize the answer in one of the following categories",
         categories=[
             CustomLLMCategoryDefinition(
@@ -48,7 +48,7 @@ def test_custom_llm_category_evaluator_skips_if_context_is_too_large():
         contexts=["London is the capital of France."] * 300,
     )
     settings = CustomLLMCategorySettings(
-        model="openai/gpt-4o-mini",
+        model="openai/gpt-5",
         prompt="You are an LLM category evaluator. Please categorize the answer in one of the following categories",
         categories=[
             CustomLLMCategoryDefinition(

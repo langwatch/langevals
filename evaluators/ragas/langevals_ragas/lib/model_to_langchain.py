@@ -21,6 +21,7 @@ class LitellmCompletion:
         try:
             if self.temperature:
                 kwargs["temperature"] = self.temperature
+            kwargs["drop_params"] = True
             return litellm.completion(*args, **kwargs)
         except Exception as e:
             self.exception = e
@@ -38,6 +39,9 @@ def model_to_langchain(
 ) -> BaseChatModel:
     if model.startswith("claude-"):
         model = model.replace("claude-", "anthropic/claude-")
+
+    if "gpt-5" in model:
+        temperature = 1.0
 
     return ChatOpenAI(
         model=model,

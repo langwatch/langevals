@@ -29,7 +29,7 @@ env_vars = []
 
 class RagasSettings(EvaluatorSettings):
     model: str = Field(
-        default="openai/gpt-4o-mini",
+        default="openai/gpt-5",
         description="The model to use for evaluation.",
     )
     max_tokens: int = Field(

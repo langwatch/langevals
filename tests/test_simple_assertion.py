@@ -42,7 +42,7 @@ entries = pd.DataFrame(
     }
 )
 
-models = ["gpt-3.5-turbo", "gpt-4-turbo", "groq/llama3-70b-8192"]
+models = ["gpt-4o-mini", "gpt-5"]
 
 client = instructor.from_litellm(completion)
 
@@ -58,7 +58,7 @@ def test_extracts_the_right_address(entry, model):
         messages=[
             {"role": "user", "content": entry.input},
         ],
-        temperature=0.0,
+        temperature=1.0,
     )
 
     assert address.model_dump_json() == entry.expected_output
