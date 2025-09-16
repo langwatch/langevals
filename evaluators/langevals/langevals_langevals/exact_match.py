@@ -52,6 +52,12 @@ class ExactMatchEvaluator(
         output_text = entry.output or ""
         expected_output_text = entry.expected_output or ""
 
+        if self.is_float(output_text) and self.is_float(expected_output_text):
+            return ExactMatchResult(
+                score=1 if float(output_text) == float(expected_output_text) else 0,
+                passed=float(output_text) == float(expected_output_text),
+            )
+
         if self.settings.trim_whitespace:
             output_text = output_text.strip()
             expected_output_text = expected_output_text.strip()
@@ -73,3 +79,10 @@ class ExactMatchEvaluator(
         passed = output_text == expected_output_text
 
         return ExactMatchResult(score=1 if passed else 0, passed=passed)
+
+    def is_float(self, text: str) -> bool:
+        try:
+            float(text)
+        except ValueError:
+            return False
+        return True

@@ -115,12 +115,21 @@ def test_langeval_exact_match_combined_settings():
         expected_output="hello world",
     )
     settings = ExactMatchSettings(
-        case_sensitive=False,
-        trim_whitespace=True,
-        remove_punctuation=True
+        case_sensitive=False, trim_whitespace=True, remove_punctuation=True
     )
 
     evaluator = ExactMatchEvaluator(settings=settings)
     result = evaluator.evaluate(entry)
 
     assert result.passed == True
+
+
+def test_langeval_exact_match_numbers_not_match():
+    entry = ExactMatchEntry(
+        output="-1",
+        expected_output="1",
+    )
+    settings = ExactMatchSettings()
+    evaluator = ExactMatchEvaluator(settings=settings)
+    result = evaluator.evaluate(entry)
+    assert result.passed == False
