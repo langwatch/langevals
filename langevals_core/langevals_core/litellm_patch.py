@@ -3,6 +3,7 @@ from tempfile import mkdtemp
 import warnings
 import litellm
 import litellm.cost_calculator
+from openai import OpenAI
 
 # Necessary for running DSPy on AWS lambdas
 os.environ["DSP_CACHEDIR"] = mkdtemp()
@@ -13,7 +14,7 @@ os.environ["DSPY_CACHEDIR"] = mkdtemp()
 def patch_litellm():
     _original_completion = litellm.completion
 
-    def patched_completion(*args, **kwargs):
+    def patch_litellm_params(kwargs):
         kwargs["drop_params"] = True
         # Caching on disk is timing out for some reason, disable it
         kwargs["cache"] = {"no-cache": True, "no-store": True}
@@ -28,9 +29,8 @@ def patch_litellm():
             kwargs["vertex_credentials"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
         for key, value in os.environ.items():
-            if (
-                key.startswith("X_LITELLM_")
-                and not key.startswith("X_LITELLM_EMBEDDINGS_")
+            if key.startswith("X_LITELLM_") and not key.startswith(
+                "X_LITELLM_EMBEDDINGS_"
             ):
                 replaced_key = key.replace("X_LITELLM_", "")
                 # check if key is all uppercase, likely not a litellm key and got here by accident
@@ -38,9 +38,39 @@ def patch_litellm():
                     continue
                 kwargs[replaced_key] = value
 
+        if "use_azure_gateway" in kwargs:
+            kwargs["model"] = kwargs["model"].replace("azure/", "")
+            kwargs["client"] = OpenAI(
+                base_url=kwargs["api_base"],
+                default_query={"api-version": kwargs["api_version"]},
+                default_headers={
+                    kwargs["azure_api_gateway_header_name"]: kwargs[
+                        "azure_api_gateway_header_key"
+                    ]
+                },
+            )
+            del kwargs["api_base"]
+            del kwargs["use_azure_gateway"]
+            del kwargs["azure_api_gateway_header_name"]
+            del kwargs["azure_api_gateway_header_key"]
+
+        return kwargs
+
+    def patched_completion(*args, **kwargs):
+        kwargs = patch_litellm_params(kwargs)
+
         return _original_completion(*args, **kwargs)
 
     litellm.completion = patched_completion
+
+    _original_acompletion = litellm.acompletion
+
+    def patched_acompletion(*args, **kwargs):
+        kwargs = patch_litellm_params(kwargs)
+
+        return _original_acompletion(*args, **kwargs)
+
+    litellm.acompletion = patched_acompletion
 
     _original_embedding = litellm.embedding
 
