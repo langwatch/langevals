@@ -2202,7 +2202,7 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "langevals-azure"
-version = "0.1.12"
+version = "0.1.13"
 description = "LangEvals Azure Content Safety evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -2220,7 +2220,7 @@ url = "evaluators/azure"
 
 [[package]]
 name = "langevals-core"
-version = "0.1.15"
+version = "0.1.16"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 optional = false
 python-versions = "^3.11"
@@ -2231,6 +2231,7 @@ develop = true
 anyio = "^4.8.0"
 boto3 = "^1.34.34"
 litellm = "^1.61.20"
+openai = "^1.107.0"
 pandas = "^2.2.2"
 pydantic = "^2.4.0"
 tenacity = "^8.4.0"
@@ -2244,7 +2245,7 @@ url = "langevals_core"
 
 [[package]]
 name = "langevals-example"
-version = "0.1.11"
+version = "0.1.12"
 description = "LangEvals boilerplate example evaluator for LLMs."
 optional = true
 python-versions = "^3.11"
@@ -2260,7 +2261,7 @@ url = "evaluators/example"
 
 [[package]]
 name = "langevals-huggingface"
-version = "0.1.10"
+version = "0.1.11"
 description = "Evaluators based on models available on huggingface."
 optional = true
 python-versions = "^3.11"
@@ -2278,7 +2279,7 @@ url = "evaluators/huggingface"
 
 [[package]]
 name = "langevals-langevals"
-version = "0.1.11"
+version = "0.1.12"
 description = "LangEvals core evaluators."
 optional = true
 python-versions = ">=3.11,<3.13"
@@ -2301,7 +2302,7 @@ url = "evaluators/langevals"
 
 [[package]]
 name = "langevals-legacy"
-version = "0.1.12"
+version = "0.1.13"
 description = "LangEvals Legacy evaluator"
 optional = true
 python-versions = "^3.11"
@@ -2323,7 +2324,7 @@ url = "evaluators/legacy"
 
 [[package]]
 name = "langevals-lingua"
-version = "0.1.10"
+version = "0.1.11"
 description = "LangEvals lingua evaluator for language detection."
 optional = true
 python-versions = "^3.11"
@@ -2340,7 +2341,7 @@ url = "evaluators/lingua"
 
 [[package]]
 name = "langevals-openai"
-version = "0.1.11"
+version = "0.1.12"
 description = "LangEvals OpenAI moderation evaluator for LLM outputs."
 optional = true
 python-versions = "^3.11"
@@ -2358,7 +2359,7 @@ url = "evaluators/openai"
 
 [[package]]
 name = "langevals-presidio"
-version = "0.1.5"
+version = "0.1.6"
 description = "LangEvals integration for Presidio"
 optional = true
 python-versions = "^3.11"
@@ -2377,7 +2378,7 @@ url = "evaluators/presidio"
 
 [[package]]
 name = "langevals-ragas"
-version = "0.1.12"
+version = "0.1.13"
 description = "LangEvals Ragas evaluator"
 optional = true
 python-versions = "^3.11"
@@ -3460,13 +3461,13 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.65.2"
+version = "1.109.1"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "openai-1.65.2-py3-none-any.whl", hash = "sha256:27d9fe8de876e31394c2553c4e6226378b6ed85e480f586ccfe25b7193fb1750"},
-    {file = "openai-1.65.2.tar.gz", hash = "sha256:729623efc3fd91c956f35dd387fa5c718edd528c4bed9f00b40ef290200fb2ce"},
+    {file = "openai-1.109.1-py3-none-any.whl", hash = "sha256:6bcaf57086cf59159b8e27447e4e7dd019db5d29a438072fbd49c290c7e65315"},
+    {file = "openai-1.109.1.tar.gz", hash = "sha256:d173ed8dbca665892a6db099b4a2dfac624f94d20a93f46eb0b56aae940ed869"},
 ]
 
 [package.dependencies]
@@ -3480,8 +3481,10 @@ tqdm = ">4"
 typing-extensions = ">=4.11,<5"
 
 [package.extras]
+aiohttp = ["aiohttp", "httpx-aiohttp (>=0.1.8)"]
 datalib = ["numpy (>=1)", "pandas (>=1.2.3)", "pandas-stubs (>=1.1.0.11)"]
-realtime = ["websockets (>=13,<15)"]
+realtime = ["websockets (>=13,<16)"]
+voice-helpers = ["numpy (>=2.0.2)", "sounddevice (>=0.5.1)"]
 
 [[package]]
 name = "optuna"
