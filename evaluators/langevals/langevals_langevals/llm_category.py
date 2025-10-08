@@ -49,7 +49,7 @@ class CustomLLMCategorySettings(LLMEvaluatorSettings):
         ],
         description="The categories to use for the evaluation",
     )
-    max_tokens: int = 8192
+    max_tokens: int = 131_072
 
 
 class CustomLLMCategoryResult(EvaluationResult):
@@ -102,7 +102,7 @@ class CustomLLMCategoryEvaluator(
         total_tokens = len(
             encode(model=self.settings.model, text=f"{self.settings.prompt} {content}")
         )
-        max_tokens = min(self.settings.max_tokens, 32768)
+        max_tokens = min(self.settings.max_tokens, 1_048_576)
         if total_tokens > max_tokens:
             return EvaluationResultSkipped(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"

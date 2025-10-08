@@ -66,7 +66,7 @@ class LLMAnswerMatchEvaluator(
                 text=f"{entry.input} {entry.output} {entry.expected_output}",
             )
         )
-        max_tokens = min(self.settings.max_tokens, 32768)
+        max_tokens = min(self.settings.max_tokens, 1_048_576)
         if total_tokens > max_tokens:
             return EvaluationResultSkipped(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"

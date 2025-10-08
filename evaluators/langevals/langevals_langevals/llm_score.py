@@ -29,7 +29,7 @@ class CustomLLMScoreSettings(LLMEvaluatorSettings):
         default="You are an LLM evaluator. Please score from 0.0 to 1.0 how likely the user is to be satisfied with this answer, from 0.0 being not satisfied at all to 1.0 being completely satisfied",
         description="The system prompt to use for the LLM to run the evaluation",
     )
-    max_tokens: int = 8192
+    max_tokens: int = 131_072
 
 
 class CustomLLMScoreResult(EvaluationResult):
@@ -74,7 +74,7 @@ class CustomLLMScoreEvaluator(
                 model=self.settings.model, text=f"{self.settings.prompt} {content}"
             )
         )
-        max_tokens = min(self.settings.max_tokens, 32768)
+        max_tokens = min(self.settings.max_tokens, 1_048_576)
         if total_tokens > max_tokens:
             return EvaluationResultSkipped(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"

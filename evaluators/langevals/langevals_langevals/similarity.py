@@ -94,9 +94,9 @@ class CustomSimilarityEvaluator(
         model = self.settings.embeddings_model
 
         total_tokens = len(litellm.encode(model=model, text=text))
-        if total_tokens > 8192:
+        if total_tokens > 131_072:
             return EvaluationResultSkipped(
-                details=f"Total tokens exceed the maximum of 8192 tokens: {total_tokens} tokens used"
+                details=f"Total tokens exceed the maximum of 131_072 tokens: {total_tokens} tokens used"
             )
 
         response = litellm.embedding(model=model, input=text)

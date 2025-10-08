@@ -49,7 +49,7 @@ class LLMEvaluatorSettings(EvaluatorSettings):
         description="The model to use for evaluation",
     )
     max_tokens: int = Field(
-        default=8192,
+        default=131_072,
         description="Max tokens allowed for evaluation",
     )
 
