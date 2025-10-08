@@ -2936,7 +2936,7 @@ develop = true
 
 [package.dependencies]
 boto3 = "^1.35.92"
-litellm = "^1.61.20"
+litellm = "1.76.0"
 pandas = "^2.2.2"
 pydantic = "^2.4.0"
 tenacity = "^8.4.0"
@@ -2976,7 +2976,7 @@ develop = true
 [package.dependencies]
 httpx = "^0.27.0"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.61.20"
+litellm = "1.76.0"
 
 [package.source]
 type = "directory"
@@ -2995,7 +2995,7 @@ develop = true
 dspy = "^2.6.8"
 jsonschema = "^4.23.0"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.61.20"
+litellm = "1.76.0"
 markdown = "^3.7"
 numpy = "^1.26.4"
 openai = ">=1.59.7"
@@ -3053,7 +3053,7 @@ develop = true
 langchain_community = ">=0.2.16"
 langchain-openai = ">=0.1.23"
 langevals-core = {path = "../../langevals_core", develop = true}
-litellm = "^1.61.20"
+litellm = "1.76.0"
 ragas = "0.2.9"
 rapidfuzz = "^3.11.0"
 rouge-score = "^0.1.2"
