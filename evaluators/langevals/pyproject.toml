@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
-litellm = "^1.61.20"
+litellm = "1.76.0"
 langevals-core = { path = "../../langevals_core", develop = true }
 openai = ">=1.59.7"
 numpy = "^1.26.4"

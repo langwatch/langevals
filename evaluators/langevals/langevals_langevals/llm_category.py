@@ -1,11 +1,11 @@
 import json
 import os
-from typing import Literal, Optional, cast
+from typing import Optional, cast
 from langevals_core.base_evaluator import (
+    MAX_TOKENS_HARD_LIMIT,
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
-    EvaluatorSettings,
     LLMEvaluatorSettings,
     SingleEvaluationResult,
     EvaluationResultSkipped,
@@ -49,7 +49,6 @@ class CustomLLMCategorySettings(LLMEvaluatorSettings):
         ],
         description="The categories to use for the evaluation",
     )
-    max_tokens: int = 8192
 
 
 class CustomLLMCategoryResult(EvaluationResult):
@@ -102,82 +101,62 @@ class CustomLLMCategoryEvaluator(
         total_tokens = len(
             encode(model=self.settings.model, text=f"{self.settings.prompt} {content}")
         )
-        max_tokens = min(self.settings.max_tokens, 32768)
+        max_tokens = min(self.settings.max_tokens, MAX_TOKENS_HARD_LIMIT)
         if total_tokens > max_tokens:
             return EvaluationResultSkipped(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"
             )
 
         cost = None
-
-        if "atla-selene" in self.settings.model:
-            # Workaround to get the Literal type for the categories at runtime
-            category_names = [
-                f'"{category.name}"' for category in self.settings.categories
-            ]
-            type_str = f"Literal[{', '.join(category_names)}]"
-            locals_dict = {"Literal": Literal}
-            type_ = eval(type_str, globals(), locals_dict)
-
-            class LLMJudge(dspy.Signature):
-                content: str = dspy.InputField()
-                reasoning: str = dspy.OutputField()
-                label: type_ = dspy.OutputField()  # type: ignore
-
-            judge = dspy.Predict(LLMJudge.with_instructions(self.settings.prompt))
-            judge.set_lm(lm=dspy.LM(model=self.settings.model))
-            arguments = judge(content=content)
-
-        else:
-            response = litellm.completion(
-                model=self.settings.model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": self.settings.prompt
-                        + ". Always output a valid json for the function call",
-                    },
-                    {
-                        "role": "user",
-                        "content": content,
-                    },
-                ],
-                tools=[
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "evaluation",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "reasoning": {
-                                        "type": "string",
-                                        "description": "use this field to ponder and write a short reasoning behind the decision written before a result is actually given",
-                                    },
-                                    "label": {
-                                        "type": "string",
-                                        "description": "the final decision of the category for the message",
-                                        "enum": [
-                                            category.name
-                                            for category in self.settings.categories
-                                        ],
-                                    },
+        response = litellm.completion(
+            model=self.settings.model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.settings.prompt
+                    + ". Always output a valid json for the function call",
+                },
+                {
+                    "role": "user",
+                    "content": content,
+                },
+            ],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "evaluation",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "reasoning": {
+                                    "type": "string",
+                                    "description": "use this field to ponder and write a short reasoning behind the decision written before a result is actually given",
                                 },
-                                "required": ["reasoning", "label"],
+                                "label": {
+                                    "type": "string",
+                                    "description": "the final decision of the category for the message",
+                                    "enum": [
+                                        category.name
+                                        for category in self.settings.categories
+                                    ],
+                                },
                             },
-                            "description": "use this function to write your thoughts on the reasoning, then decide if it passed or not with this json structure",
+                            "required": ["reasoning", "label"],
                         },
+                        "description": "use this function to write your thoughts on the reasoning, then decide if it passed or not with this json structure",
                     },
-                ],
-                tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
-            )
+                },
+            ],
+            tool_choice={"type": "function", "function": {"name": "evaluation"}},  # type: ignore
+        )
 
-            response = cast(ModelResponse, response)
-            choice = cast(Choices, response.choices[0])
-            arguments = json.loads(
-                cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
-            )
-            cost = completion_cost(completion_response=response)
+        response = cast(ModelResponse, response)
+        choice = cast(Choices, response.choices[0])
+        arguments = json.loads(
+            cast(Message, choice.message).tool_calls[0].function.arguments  # type: ignore
+        )
+        cost = completion_cost(completion_response=response)
 
         return CustomLLMCategoryResult(
             label=arguments["label"],
