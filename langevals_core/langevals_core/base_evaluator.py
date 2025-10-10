@@ -42,6 +42,9 @@ class EvaluatorSettings(BaseModel):
 
 TSettings = TypeVar("TSettings", bound=EvaluatorSettings)
 
+DEFAULT_MAX_TOKENS = 131_072
+MAX_TOKENS_HARD_LIMIT = 1_048_576
+
 
 class LLMEvaluatorSettings(EvaluatorSettings):
     model: str = Field(
@@ -49,7 +52,7 @@ class LLMEvaluatorSettings(EvaluatorSettings):
         description="The model to use for evaluation",
     )
     max_tokens: int = Field(
-        default=131_072,
+        default=DEFAULT_MAX_TOKENS,
         description="Max tokens allowed for evaluation",
     )
 

@@ -653,6 +653,7 @@ export type Evaluators = {
        */
       model: string;
       /**
+       * @description Max tokens allowed for evaluation
        * @default 131072
        */
       max_tokens: number;
@@ -671,6 +672,7 @@ export type Evaluators = {
        */
       model: string;
       /**
+       * @description Max tokens allowed for evaluation
        * @default 131072
        */
       max_tokens: number;
@@ -697,6 +699,7 @@ export type Evaluators = {
        */
       model: string;
       /**
+       * @description Max tokens allowed for evaluation
        * @default 131072
        */
       max_tokens: number;
@@ -1821,7 +1824,7 @@ Use an LLM as a judge with a custom prompt to do a true/false boolean evaluation
         default: "openai/gpt-5",
       },
       max_tokens: {
-        description: undefined,
+        description: "Max tokens allowed for evaluation",
         default: 131072,
       },
       prompt: {
@@ -1854,7 +1857,7 @@ Use an LLM as a judge with a custom prompt to classify the message into custom d
         default: "openai/gpt-5",
       },
       max_tokens: {
-        description: undefined,
+        description: "Max tokens allowed for evaluation",
         default: 131072,
       },
       prompt: {
@@ -1900,7 +1903,7 @@ Use an LLM as a judge with custom prompt to do a numeric score evaluation of the
         default: "openai/gpt-5",
       },
       max_tokens: {
-        description: undefined,
+        description: "Max tokens allowed for evaluation",
         default: 131072,
       },
       prompt: {

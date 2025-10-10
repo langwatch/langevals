@@ -2,6 +2,7 @@ import json
 import os
 from typing import Literal, Optional, cast
 from langevals_core.base_evaluator import (
+    MAX_TOKENS_HARD_LIMIT,
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
@@ -30,7 +31,6 @@ class CustomLLMBooleanSettings(LLMEvaluatorSettings):
         default="You are an LLM evaluator. We need the guarantee that the output answers what is being asked on the input, please evaluate as False if it doesn't",
         description="The system prompt to use for the LLM to run the evaluation",
     )
-    max_tokens: int = 131_072
 
 
 class CustomLLMBooleanResult(EvaluationResult):
@@ -79,7 +79,7 @@ class CustomLLMBooleanEvaluator(
                 model=self.settings.model, text=f"{self.settings.prompt} {content}"
             )
         )
-        max_tokens = min(self.settings.max_tokens, 1_048_576)
+        max_tokens = min(self.settings.max_tokens, MAX_TOKENS_HARD_LIMIT)
         if total_tokens > max_tokens:
             return EvaluationResultSkipped(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"

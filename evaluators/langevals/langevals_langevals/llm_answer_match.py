@@ -4,6 +4,7 @@ from typing import Optional
 import dspy
 
 from langevals_core.base_evaluator import (
+    MAX_TOKENS_HARD_LIMIT,
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
@@ -66,7 +67,7 @@ class LLMAnswerMatchEvaluator(
                 text=f"{entry.input} {entry.output} {entry.expected_output}",
             )
         )
-        max_tokens = min(self.settings.max_tokens, 1_048_576)
+        max_tokens = min(self.settings.max_tokens, MAX_TOKENS_HARD_LIMIT)
         if total_tokens > max_tokens:
             return EvaluationResultSkipped(
                 details=f"Total tokens exceed the maximum of {max_tokens}: {total_tokens}"

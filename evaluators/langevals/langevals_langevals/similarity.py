@@ -1,5 +1,6 @@
 from typing import Literal, Optional
 from langevals_core.base_evaluator import (
+    DEFAULT_MAX_TOKENS,
     BaseEvaluator,
     EvaluatorEntry,
     EvaluationResult,
@@ -94,9 +95,9 @@ class CustomSimilarityEvaluator(
         model = self.settings.embeddings_model
 
         total_tokens = len(litellm.encode(model=model, text=text))
-        if total_tokens > 131_072:
+        if total_tokens > DEFAULT_MAX_TOKENS:
             return EvaluationResultSkipped(
-                details=f"Total tokens exceed the maximum of 131_072 tokens: {total_tokens} tokens used"
+                details=f"Total tokens exceed the maximum of {DEFAULT_MAX_TOKENS} tokens: {total_tokens} tokens used"
             )
 
         response = litellm.embedding(model=model, input=text)
