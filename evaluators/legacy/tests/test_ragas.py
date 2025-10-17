@@ -216,3 +216,146 @@ def test_with_anthropic_models():
     assert result.score and result.score > 0.9
     # TODO: capture costs on ragas with claude too
     # assert result.cost and result.cost.amount > 0.0
+
+
+def test_temperature_compatibility_regression():
+    """
+    Regression test to ensure that models with temperature restrictions
+    (like those that only support default temperature=1.0) work correctly
+    with the legacy RAGAS evaluators.
+
+    This test verifies that the fix for the temperature=0.3 issue doesn't
+    cause BadRequestError for models that don't support custom temperature values.
+
+    Note: This is a unit test that focuses on the temperature logic rather than
+    making actual API calls, which would require API keys.
+    """
+    from langevals_legacy.vendor.legacy_ragas.llms.base import BaseRagasLLM
+    from langevals_legacy.vendor.legacy_ragas.run_config import RunConfig
+
+    # Test the temperature logic directly without making API calls
+    class TestLLMWrapper(BaseRagasLLM):
+        def __init__(self):
+            super().__init__(RunConfig())
+
+        def generate_text(
+            self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
+        ):
+            # Mock implementation
+            pass
+
+        def agenerate_text(
+            self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
+        ):
+            # Mock implementation
+            pass
+
+    llm = TestLLMWrapper()
+
+    # Test that the temperature logic works correctly for the scenario that was failing
+    # The original bug was that n > 1 would return temperature=0.3, which caused
+    # BadRequestError for models that only support default temperature=1.0
+
+    # Test single completion (should use very low temperature)
+    assert llm.get_temperature(n=1) == 1e-8
+
+    # Test multiple completions (should use default temperature=1.0, not 0.3)
+    assert llm.get_temperature(n=2) == 1.0
+    assert llm.get_temperature(n=3) == 1.0
+    assert llm.get_temperature(n=5) == 1.0
+
+    # Verify that we never return the problematic temperature=0.3
+    for n in range(1, 10):
+        temp = llm.get_temperature(n)
+        assert temp != 0.3, f"Temperature should never be 0.3 for n={n}, got {temp}"
+        if n == 1:
+            assert temp == 1e-8, f"Single completion should use 1e-8, got {temp}"
+        else:
+            assert temp == 1.0, f"Multiple completions should use 1.0, got {temp}"
+
+
+def test_temperature_compatibility_with_multiple_completions():
+    """
+    Test specifically for the scenario that triggered the original bug:
+    when the RAGAS evaluator needs multiple completions (n > 1), it should
+    use temperature=1.0 instead of the problematic temperature=0.3.
+    """
+    from langevals_legacy.vendor.legacy_ragas.llms.base import BaseRagasLLM
+
+    # Create a mock LLM wrapper to test the temperature logic
+    class MockLLMWrapper(BaseRagasLLM):
+        def __init__(self):
+            from langevals_legacy.vendor.legacy_ragas.run_config import RunConfig
+
+            super().__init__(RunConfig())
+
+        def generate_text(
+            self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
+        ):
+            # This would be called by the actual implementation
+            pass
+
+        def agenerate_text(
+            self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
+        ):
+            # This would be called by the actual implementation
+            pass
+
+    mock_llm = MockLLMWrapper()
+
+    # Test the temperature logic for single completion
+    assert mock_llm.get_temperature(n=1) == 1e-8
+
+    # Test the temperature logic for multiple completions (this was the bug)
+    # Should return 1.0 (default temperature) instead of 0.3
+    assert mock_llm.get_temperature(n=2) == 1.0
+    assert mock_llm.get_temperature(n=5) == 1.0
+
+
+def test_temperature_fix_regression():
+    """
+    Regression test that verifies the specific fix for the temperature=0.3 issue.
+    This test ensures that the get_temperature method returns the correct values
+    and documents the expected behavior.
+    """
+    from langevals_legacy.vendor.legacy_ragas.llms.base import BaseRagasLLM
+    from langevals_legacy.vendor.legacy_ragas.run_config import RunConfig
+
+    # Create a concrete implementation to test the actual method
+    class TestLLMWrapper(BaseRagasLLM):
+        def __init__(self):
+            super().__init__(RunConfig())
+
+        def generate_text(
+            self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
+        ):
+            # Mock implementation
+            pass
+
+        def agenerate_text(
+            self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
+        ):
+            # Mock implementation
+            pass
+
+    llm = TestLLMWrapper()
+
+    # Test cases that verify the fix
+    test_cases = [
+        (1, 1e-8),  # Single completion should use very low temperature
+        (2, 1.0),  # Multiple completions should use default temperature (1.0)
+        (3, 1.0),  # Multiple completions should use default temperature (1.0)
+        (5, 1.0),  # Multiple completions should use default temperature (1.0)
+    ]
+
+    for n, expected_temp in test_cases:
+        actual_temp = llm.get_temperature(n)
+        assert (
+            actual_temp == expected_temp
+        ), f"For n={n}, expected temperature={expected_temp}, got {actual_temp}"
+
+    # Verify that we're not using the old problematic temperature=0.3
+    for n in range(2, 10):
+        temp = llm.get_temperature(n)
+        assert temp != 0.3, f"Temperature should not be 0.3 for n={n}, got {temp}"
+        assert temp == 1.0, f"Temperature should be 1.0 for n={n}, got {temp}"
