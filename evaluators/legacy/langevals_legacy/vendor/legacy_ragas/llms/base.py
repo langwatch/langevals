@@ -51,7 +51,9 @@ class BaseRagasLLM(ABC):
 
     def get_temperature(self, n: int) -> float:
         """Return the temperature to use for completion based on n."""
-        return 0.3 if n > 1 else 1e-8
+        # Use default temperature (1.0) for models that don't support custom temperature
+        # This avoids BadRequestError for models that only support default temperature
+        return 1.0 if n > 1 else 1e-8
 
     @abstractmethod
     def generate_text(
@@ -61,8 +63,7 @@ class BaseRagasLLM(ABC):
         temperature: float = 1e-8,
         stop: t.Optional[t.List[str]] = None,
         callbacks: Callbacks = None,
-    ) -> LLMResult:
-        ...
+    ) -> LLMResult: ...
 
     @abstractmethod
     async def agenerate_text(
@@ -72,8 +73,7 @@ class BaseRagasLLM(ABC):
         temperature: float = 1e-8,
         stop: t.Optional[t.List[str]] = None,
         callbacks: Callbacks = None,
-    ) -> LLMResult:
-        ...
+    ) -> LLMResult: ...
 
     async def generate(
         self,
