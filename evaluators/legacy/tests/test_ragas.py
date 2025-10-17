@@ -236,7 +236,7 @@ def test_temperature_compatibility_regression():
     # Test the temperature logic directly without making API calls
     class TestLLMWrapper(BaseRagasLLM):
         def __init__(self):
-            super().__init__(RunConfig())
+            super().__init__(run_config=RunConfig())
 
         def generate_text(
             self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
@@ -287,7 +287,7 @@ def test_temperature_compatibility_with_multiple_completions():
         def __init__(self):
             from langevals_legacy.vendor.legacy_ragas.run_config import RunConfig
 
-            super().__init__(RunConfig())
+            super().__init__(run_config=RunConfig())
 
         def generate_text(
             self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
@@ -324,7 +324,7 @@ def test_temperature_fix_regression():
     # Create a concrete implementation to test the actual method
     class TestLLMWrapper(BaseRagasLLM):
         def __init__(self):
-            super().__init__(RunConfig())
+            super().__init__(run_config=RunConfig())
 
         def generate_text(
             self, prompt, n=1, temperature=1e-8, stop=None, callbacks=None
