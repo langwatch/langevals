@@ -40,19 +40,29 @@ def patch_litellm():
 
         if "use_azure_gateway" in kwargs:
             kwargs["model"] = kwargs["model"].replace("azure/", "")
+
+            # Build default headers from custom_headers
+            default_headers = {}
+            if "custom_headers" in kwargs:
+                import json
+
+                try:
+                    custom_headers = json.loads(kwargs["custom_headers"])
+                    default_headers.update(custom_headers)
+                except (json.JSONDecodeError, TypeError):
+                    pass
+
             kwargs["client"] = OpenAI(
                 base_url=kwargs["api_base"],
                 default_query={"api-version": kwargs["api_version"]},
-                default_headers={
-                    kwargs["azure_api_gateway_header_name"]: kwargs[
-                        "azure_api_gateway_header_key"
-                    ]
-                },
+                default_headers=default_headers,
             )
             del kwargs["api_base"]
             del kwargs["use_azure_gateway"]
-            del kwargs["azure_api_gateway_header_name"]
-            del kwargs["azure_api_gateway_header_key"]
+            if "custom_headers" in kwargs:
+                del kwargs["custom_headers"]
+
+            print(f"kwargs: {kwargs}")
 
         return kwargs
 
