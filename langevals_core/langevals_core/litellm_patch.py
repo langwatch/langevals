@@ -57,12 +57,11 @@ def patch_litellm():
                 default_query={"api-version": kwargs["api_version"]},
                 default_headers=default_headers,
             )
+
             del kwargs["api_base"]
             del kwargs["use_azure_gateway"]
             if "custom_headers" in kwargs:
                 del kwargs["custom_headers"]
-
-            print(f"kwargs: {kwargs}")
 
         return kwargs
 
