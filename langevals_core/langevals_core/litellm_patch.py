@@ -3,7 +3,8 @@ from tempfile import mkdtemp
 import warnings
 import litellm
 import litellm.cost_calculator
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
+import json
 
 # Necessary for running DSPy on AWS lambdas
 os.environ["DSP_CACHEDIR"] = mkdtemp()
@@ -18,12 +19,6 @@ def patch_litellm():
         kwargs["drop_params"] = True
         # Caching on disk is timing out for some reason, disable it
         kwargs["cache"] = {"no-cache": True, "no-store": True}
-        if (
-            os.environ.get("AZURE_DEPLOYMENT_NAME") is not None
-            and "model" in kwargs
-            and kwargs["model"].startswith("azure/")
-        ):
-            kwargs["model"] = "azure/" + os.environ["AZURE_DEPLOYMENT_NAME"]
 
         if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None:
             kwargs["vertex_credentials"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
@@ -38,30 +33,36 @@ def patch_litellm():
                     continue
                 kwargs[replaced_key] = value
 
+        if "extra_headers" in kwargs and isinstance(kwargs["extra_headers"], str):
+            kwargs["extra_headers"] = json.loads(kwargs["extra_headers"])
+
+        # Azure patches
+        if (
+            os.environ.get("AZURE_DEPLOYMENT_NAME") is not None
+            and "model" in kwargs
+            and kwargs["model"].startswith("azure/")
+        ):
+            kwargs["model"] = "azure/" + os.environ["AZURE_DEPLOYMENT_NAME"]
+
         if "use_azure_gateway" in kwargs:
             kwargs["model"] = kwargs["model"].replace("azure/", "")
 
-            # Build default headers from custom_headers
-            default_headers = {}
-            if "custom_headers" in kwargs:
-                import json
+            if "/openai/" in kwargs["api_base"]:
+                if not kwargs["api_base"].endswith("/"):
+                    kwargs["api_base"] += "/"
 
-                try:
-                    custom_headers = json.loads(kwargs["custom_headers"])
-                    default_headers.update(custom_headers)
-                except (json.JSONDecodeError, TypeError):
-                    pass
+                if "/deployments" not in kwargs["api_base"]:
+                    kwargs["api_base"] += "deployments/"
+
+                kwargs["api_base"] += kwargs["model"]
 
             kwargs["client"] = OpenAI(
                 base_url=kwargs["api_base"],
                 default_query={"api-version": kwargs["api_version"]},
-                default_headers=default_headers,
             )
 
             del kwargs["api_base"]
             del kwargs["use_azure_gateway"]
-            if "custom_headers" in kwargs:
-                del kwargs["custom_headers"]
 
         return kwargs
 
