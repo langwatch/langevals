@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-core"
-version = "0.1.19"
+version = "0.1.20"
 description = "Core package for LLM evaluation platform, providing base classes and utilities."
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",
@@ -13,7 +13,7 @@ python = "^3.11"
 pydantic = "^2.4.0"
 pandas = "^2.2.2"
 tqdm = "^4.66.4"
-litellm = "1.76.0"
+litellm = "^1.79.0"
 openai = "^1.107.0"
 tenacity = "^8.4.0"
 vertexai = "^1.71.1"

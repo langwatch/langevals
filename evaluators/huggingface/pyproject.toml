@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-huggingface"
-version = "0.1.13"
+version = "0.1.14"
 description = "Evaluators based on models available on huggingface."
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",
@@ -12,7 +12,7 @@ license = "MIT"
 python = "^3.11"
 langevals-core = { path = "../../langevals_core", develop = true }
 httpx = "^0.27.0"
-litellm = "1.76.0"
+litellm = "^1.79.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

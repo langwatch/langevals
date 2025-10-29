@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-legacy"
-version = "0.1.15"
+version = "0.1.16"
 description = "LangEvals Legacy evaluator"
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",
@@ -14,7 +14,7 @@ langevals-core = { path = "../../langevals_core", develop = true }
 langchain-openai = ">=0.1.23"
 langchain_community = ">=0.2.16"
 datasets = "2.14.6"
-litellm = "1.76.0"
+litellm = "^1.79.0"
 pysbd = "^0.3.4"
 appdirs = "^1.4.4"
 

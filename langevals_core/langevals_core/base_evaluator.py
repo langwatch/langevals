@@ -42,7 +42,7 @@ class EvaluatorSettings(BaseModel):
 
 TSettings = TypeVar("TSettings", bound=EvaluatorSettings)
 
-DEFAULT_MAX_TOKENS = 131_072
+DEFAULT_MAX_TOKENS = 128_000
 MAX_TOKENS_HARD_LIMIT = 1_048_576
 
 

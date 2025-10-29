@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-ragas"
-version = "0.1.15"
+version = "0.1.16"
 description = "LangEvals Ragas evaluator"
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",
@@ -14,7 +14,7 @@ langevals-core = { path = "../../langevals_core", develop = true }
 ragas = "0.2.9"
 langchain-openai = ">=0.1.23"
 langchain_community = ">=0.2.16"
-litellm = "1.76.0"
+litellm = "^1.79.0"
 rapidfuzz = "^3.11.0"
 sacrebleu = "^2.5.1"
 rouge-score = "^0.1.2"
