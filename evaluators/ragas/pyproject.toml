@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-ragas"
-version = "0.1.16"
+version = "0.1.17"
 description = "LangEvals Ragas evaluator"
 authors = [
   "Rogerio Chaves <rogerio@langwatch.ai>",

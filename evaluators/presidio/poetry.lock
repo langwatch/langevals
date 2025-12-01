@@ -1732,7 +1732,7 @@ develop = true
 anyio = "^4.8.0"
 boto3 = "^1.34.34"
 litellm = "^1.79.0"
-openai = "^1.107.0"
+openai = ">=1.107.0"
 pandas = "^2.2.2"
 pydantic = "^2.4.0"
 tenacity = "^8.4.0"

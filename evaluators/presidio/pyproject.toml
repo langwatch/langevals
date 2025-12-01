@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langevals-presidio"
-version = "0.1.9"
+version = "0.1.10"
 description = "LangEvals integration for Presidio"
 authors = ["Rogerio Chaves <rogerio@langwatch.ai>"]
 license = "MIT"
