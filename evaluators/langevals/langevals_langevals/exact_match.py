@@ -32,8 +32,8 @@ class ExactMatchResult(EvaluationResult):
 
 
 class ExactMatchEntry(EvaluatorEntry):
-    output: Optional[str] = None
-    expected_output: Optional[str] = None
+    output: str = None
+    expected_output: str = None
 
 
 class ExactMatchEvaluator(

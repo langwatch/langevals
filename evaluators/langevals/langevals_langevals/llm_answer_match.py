@@ -18,8 +18,8 @@ from litellm.cost_calculator import cost_per_token
 
 class LLMAnswerMatchEntry(EvaluatorEntry):
     input: Optional[str] = Field(default="")
-    output: Optional[str] = Field(default="")
-    expected_output: Optional[str] = Field(default="")
+    output: str = Field(default="")
+    expected_output: str = Field(default="")
 
 
 class LLMAnswerMatchSettings(LLMEvaluatorSettings):
