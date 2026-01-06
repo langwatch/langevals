@@ -1050,53 +1050,6 @@
         }
       }
     },
-    "/huggingface/llama_guard/evaluate": {
-      "post": {
-        "summary": "Huggingface Llama Guard Evaluate",
-        "description": "This evaluator is a special version of Llama trained strictly\nfor acting as a guardrail, following customizable guidelines.\nIt can work both as a safety evaluator and as policy enforcement.\n\n\n__Env vars:__ CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_KEY\n\n__Docs:__ https://huggingface.co/meta-llama/LlamaGuard-7b",
-        "operationId": "huggingface_llama_guard_evaluate_huggingface_llama_guard_evaluate_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/__main____create_evaluator_routes___locals___Request__23"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "anyOf": [
-                      { "$ref": "#/components/schemas/LlamaGuardResult" },
-                      {
-                        "$ref": "#/components/schemas/EvaluationResultSkipped"
-                      },
-                      { "$ref": "#/components/schemas/EvaluationResultError" }
-                    ]
-                  },
-                  "type": "array",
-                  "title": "Response Huggingface Llama Guard Evaluate Huggingface Llama Guard Evaluate Post"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
-              }
-            }
-          }
-        }
-      }
-    },
     "/haystack/faithfulness/evaluate": {
       "post": {
         "summary": "Haystack Faithfulness Evaluate",
