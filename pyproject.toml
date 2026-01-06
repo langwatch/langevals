@@ -51,12 +51,10 @@ flaky = "^3.8.1"
 [tool.poetry.extras]
 azure = [ "langevals-azure",]
 openai = [ "langevals-openai",]
-example = [ "langevals-example",]
 ragas = [ "langevals-ragas",]
 lingua = [ "langevals-lingua",]
-huggingface = [ "langevals-huggingface",]
 langevals = [ "langevals-langevals",]
-all = [ "langevals-azure", "langevals-langevals", "langevals-example", "langevals-legacy", "langevals-lingua", "langevals-ragas", "langevals-presidio", "langevals-huggingface", "langevals-openai",]
+all = [ "langevals-azure", "langevals-langevals", "langevals-legacy", "langevals-lingua", "langevals-ragas", "langevals-presidio", "langevals-openai",]
 presidio = [ "langevals-presidio",]
 legacy = [ "langevals-legacy",]
 
@@ -74,11 +72,6 @@ path = "evaluators/openai"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.langevals-example]
-path = "evaluators/example"
-develop = true
-optional = true
-
 [tool.poetry.dependencies.langevals-ragas]
 path = "evaluators/ragas"
 develop = true
@@ -86,11 +79,6 @@ optional = true
 
 [tool.poetry.dependencies.langevals-lingua]
 path = "evaluators/lingua"
-develop = true
-optional = true
-
-[tool.poetry.dependencies.langevals-huggingface]
-path = "evaluators/huggingface"
 develop = true
 optional = true
 
