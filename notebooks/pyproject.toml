@@ -72,11 +72,6 @@ path = "../evaluators/openai"
 develop = true
 optional = false
 
-[tool.poetry.dependencies.langevals-example]
-path = "../evaluators/example"
-develop = true
-optional = false
-
 [tool.poetry.dependencies.langevals-ragas]
 path = "../evaluators/ragas"
 develop = true
@@ -84,11 +79,6 @@ optional = false
 
 [tool.poetry.dependencies.langevals-lingua]
 path = "../evaluators/lingua"
-develop = true
-optional = false
-
-[tool.poetry.dependencies.langevals-huggingface]
-path = "../evaluators/huggingface"
 develop = true
 optional = false
 

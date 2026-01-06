@@ -527,53 +527,6 @@
         }
       }
     },
-    "/example/word_count/evaluate": {
-      "post": {
-        "summary": "Example Word Count Evaluate",
-        "description": "This evaluator serves as a boilerplate for creating new evaluators.\n\n\n__Env vars:__ NECESSARY_ENV_VAR\n\n__Docs:__ https://path/to/official/docs",
-        "operationId": "example_word_count_evaluate_example_word_count_evaluate_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/__main____create_evaluator_routes___locals___Request__12"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "anyOf": [
-                      { "$ref": "#/components/schemas/ExampleWordCountResult" },
-                      {
-                        "$ref": "#/components/schemas/EvaluationResultSkipped"
-                      },
-                      { "$ref": "#/components/schemas/EvaluationResultError" }
-                    ]
-                  },
-                  "type": "array",
-                  "title": "Response Example Word Count Evaluate Example Word Count Evaluate Post"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
-              }
-            }
-          }
-        }
-      }
-    },
     "/langevals/basic/evaluate": {
       "post": {
         "summary": "Langevals Basic Evaluate",
@@ -1035,53 +988,6 @@
                   },
                   "type": "array",
                   "title": "Response Openai Moderation Evaluate Openai Moderation Evaluate Post"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/huggingface/llama_guard/evaluate": {
-      "post": {
-        "summary": "Huggingface Llama Guard Evaluate",
-        "description": "This evaluator is a special version of Llama trained strictly\nfor acting as a guardrail, following customizable guidelines.\nIt can work both as a safety evaluator and as policy enforcement.\n\n\n__Env vars:__ CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_KEY\n\n__Docs:__ https://huggingface.co/meta-llama/LlamaGuard-7b",
-        "operationId": "huggingface_llama_guard_evaluate_huggingface_llama_guard_evaluate_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/__main____create_evaluator_routes___locals___Request__23"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "anyOf": [
-                      { "$ref": "#/components/schemas/LlamaGuardResult" },
-                      {
-                        "$ref": "#/components/schemas/EvaluationResultSkipped"
-                      },
-                      { "$ref": "#/components/schemas/EvaluationResultError" }
-                    ]
-                  },
-                  "type": "array",
-                  "title": "Response Huggingface Llama Guard Evaluate Huggingface Llama Guard Evaluate Post"
                 }
               }
             }
