@@ -1,7 +1,3 @@
-from langevals_example.word_count import (
-    ExampleWordCountEvaluator,
-    ExampleWordCountResult,
-)
 from langevals_langevals.competitor_blocklist import (
     CompetitorBlocklistEvaluator,
     CompetitorBlocklistResult,
@@ -25,7 +21,6 @@ def test_run_simple_evaluation():
     results = langevals.evaluate(
         entries,
         [
-            ExampleWordCountEvaluator(),
             CompetitorBlocklistEvaluator(
                 settings=CompetitorBlocklistSettings(competitors=["Bob"])
             ),
@@ -33,13 +28,6 @@ def test_run_simple_evaluation():
     )
 
     assert results.results == [
-        [
-            ExampleWordCountResult(score=1, details="Words found: hi"),
-            ExampleWordCountResult(
-                score=6, details="Words found: I, am, a, chatbot,, no, feelings"
-            ),
-            ExampleWordCountResult(score=4, details="Words found: My, name, is, Bob"),
-        ],
         [
             CompetitorBlocklistResult(score=0, passed=True),
             CompetitorBlocklistResult(score=0, passed=True),
@@ -50,29 +38,6 @@ def test_run_simple_evaluation():
     ]
 
     assert results.to_list() == {
-        "word_count": [
-            {
-                "status": "processed",
-                "score": 1.0,
-                "passed": None,
-                "details": "Words found: hi",
-                "cost": None,
-            },
-            {
-                "status": "processed",
-                "score": 6.0,
-                "passed": None,
-                "details": "Words found: I, am, a, chatbot,, no, feelings",
-                "cost": None,
-            },
-            {
-                "status": "processed",
-                "score": 4.0,
-                "passed": None,
-                "details": "Words found: My, name, is, Bob",
-                "cost": None,
-            },
-        ],
         "competitor_blocklist": [
             {
                 "status": "processed",
@@ -104,15 +69,13 @@ def test_run_simple_evaluation():
             {
                 "input": ["hello", "how are you?", "what is your name?"],
                 "output": ["hi", "I am a chatbot, no feelings", "My name is Bob"],
-                "word_count_score": [1.0, 6.0, 4.0],
-                "word_count_details": [
-                    "Words found: hi",
-                    "Words found: I, am, a, chatbot,, no, feelings",
-                    "Words found: My, name, is, Bob",
-                ],
                 "competitor_blocklist_score": [0.0, 0.0, 1.0],
                 "competitor_blocklist_passed": [True, True, False],
-                "competitor_blocklist_details": [None, None, "Competitors mentioned: Bob"],
+                "competitor_blocklist_details": [
+                    None,
+                    None,
+                    "Competitors mentioned: Bob",
+                ],
             }
         ).to_dict()
     )
