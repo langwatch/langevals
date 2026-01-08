@@ -11,3 +11,4 @@ notebooks/data/**/*
 !notebooks/data/.gitkeep
 !notebooks/data/samsung-questions.csv
 notebooks/local_cache
+langevals_licenses.json

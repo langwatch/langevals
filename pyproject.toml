@@ -25,6 +25,7 @@ markdown = "^3.6"
 uvicorn = "^0.29.0"
 gunicorn = "^23.0.0"
 nest-asyncio = "^1.6.0"
+pip-licenses = "^5.5.0"
 [[tool.poetry.dependencies.torch]]
 version = "^2.2.2+cpu"
 optional = true

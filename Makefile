@@ -86,3 +86,9 @@ check-evaluator-versions:
 
 %:
 	@:
+
+licenses:
+	@echo "Generating licenses..."
+	@poetry run pip-licenses --summary
+	@poetry run pip-licenses --format=json --with-license-file > langevals_licenses.json
+	@echo "Full licenses report saved to langevals_licenses.json"
