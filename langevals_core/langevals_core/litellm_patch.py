@@ -10,6 +10,25 @@ import json
 os.environ["DSP_CACHEDIR"] = mkdtemp()
 os.environ["DSPY_CACHEDIR"] = mkdtemp()
 
+# Parameters that need type conversion from string env vars
+INT_PARAMS = {"max_tokens", "seed", "n", "top_logprobs", "max_completion_tokens"}
+FLOAT_PARAMS = {"temperature", "top_p", "frequency_penalty", "presence_penalty"}
+
+
+def convert_param_type(key: str, value: str):
+    """Convert string env var value to proper type for litellm params."""
+    if key in INT_PARAMS:
+        try:
+            return int(value)
+        except ValueError:
+            return value
+    elif key in FLOAT_PARAMS:
+        try:
+            return float(value)
+        except ValueError:
+            return value
+    return value
+
 
 # Patch litellm completion for mapping AZURE_DEPLOYMENT_NAME into the model name
 def patch_litellm():
@@ -31,7 +50,7 @@ def patch_litellm():
                 # check if key is all uppercase, likely not a litellm key and got here by accident
                 if replaced_key.isupper():
                     continue
-                kwargs[replaced_key] = value
+                kwargs[replaced_key] = convert_param_type(replaced_key, value)
 
         if "extra_headers" in kwargs and isinstance(kwargs["extra_headers"], str):
             kwargs["extra_headers"] = json.loads(kwargs["extra_headers"])
@@ -96,7 +115,7 @@ def patch_litellm():
                 # check if key is all uppercase, likely not a litellm key and got here by accident
                 if replaced_key.isupper():
                     continue
-                kwargs[replaced_key] = value
+                kwargs[replaced_key] = convert_param_type(replaced_key, value)
         return _original_embedding(*args, **kwargs)
 
     litellm.embedding = patched_embedding
