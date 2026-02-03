@@ -1,14 +1,17 @@
 #!/bin/bash
 
-# Ensure we're in the directory of the package to check
-if [ ! -f "pyproject.toml" ]; then
-    echo "Error: pyproject.toml not found in the current directory."
+PACKAGE_DIR="${1:-.}"
+
+if [ ! -f "$PACKAGE_DIR/pyproject.toml" ]; then
+    echo "Error: pyproject.toml not found in $PACKAGE_DIR"
     exit 1
 fi
 
-# Get the package name and current version from poetry
-PACKAGE_NAME=$(poetry version | cut -d' ' -f1)
-CURRENT_VERSION=$(poetry version --short)
+cd "$PACKAGE_DIR"
+
+# Get package name and version using Python (uv has no version command)
+PACKAGE_NAME=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])")
+CURRENT_VERSION=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
 
 # Fetch the published package metadata from PyPI
 REMOTE_METADATA=$(curl -s https://pypi.org/pypi/$PACKAGE_NAME/$CURRENT_VERSION/json)
@@ -21,7 +24,7 @@ fi
 
 # Build the package and calculate the md5 digest of the distribution file
 rm -rf dist
-poetry build
+uv build
 DIST_FILE=$(ls dist/*.whl)
 LOCAL_DIGEST=$(md5sum "$DIST_FILE" | cut -d' ' -f1)
 # Clean up the build artifacts

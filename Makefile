@@ -1,94 +1,56 @@
-.PHONY: test lock lock-core lock-evaluators install install-core install-evaluators run-docker
+.PHONY: test lock install setup preload start run-docker check-evaluator-versions licenses
 
+# Run tests for all evaluators
 test:
 	@for dir in evaluators/*; do \
 		if [ -d $$dir ]; then \
 			echo "Running tests in $$dir"; \
-			cd $$dir && poetry run pytest -s -vv && cd ../..; \
+			uv run --directory $$dir pytest -s -vv; \
 		fi \
 	done
 
-ensure-poetry:
-	@if ! command -v poetry &> /dev/null; then \
-		curl -sSL https://install.python-poetry.org | python3 -; \
-	fi
+# Lock all dependencies (single unified lock file)
+lock:
+	uv lock
 
+# Install all packages in development mode
+install:
+	uv sync --all-extras --all-groups
+
+# Generate workspace config, evaluator dependencies, and TypeScript types
 setup:
-	poetry run python scripts/generate_evaluator_dependencies.py
-	poetry run python scripts/generate_workspace.py
-	poetry run python scripts/generate_evaluators_ts.py
+	uv run python scripts/generate_evaluator_dependencies.py
+	uv run python scripts/generate_workspace.py
+	uv run python scripts/generate_evaluators_ts.py
 
-lock-core:
-	@echo "Locking dependencies for langevals_core..."
-	@cd langevals_core && poetry lock --no-update
-
-lock-evaluators: lock-core install-core
-	@for dir in evaluators/*; do \
-		if [ -d $$dir ]; then \
-			echo "Locking in $$dir"; \
-			cd $$dir && poetry lock --no-update && cd ../..; \
-		fi \
-	done
-
-install-core:
-	@echo "Installing dependencies for langevals_core..."
-	@cd langevals_core && poetry install
-
-install-evaluators: install-core
-	@for dir in evaluators/*; do \
-		if [ -d $$dir ]; then \
-			echo "Installing in $$dir"; \
-			cd $$dir && poetry install && cd ../..; \
-		fi \
-	done
-
-lock: ensure-poetry lock-core install-core lock-evaluators
-	@echo "All packages locked."
-	poetry lock --no-update
-
-install: ensure-poetry install-core install-evaluators
-	@echo "All evaluator packages installed."
-	poetry install --all-extras
-	make setup && poetry lock --no-update && poetry install --all-extras
-
+# Preload evaluators
 preload:
-	@echo "Preloading evaluators..."
-	poetry run python langevals/server.py --preload
+	uv run python langevals/server.py --preload
 
+# Start server
 start:
-	@echo "Starting the server..."
-	poetry run python langevals/server.py $(filter-out $@,$(MAKECMDGOALS))
+	uv run python langevals/server.py $(filter-out $@,$(MAKECMDGOALS))
 
+# Build and run Docker
 run-docker:
-	@echo "Building and running the Docker container for the evaluator..."
-	@docker build --build-arg EVALUATOR=$(EVALUATOR) -t langevals-$(EVALUATOR) .
-	@docker run -p 80:80 langevals-$(EVALUATOR)
+	docker build --build-arg EVALUATOR=$(EVALUATOR) -t langevals-$(EVALUATOR) .
+	docker run -p 80:80 langevals-$(EVALUATOR)
 
+# Check evaluator versions for changes
 check-evaluator-versions:
 	@echo "Checking all evaluator versions for changes..."
-	@(cd langevals_core && ../scripts/check_version_bump.sh --bump; exit_status=$$?; \
-		if [ $$exit_status -eq 3 ]; then \
-			echo "[Auto Bump] Bumping poetry version"; \
-			poetry version patch; \
-		fi); \
-	for dir in evaluators/*; do \
+	@./scripts/check_version_bump.sh langevals_core
+	@for dir in evaluators/*; do \
 		if [ -d "$$dir" ]; then \
 			echo "Checking $$dir"; \
-			(cd "$$dir" && git add pyproject.toml && python ../../scripts/replace_develop_dependencies.py pyproject.toml && ../../scripts/check_version_bump.sh --bump; exit_status=$$?; git checkout pyproject.toml; \
-				if [ $$exit_status -eq 3 ]; then \
-					echo "[Auto Bump] Bumping poetry version"; \
-					poetry version patch; \
-				else \
-					exit $$exit_status; \
-				fi); \
+			./scripts/check_version_bump.sh "$$dir"; \
 		fi \
 	done
+
+# Generate license report
+licenses:
+	uv run pip-licenses --summary
+	uv run pip-licenses --format=json --with-license-file > langevals_licenses.json
 
 %:
 	@:
-
-licenses:
-	@echo "Generating licenses..."
-	@poetry run pip-licenses --summary
-	@poetry run pip-licenses --format=json --with-license-file > langevals_licenses.json
-	@echo "Full licenses report saved to langevals_licenses.json"
