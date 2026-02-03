@@ -1,24 +1,31 @@
 FROM python:3.11.6-slim
 
-RUN pip install poetry==1.8.2
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /usr/src/app
 
 RUN pip install --target . awslambdaric
 
-COPY pyproject.toml poetry.lock poetry.toml .
+# Copy workspace config and lock file
+COPY pyproject.toml uv.lock ./
+
+# Copy workspace members
 COPY langevals_core/ langevals_core/
-COPY evaluators/langevals evaluators/langevals
-RUN poetry install --only main
+COPY evaluators/ evaluators/
+COPY notebooks/pyproject.toml notebooks/
 
-COPY evaluators evaluators
+# Install dependencies (frozen from lock file, no dev deps, all extras)
+RUN uv sync --frozen --no-dev --all-extras
 
-RUN poetry install --only main --all-extras
+# Copy application code
 COPY langevals/ langevals/
-RUN PYTHONPATH="." poetry run python langevals/server.py --preload
+
+# Preload evaluators
+RUN PYTHONPATH="." uv run python langevals/server.py --preload
 
 ENV RUNNING_IN_DOCKER=true
 
 COPY . .
 
-CMD PYTHONPATH="." poetry run python langevals/server.py
+CMD ["uv", "run", "python", "langevals/server.py"]

@@ -91,14 +91,32 @@ class PresidioPIIDetectionEvaluator(
 
     @classmethod
     def preload(cls):
+        # Try loading in order: 1) as installed package, 2) from cache, 3) download
+        model_loaded = False
         cache_dir = os.path.join(os.path.dirname(__file__), ".cache")
-        os.makedirs(cache_dir, exist_ok=True)
+
+        # First, try loading as an installed package (when en-core-web-lg is a dependency)
         try:
-            spacy.load(os.path.join(cache_dir, "en_core_web_lg"))
-        except Exception:
+            spacy.load("en_core_web_lg")
+            model_loaded = True
+        except OSError:
+            pass
+
+        # Second, try loading from local cache
+        if not model_loaded:
+            os.makedirs(cache_dir, exist_ok=True)
+            try:
+                spacy.load(os.path.join(cache_dir, "en_core_web_lg"))
+                model_loaded = True
+            except OSError:
+                pass
+
+        # Last resort: download and cache
+        if not model_loaded:
             spacy.cli.download("en_core_web_lg", False, False, "--no-cache-dir")  # type: ignore
             nlp = spacy.load("en_core_web_lg")
             nlp.to_disk(os.path.join(cache_dir, "en_core_web_lg"))
+
         cls.analyzer = AnalyzerEngine(
             nlp_engine=SpacyNlpEngine(
                 models=[{"lang_code": "en", "model_name": "en_core_web_lg"}]
