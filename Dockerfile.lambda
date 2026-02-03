@@ -25,5 +25,5 @@ RUN PYTHONPATH="." uv run python langevals/server.py --preload
 
 COPY . .
 
-ENTRYPOINT ["uv", "run", "python", "-m", "awslambdaric"]
+ENTRYPOINT ["uv", "--no-cache", "run", "--no-sync", "python", "-m", "awslambdaric"]
 CMD ["langevals.server.handler"]
