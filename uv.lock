@@ -908,6 +908,20 @@ wheels = [
 ]
 
 [[package]]
+name = "en-core-web-lg"
+version = "3.7.1"
+source = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl" }
+dependencies = [
+    { name = "spacy" },
+]
+wheels = [
+    { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl", hash = "sha256:ab70aeb6172cde82508f7739f35ebc9918a3d07debeed637403c8f794ba3d3dc" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "spacy", specifier = ">=3.7.2,<3.8.0" }]
+
+[[package]]
 name = "execnet"
 version = "2.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2378,6 +2392,7 @@ name = "langevals-presidio"
 version = "0.1.10"
 source = { editable = "evaluators/presidio" }
 dependencies = [
+    { name = "en-core-web-lg" },
     { name = "langevals-core" },
     { name = "presidio-analyzer" },
     { name = "presidio-anonymizer" },
@@ -2395,6 +2410,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "en-core-web-lg", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl" },
     { name = "langevals-core", editable = "langevals_core" },
     { name = "presidio-analyzer", specifier = ">=2.2.355" },
     { name = "presidio-anonymizer", specifier = ">=2.2.355" },

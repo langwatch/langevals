@@ -18,9 +18,6 @@ COPY notebooks/pyproject.toml notebooks/
 # Install dependencies (frozen from lock file, no dev deps, all extras)
 RUN uv sync --frozen --no-dev --all-extras
 
-# Download spacy model for presidio (requires pip in the venv)
-RUN uv pip install pip && uv run python -m spacy download en_core_web_lg
-
 # Copy application code
 COPY langevals/ langevals/
 

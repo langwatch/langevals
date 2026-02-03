@@ -20,9 +20,6 @@ ARG EVALUATOR
 # Install only base + specific evaluator extra
 RUN uv sync --frozen --no-dev --extra $EVALUATOR
 
-# Install pip and spacy model for presidio (if needed)
-RUN uv pip install pip && uv run python -m spacy download en_core_web_lg || true
-
 COPY langevals/ langevals/
 RUN PYTHONPATH="." uv run python langevals/server.py --preload
 
